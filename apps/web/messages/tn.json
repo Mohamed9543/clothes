@@ -1,0 +1,138 @@
+{
+  "brand": {
+    "name": "لباس",
+    "tagline": "الموضة، تجربها قبل ما تشريها."
+  },
+  "nav": {
+    "home": "لصفحة الرئيسية",
+    "catalog": "الكتالوق",
+    "about": "شكون احنا",
+    "cart": "الكارتة",
+    "account": "الكونط متاعي",
+    "login": "دخول",
+    "logout": "خروج",
+    "searchPlaceholder": "قلّب على حاجة..."
+  },
+  "footer": {
+    "about": "على لباس",
+    "aboutText": "لباس هي منصة نتاع الموضة تخليك تجرب الحوايج بصفة افتراضية قبل ما تشريهم.",
+    "help": "مساعدة",
+    "contact": "اتصل بينا",
+    "terms": "الشروط",
+    "rights": "جميع الحقوق محفوظة."
+  },
+  "home": {
+    "heroTitle": "جرّبها قبل ما تشريها",
+    "heroSubtitle": "اكتشف المجموعة متاعنا ولقى الستيل يعجبك، بالراحة.",
+    "heroCta": "شوف الكتالوق",
+    "categoriesTitle": "شري حسب الفئة",
+    "categoryMen": "راجل",
+    "categoryWomen": "مرا",
+    "categoryKids": "صغار",
+    "featuredTitle": "الجديد"
+  },
+  "catalog": {
+    "title": "الكتالوق",
+    "filters": "الفلاتر",
+    "audience": "الفئة",
+    "all": "الكل",
+    "men": "راجل",
+    "women": "مرا",
+    "kids": "صغار",
+    "type": "النوع",
+    "pull": "كنزة",
+    "pantalon": "سروال",
+    "chemise": "قميص",
+    "robe": "فستان",
+    "veste": "جاكيت",
+    "chaussure": "صباط",
+    "accessoire": "إكسسوار",
+    "priceRange": "الميزانية",
+    "minPrice": "الأدنى",
+    "maxPrice": "الأقصى",
+    "apply": "أكد",
+    "reset": "رجّع",
+    "noResults": "ما فماش حاجة تنجم تعجبك.",
+    "resultsCount": "{count} حاجة موجودة"
+  },
+  "product": {
+    "addToCart": "زيد في الكارتة",
+    "addedToCart": "تزادت في الكارتة!",
+    "size": "المقاس",
+    "color": "اللون",
+    "quantity": "العدد",
+    "outOfStock": "ماباقاش موجود",
+    "inStock": "موجود",
+    "description": "التفاصيل",
+    "selectSize": "اختار مقاس"
+  },
+  "cart": {
+    "title": "الكارتة متاعي",
+    "empty": "الكارتة متاعك فارغة.",
+    "browseCatalog": "شوف الكتالوق",
+    "product": "الحاجة",
+    "size": "المقاس",
+    "quantity": "العدد",
+    "price": "السعر",
+    "subtotal": "المجموع الفرعي",
+    "total": "المجموع",
+    "remove": "نحّي",
+    "checkout": "كمل الطلبية"
+  },
+  "checkout": {
+    "title": "كمل الطلبية",
+    "shippingAddress": "عنوان التوصيل",
+    "fullName": "الاسم الكامل",
+    "phone": "التليفون",
+    "address": "العنوان",
+    "city": "المدينة",
+    "country": "البلاد",
+    "paymentMethod": "طريقة الخلاص",
+    "cod": "خلاص عند التوصيل",
+    "placeOrder": "أكد الطلبية",
+    "orderSuccessTitle": "الطلبية تأكدت!",
+    "orderSuccessText": "شكرا على طلبيتك. تنجم تتبع حالتها من الكونط متاعك.",
+    "viewOrder": "شوف طلبيتي"
+  },
+  "account": {
+    "title": "الكونط متاعي",
+    "profile": "البروفيل",
+    "myOrders": "الطلبيات متاعي",
+    "orderNumber": "الطلبية",
+    "orderDate": "التاريخ",
+    "orderTotal": "المجموع",
+    "orderStatus": "الحالة",
+    "noOrders": "ماعملتش حتى طلبية لحد الآن."
+  },
+  "auth": {
+    "loginTitle": "دخول",
+    "registerTitle": "اعمل كونط",
+    "email": "الإيمايل",
+    "password": "الباسوورد",
+    "firstName": "الاسم",
+    "lastName": "اللقب",
+    "loginCta": "دخول",
+    "registerCta": "سجّل",
+    "noAccount": "ماعندكش كونط؟",
+    "haveAccount": "عندك كونط ديجا؟",
+    "createAccount": "اعمل كونط",
+    "signIn": "دخول"
+  },
+  "orderStatus": {
+    "pending": "تنتظر",
+    "confirmed": "متأكدة",
+    "shipped": "خرجت للتوصيل",
+    "delivered": "توصلت",
+    "cancelled": "تلغات"
+  },
+  "about": {
+    "title": "على لباس",
+    "text1": "لباس جات من فكرة بسيطة: شرا الحوايج عبر الأنترنات مايستهلش يبقى مخاطرة. التكنولوجيا متاعنا نتاع القياس الافتراضي تخليك تشوف كل حاجة على أفتار ثلاثي الأبعاد شبه قامتك قبل ما تشريها.",
+    "text2": "المساعد الذكي متاعنا يعاونك تركب لبسة كاملة حسب المناسبة والميزانية متاعك، بلغتك."
+  },
+  "common": {
+    "loading": "قاعد يتحمّل...",
+    "error": "صارت مشكلة.",
+    "currency": "د.ت"
+  }
+}

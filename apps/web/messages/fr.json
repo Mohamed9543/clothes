@@ -1,0 +1,138 @@
+{
+  "brand": {
+    "name": "Libas",
+    "tagline": "La mode, essayée avant d'être achetée."
+  },
+  "nav": {
+    "home": "Accueil",
+    "catalog": "Catalogue",
+    "about": "À propos",
+    "cart": "Panier",
+    "account": "Mon compte",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "searchPlaceholder": "Rechercher un vêtement..."
+  },
+  "footer": {
+    "about": "À propos de Libas",
+    "aboutText": "Libas est une marketplace de mode qui vous permet d'essayer virtuellement vos vêtements avant de les acheter.",
+    "help": "Aide",
+    "contact": "Contact",
+    "terms": "Conditions générales",
+    "rights": "Tous droits réservés."
+  },
+  "home": {
+    "heroTitle": "Essayez avant d'acheter",
+    "heroSubtitle": "Découvrez notre collection et trouvez votre style, en toute confiance.",
+    "heroCta": "Explorer le catalogue",
+    "categoriesTitle": "Acheter par catégorie",
+    "categoryMen": "Homme",
+    "categoryWomen": "Femme",
+    "categoryKids": "Enfant",
+    "featuredTitle": "Nouveautés"
+  },
+  "catalog": {
+    "title": "Catalogue",
+    "filters": "Filtres",
+    "audience": "Public",
+    "all": "Tous",
+    "men": "Homme",
+    "women": "Femme",
+    "kids": "Enfant",
+    "type": "Type",
+    "pull": "Pull",
+    "pantalon": "Pantalon",
+    "chemise": "Chemise",
+    "robe": "Robe",
+    "veste": "Veste",
+    "chaussure": "Chaussure",
+    "accessoire": "Accessoire",
+    "priceRange": "Fourchette de prix",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser",
+    "noResults": "Aucun produit ne correspond à votre recherche.",
+    "resultsCount": "{count} produit(s) trouvé(s)"
+  },
+  "product": {
+    "addToCart": "Ajouter au panier",
+    "addedToCart": "Ajouté au panier !",
+    "size": "Taille",
+    "color": "Couleur",
+    "quantity": "Quantité",
+    "outOfStock": "Rupture de stock",
+    "inStock": "En stock",
+    "description": "Description",
+    "selectSize": "Veuillez choisir une taille"
+  },
+  "cart": {
+    "title": "Mon panier",
+    "empty": "Votre panier est vide.",
+    "browseCatalog": "Parcourir le catalogue",
+    "product": "Produit",
+    "size": "Taille",
+    "quantity": "Quantité",
+    "price": "Prix",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "remove": "Retirer",
+    "checkout": "Passer la commande"
+  },
+  "checkout": {
+    "title": "Finaliser la commande",
+    "shippingAddress": "Adresse de livraison",
+    "fullName": "Nom complet",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "city": "Ville",
+    "country": "Pays",
+    "paymentMethod": "Mode de paiement",
+    "cod": "Paiement à la livraison",
+    "placeOrder": "Confirmer la commande",
+    "orderSuccessTitle": "Commande confirmée !",
+    "orderSuccessText": "Merci pour votre commande. Vous pouvez suivre son statut dans votre compte.",
+    "viewOrder": "Voir ma commande"
+  },
+  "account": {
+    "title": "Mon compte",
+    "profile": "Profil",
+    "myOrders": "Mes commandes",
+    "orderNumber": "Commande",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "orderStatus": "Statut",
+    "noOrders": "Vous n'avez pas encore passé de commande."
+  },
+  "auth": {
+    "loginTitle": "Connexion",
+    "registerTitle": "Créer un compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "loginCta": "Se connecter",
+    "registerCta": "S'inscrire",
+    "noAccount": "Pas encore de compte ?",
+    "haveAccount": "Déjà un compte ?",
+    "createAccount": "Créer un compte",
+    "signIn": "Se connecter"
+  },
+  "orderStatus": {
+    "pending": "En attente",
+    "confirmed": "Confirmée",
+    "shipped": "Expédiée",
+    "delivered": "Livrée",
+    "cancelled": "Annulée"
+  },
+  "about": {
+    "title": "À propos de Libas",
+    "text1": "Libas est née d'une idée simple : acheter des vêtements en ligne ne devrait plus être un pari. Notre technologie d'essayage virtuel vous permet de visualiser chaque pièce sur un avatar 3D à votre morphologie avant de l'acheter.",
+    "text2": "Notre assistant intelligent vous aide à composer des tenues complètes selon vos occasions et votre budget, dans votre langue."
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue.",
+    "currency": "TND"
+  }
+}

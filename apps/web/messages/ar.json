@@ -1,0 +1,138 @@
+{
+  "brand": {
+    "name": "لباس",
+    "tagline": "الموضة، تجربها قبل ما تشريها."
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "catalog": "الكتالوج",
+    "about": "من نحن",
+    "cart": "السلة",
+    "account": "حسابي",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "searchPlaceholder": "ابحث عن ملابس..."
+  },
+  "footer": {
+    "about": "عن لباس",
+    "aboutText": "لباس هي منصة أزياء تتيح لك تجربة الملابس افتراضيًا قبل شرائها.",
+    "help": "المساعدة",
+    "contact": "اتصل بنا",
+    "terms": "الشروط والأحكام",
+    "rights": "جميع الحقوق محفوظة."
+  },
+  "home": {
+    "heroTitle": "جرّبه قبل ما تشريه",
+    "heroSubtitle": "اكتشف مجموعتنا واعثر على أسلوبك، بكل ثقة.",
+    "heroCta": "تصفح الكتالوج",
+    "categoriesTitle": "تسوق حسب الفئة",
+    "categoryMen": "رجال",
+    "categoryWomen": "نساء",
+    "categoryKids": "أطفال",
+    "featuredTitle": "أحدث المنتجات"
+  },
+  "catalog": {
+    "title": "الكتالوج",
+    "filters": "التصفية",
+    "audience": "الفئة",
+    "all": "الكل",
+    "men": "رجال",
+    "women": "نساء",
+    "kids": "أطفال",
+    "type": "النوع",
+    "pull": "كنزة",
+    "pantalon": "بنطلون",
+    "chemise": "قميص",
+    "robe": "فستان",
+    "veste": "جاكيت",
+    "chaussure": "حذاء",
+    "accessoire": "إكسسوار",
+    "priceRange": "نطاق السعر",
+    "minPrice": "الأدنى",
+    "maxPrice": "الأقصى",
+    "apply": "تطبيق",
+    "reset": "إعادة تعيين",
+    "noResults": "لا توجد منتجات مطابقة لبحثك.",
+    "resultsCount": "{count} منتج/منتجات"
+  },
+  "product": {
+    "addToCart": "أضف إلى السلة",
+    "addedToCart": "تمت الإضافة إلى السلة!",
+    "size": "المقاس",
+    "color": "اللون",
+    "quantity": "الكمية",
+    "outOfStock": "غير متوفر",
+    "inStock": "متوفر",
+    "description": "الوصف",
+    "selectSize": "الرجاء اختيار مقاس"
+  },
+  "cart": {
+    "title": "سلتي",
+    "empty": "سلتك فارغة.",
+    "browseCatalog": "تصفح الكتالوج",
+    "product": "المنتج",
+    "size": "المقاس",
+    "quantity": "الكمية",
+    "price": "السعر",
+    "subtotal": "المجموع الفرعي",
+    "total": "المجموع",
+    "remove": "إزالة",
+    "checkout": "إتمام الطلب"
+  },
+  "checkout": {
+    "title": "إتمام الطلب",
+    "shippingAddress": "عنوان التوصيل",
+    "fullName": "الاسم الكامل",
+    "phone": "الهاتف",
+    "address": "العنوان",
+    "city": "المدينة",
+    "country": "البلد",
+    "paymentMethod": "طريقة الدفع",
+    "cod": "الدفع عند الاستلام",
+    "placeOrder": "تأكيد الطلب",
+    "orderSuccessTitle": "تم تأكيد طلبك!",
+    "orderSuccessText": "شكرًا لطلبك. يمكنك متابعة حالته من حسابك.",
+    "viewOrder": "عرض طلبي"
+  },
+  "account": {
+    "title": "حسابي",
+    "profile": "الملف الشخصي",
+    "myOrders": "طلباتي",
+    "orderNumber": "الطلب",
+    "orderDate": "التاريخ",
+    "orderTotal": "المجموع",
+    "orderStatus": "الحالة",
+    "noOrders": "لم تقم بأي طلب بعد."
+  },
+  "auth": {
+    "loginTitle": "تسجيل الدخول",
+    "registerTitle": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "اللقب",
+    "loginCta": "تسجيل الدخول",
+    "registerCta": "التسجيل",
+    "noAccount": "ليس لديك حساب؟",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "createAccount": "إنشاء حساب",
+    "signIn": "تسجيل الدخول"
+  },
+  "orderStatus": {
+    "pending": "قيد الانتظار",
+    "confirmed": "مؤكدة",
+    "shipped": "تم الشحن",
+    "delivered": "تم التسليم",
+    "cancelled": "ملغاة"
+  },
+  "about": {
+    "title": "عن لباس",
+    "text1": "وُلدت لباس من فكرة بسيطة: شراء الملابس عبر الإنترنت لم يعد يجب أن يكون مغامرة. تتيح لك تقنية القياس الافتراضي تصوّر كل قطعة على صورة رمزية ثلاثية الأبعاد تشبه قوامك قبل شرائها.",
+    "text2": "يساعدك مساعدنا الذكي على تركيب إطلالات كاملة حسب مناسبتك وميزانيتك، بلغتك."
+  },
+  "common": {
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ ما.",
+    "currency": "د.ت"
+  }
+}

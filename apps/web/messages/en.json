@@ -1,0 +1,138 @@
+{
+  "brand": {
+    "name": "Libas",
+    "tagline": "Fashion, tried on before you buy."
+  },
+  "nav": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "about": "About",
+    "cart": "Cart",
+    "account": "My account",
+    "login": "Login",
+    "logout": "Logout",
+    "searchPlaceholder": "Search for clothes..."
+  },
+  "footer": {
+    "about": "About Libas",
+    "aboutText": "Libas is a fashion marketplace that lets you virtually try on clothes before you buy them.",
+    "help": "Help",
+    "contact": "Contact",
+    "terms": "Terms & conditions",
+    "rights": "All rights reserved."
+  },
+  "home": {
+    "heroTitle": "Try it before you buy it",
+    "heroSubtitle": "Discover our collection and find your style, with confidence.",
+    "heroCta": "Browse the catalog",
+    "categoriesTitle": "Shop by category",
+    "categoryMen": "Men",
+    "categoryWomen": "Women",
+    "categoryKids": "Kids",
+    "featuredTitle": "New arrivals"
+  },
+  "catalog": {
+    "title": "Catalog",
+    "filters": "Filters",
+    "audience": "Audience",
+    "all": "All",
+    "men": "Men",
+    "women": "Women",
+    "kids": "Kids",
+    "type": "Type",
+    "pull": "Sweater",
+    "pantalon": "Trousers",
+    "chemise": "Shirt",
+    "robe": "Dress",
+    "veste": "Jacket",
+    "chaussure": "Shoes",
+    "accessoire": "Accessory",
+    "priceRange": "Price range",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "apply": "Apply",
+    "reset": "Reset",
+    "noResults": "No products match your search.",
+    "resultsCount": "{count} product(s) found"
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "addedToCart": "Added to cart!",
+    "size": "Size",
+    "color": "Color",
+    "quantity": "Quantity",
+    "outOfStock": "Out of stock",
+    "inStock": "In stock",
+    "description": "Description",
+    "selectSize": "Please choose a size"
+  },
+  "cart": {
+    "title": "My cart",
+    "empty": "Your cart is empty.",
+    "browseCatalog": "Browse the catalog",
+    "product": "Product",
+    "size": "Size",
+    "quantity": "Quantity",
+    "price": "Price",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "remove": "Remove",
+    "checkout": "Checkout"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shippingAddress": "Shipping address",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "paymentMethod": "Payment method",
+    "cod": "Cash on delivery",
+    "placeOrder": "Place order",
+    "orderSuccessTitle": "Order confirmed!",
+    "orderSuccessText": "Thank you for your order. You can track its status in your account.",
+    "viewOrder": "View my order"
+  },
+  "account": {
+    "title": "My account",
+    "profile": "Profile",
+    "myOrders": "My orders",
+    "orderNumber": "Order",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "orderStatus": "Status",
+    "noOrders": "You haven't placed any orders yet."
+  },
+  "auth": {
+    "loginTitle": "Login",
+    "registerTitle": "Create an account",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "loginCta": "Log in",
+    "registerCta": "Sign up",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "createAccount": "Create an account",
+    "signIn": "Sign in"
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "about": {
+    "title": "About Libas",
+    "text1": "Libas was born from a simple idea: buying clothes online shouldn't be a gamble anymore. Our virtual try-on technology lets you visualize every piece on a 3D avatar shaped like you before you buy it.",
+    "text2": "Our smart assistant helps you put together full outfits based on your occasion and budget, in your own language."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "currency": "TND"
+  }
+}

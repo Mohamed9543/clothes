@@ -1,0 +1,62 @@
+'use client';
+
+import { ShoppingBag, User as UserIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useAuth } from '@/context/auth-context';
+import { useCart } from '@/context/cart-context';
+import { Link } from '@/i18n/navigation';
+import { LocaleSwitcher } from './locale-switcher';
+import { SearchBar } from './search-bar';
+
+export function Navbar() {
+  const t = useTranslations('nav');
+  const tBrand = useTranslations('brand');
+  const { user } = useAuth();
+  const { itemCount } = useCart();
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
+        <Link href="/" className="shrink-0 text-xl font-semibold tracking-tight text-foreground">
+          {tBrand('name')}
+        </Link>
+
+        <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
+          <Link href="/catalogue" className="hover:text-brand-terracotta">
+            {t('catalog')}
+          </Link>
+          <Link href="/a-propos" className="hover:text-brand-terracotta">
+            {t('about')}
+          </Link>
+        </nav>
+
+        <SearchBar />
+
+        <div className="ms-auto flex items-center gap-3">
+          <LocaleSwitcher />
+
+          <Link
+            href="/panier"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
+            aria-label={t('cart')}
+          >
+            <ShoppingBag className="h-5 w-5" />
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -end-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-terracotta px-1 text-[10px] font-semibold text-white">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            href={user ? '/compte' : '/login'}
+            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
+            aria-label={t('account')}
+          >
+            <UserIcon className="h-5 w-5" />
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
