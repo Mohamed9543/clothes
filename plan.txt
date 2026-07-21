@@ -1,0 +1,25 @@
+Frontend web — Next.js (React) + TypeScript + Tailwind. Next.js te donne le SSR pour un bon SEO produit et des pages rapides. Pour l'i18n (arabe, darija, français, anglais) : next-intl, avec support RTL pour l'arabe (Tailwind gère bien le dir="rtl").
+
+Mobile — React Native (avec Expo pour aller vite), pour partager une bonne partie de la logique métier et des types avec le web.
+
+Backend — Node.js avec NestJS (structure modulaire propre, parfait pour séparer catalogue / commandes / avatar / chatbot en modules ou microservices plus tard). Alternative solide : Django si tu es plus à l'aise en Python (utile aussi pour le module IA/3D).
+
+Base de données — mongodb
+
+Recherche & filtres — Meilisearch (plus simple à opérer que Elasticsearch, très bon pour la recherche multilingue et les filtres à facettes prix/catégorie/type).
+
+Stockage — S3 (ou compatible comme Cloudflare R2, moins cher) pour les modèles 3D, textures, images produits, servis via CDN.
+
+Module avatar 3D — le point le plus dur techniquement. Deux options réalistes :
+
+Utiliser une solution existante comme Ready Player Me (SDK d'avatar 3D) que tu personnalises avec les mesures utilisateur (taille, poids → morphologie approximative), plutôt que de créer un moteur de génération d'avatar from scratch — ça te ferait perdre des mois.
+Rendu et essayage côté client avec Three.js / React Three Fiber, en superposant des modèles 3D de vêtements (format glTF) sur le squelette de l'avatar (rigging).
+
+Chatbot IA — API Claude (Anthropic) avec function calling : tu définis des "tools" comme chercher_outfit(occasion, budget_min, budget_max) ou matcher_vetement(id_produit), et le modèle appelle ces fonctions qui interrogent ton catalogue. Pour la darija, il faut absolument tester le modèle sur des phrases réelles en darija tunisienne — c'est souvent le point faible, donc prévois une couche de normalisation ou des exemples few-shot dans le prompt système.
+
+Paiement (contexte tunisien) — Konnect, ClicToPay ou Flouci sont les options à considérer plutôt que Stripe qui ne couvre pas bien la Tunisie.
+and this my connection to mongodb :mongodb+srv://neffatimohamed3_db_user:SAcbk7HW0sAh2ooT@cluster0.hnuakoo.mongodb.net/?appName=Cluster0
+Phase 0 — Fondations  : setup du repo backend, base de données, authentification
+Phase 1 — MVP e-commerce classique : catalogue, panier, commandes, comptes
+Phase 2 — Chatbot IA : intégration API Claude, recommandation d'outfits
+Phase 3 — Avatar 3D & essayage : la partie la plus risquée techniquement, à faire en dernier une fois le reste stable
