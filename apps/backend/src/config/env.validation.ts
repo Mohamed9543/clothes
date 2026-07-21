@@ -9,6 +9,10 @@ export const envSchema = z.object({
   JWT_ACCESS_EXPIRY: z.string().default('15m'),
   JWT_REFRESH_EXPIRY: z.string().default('7d'),
   WEB_APP_URL: z.string().default('http://localhost:3001'),
+  // Optional so the rest of the app still boots without it; ChatService checks
+  // for its presence and fails only the chat endpoints if it's missing.
+  ANTHROPIC_API_KEY: z.string().default(''),
+  ANTHROPIC_MODEL: z.string().default('claude-opus-4-8'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

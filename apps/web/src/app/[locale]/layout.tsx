@@ -9,6 +9,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/context/auth-context';
 import { CartProvider } from '@/context/cart-context';
+import { ChatWidget } from '@/components/chat/chat-widget';
 import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
@@ -56,6 +57,7 @@ export default async function LocaleLayout({
               <Navbar />
               <main className="flex-1">{children}</main>
               <Footer />
+              <ChatWidget />
             </CartProvider>
           </AuthProvider>
         </NextIntlClientProvider>

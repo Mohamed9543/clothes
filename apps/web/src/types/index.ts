@@ -91,3 +91,41 @@ export interface Order {
   shippingAddress: ShippingAddress;
   createdAt: string;
 }
+
+export interface ChatToolProduct {
+  id: string;
+  slug: string;
+  name: LocalizedText;
+  price: number;
+  audience: string;
+  type: string;
+  image: string | null;
+}
+
+export type ChatMessageRole = 'user' | 'assistant';
+
+export interface ChatMessage {
+  role: ChatMessageRole;
+  content: string;
+  createdAt: string;
+}
+
+export interface Conversation {
+  _id: string;
+  title: string;
+  messages: ChatMessage[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConversationSummary {
+  _id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChatReply {
+  message: string;
+  products: ChatToolProduct[];
+}

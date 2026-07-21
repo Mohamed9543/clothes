@@ -134,5 +134,16 @@
     "loading": "Loading...",
     "error": "Something went wrong.",
     "currency": "TND"
+  },
+  "chat": {
+    "title": "Libas Assistant",
+    "openLabel": "Open the assistant",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "thinking": "Assistant is typing...",
+    "loginRequired": "Log in to chat with the assistant.",
+    "login": "Log in",
+    "greeting": "Hi! I can help you find an outfit, compare products, or answer questions about the catalog.",
+    "error": "Something went wrong, please try again."
   }
 }
