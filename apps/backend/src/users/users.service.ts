@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { User, UserDocument } from './schemas/user.schema';
 
 export interface CreateUserInput {
@@ -33,5 +34,13 @@ export class UsersService {
 
   async updateRefreshTokenHash(userId: string, refreshTokenHash: string | null): Promise<void> {
     await this.userModel.updateOne({ _id: userId }, { refreshTokenHash }).exec();
+  }
+
+  async updateProfile(userId: string, dto: UpdateProfileDto): Promise<UserDocument> {
+    const user = await this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { apiFetch } from '@/lib/api';
 import { localize } from '@/lib/localized';
@@ -13,6 +13,7 @@ export default function AccountPage() {
   const tOrderStatus = useTranslations('orderStatus');
   const tCommon = useTranslations('common');
   const tNav = useTranslations('nav');
+  const tAvatar = useTranslations('avatar');
   const locale = useLocale();
   const router = useRouter();
   const { user, isLoading: authLoading, logout } = useAuth();
@@ -45,12 +46,14 @@ export default function AccountPage() {
             {user.firstName} {user.lastName}
           </p>
           <p className="text-sm text-muted">{user.email}</p>
-          <button
-            onClick={() => logout()}
-            className="mt-3 text-sm text-brand-terracotta underline"
-          >
-            {tNav('logout')}
-          </button>
+          <div className="mt-3 flex gap-4">
+            <Link href="/avatar" className="text-sm text-brand-terracotta underline">
+              {tAvatar('myAvatar')}
+            </Link>
+            <button onClick={() => logout()} className="text-sm text-brand-terracotta underline">
+              {tNav('logout')}
+            </button>
+          </div>
         </div>
       )}
 

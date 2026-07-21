@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { AddToCartForm } from '@/components/add-to-cart-form';
+import { TryOnButton } from '@/components/avatar/try-on-button';
 import { serverApiFetch } from '@/lib/server-api';
 import { localize } from '@/lib/localized';
 import type { Product } from '@/types';
@@ -52,8 +53,9 @@ export default async function ProductPage({
             <p className="text-sm text-muted">{localize(product.description, locale)}</p>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 space-y-3">
             <AddToCartForm product={product} />
+            <TryOnButton product={product} />
           </div>
         </div>
       </div>

@@ -135,6 +135,27 @@
     "error": "Something went wrong.",
     "currency": "TND"
   },
+  "avatar": {
+    "title": "My 3D avatar",
+    "intro": "Create your personalized 3D avatar to virtually try on clothes before buying them.",
+    "measurements": "My measurements",
+    "height": "Height (cm)",
+    "weight": "Weight (kg)",
+    "gender": "Gender",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "genderOther": "Other",
+    "save": "Save",
+    "saved": "Profile updated!",
+    "createAvatar": "Create / edit my avatar",
+    "creatorHint": "Customize your avatar in the window below, then click \"Done\" to save it.",
+    "myAvatar": "My avatar",
+    "noAvatarYet": "You haven't created an avatar yet.",
+    "tryOn": "Try on my avatar",
+    "createAvatarFirst": "Create your avatar first to try on this product",
+    "closeTryOn": "Close",
+    "loadError": "Couldn't load the 3D model. Please try again later."
+  },
   "chat": {
     "title": "Libas Assistant",
     "openLabel": "Open the assistant",

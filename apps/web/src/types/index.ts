@@ -38,6 +38,8 @@ export interface PaginatedResult<T> {
   totalPages: number;
 }
 
+export type Gender = 'male' | 'female' | 'other';
+
 export interface User {
   id: string;
   email: string;
@@ -45,6 +47,10 @@ export interface User {
   lastName: string;
   role: 'customer' | 'admin';
   preferredLanguage: string;
+  avatarUrl: string | null;
+  heightCm: number | null;
+  weightKg: number | null;
+  gender: Gender | null;
 }
 
 export interface CartItem {

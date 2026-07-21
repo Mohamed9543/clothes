@@ -15,6 +15,12 @@ export enum PreferredLanguage {
   ENGLISH = 'en',
 }
 
+export enum Gender {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
+}
+
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
@@ -37,6 +43,18 @@ export class User {
 
   @Prop({ type: String, default: null })
   refreshTokenHash: string | null;
+
+  @Prop({ type: String, default: null })
+  avatarUrl: string | null;
+
+  @Prop({ type: Number, default: null })
+  heightCm: number | null;
+
+  @Prop({ type: Number, default: null })
+  weightKg: number | null;
+
+  @Prop({ type: String, enum: Gender, default: null })
+  gender: Gender | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
