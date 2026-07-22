@@ -19,10 +19,21 @@ export class ProductsService {
   constructor(@InjectModel(Product.name) private readonly productModel: Model<ProductDocument>) {}
 
   async findAll(query: QueryProductsDto): Promise<PaginatedResult<ProductDocument>> {
+    return this.findAllInternal(query, { isActive: true });
+  }
+
+  async findAllAdmin(query: QueryProductsDto): Promise<PaginatedResult<ProductDocument>> {
+    return this.findAllInternal(query, {});
+  }
+
+  private async findAllInternal(
+    query: QueryProductsDto,
+    baseFilter: QueryFilter<Product>,
+  ): Promise<PaginatedResult<ProductDocument>> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
 
-    const filter: QueryFilter<Product> = { isActive: true };
+    const filter: QueryFilter<Product> = { ...baseFilter };
 
     if (query.audience) filter.audience = query.audience;
     if (query.type) filter.type = query.type;

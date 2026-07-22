@@ -28,6 +28,11 @@ export function Navbar() {
           <Link href="/a-propos" className="hover:text-brand-terracotta">
             {t('about')}
           </Link>
+          {user?.role === 'admin' && (
+            <Link href="/admin" className="hover:text-brand-terracotta">
+              {t('admin')}
+            </Link>
+          )}
         </nav>
 
         <SearchBar />

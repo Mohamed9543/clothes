@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -52,4 +53,8 @@ export class CreateProductDto {
   @IsNumber()
   @Min(0)
   stock: number;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }
