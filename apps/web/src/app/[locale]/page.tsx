@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import { AdminRedirect } from '@/components/admin-redirect';
 import { ProductCard } from '@/components/product-card';
 import { OutfitCard } from '@/components/outfit-card';
 import { serverApiFetch } from '@/lib/server-api';
@@ -12,6 +13,7 @@ export default async function HomePage() {
 
   return (
     <div>
+      <AdminRedirect />
       <section className="border-b border-border bg-surface">
         <div className="mx-auto max-w-6xl px-4 py-20 text-center">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{t('heroTitle')}</h1>
