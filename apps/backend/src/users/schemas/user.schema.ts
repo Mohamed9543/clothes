@@ -55,6 +55,11 @@ export class User {
 
   @Prop({ type: String, enum: Gender, default: null })
   gender: Gender | null;
+
+  @Prop({ default: false })
+  isBlocked: boolean;
+
+  createdAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

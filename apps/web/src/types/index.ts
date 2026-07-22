@@ -89,6 +89,17 @@ export interface ProductReviewsResult {
   count: number;
 }
 
+export interface AdminUser {
+  _id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: 'customer' | 'admin';
+  preferredLanguage: string;
+  isBlocked: boolean;
+  createdAt: string;
+}
+
 export interface MonthlyRevenue {
   month: string;
   revenue: number;

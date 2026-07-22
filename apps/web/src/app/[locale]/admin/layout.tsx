@@ -69,6 +69,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           {t('tabOutfits')}
         </Link>
+        <Link
+          href="/admin/utilisateurs"
+          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
+        >
+          {t('tabUsers')}
+        </Link>
       </nav>
       {children}
     </div>

@@ -109,6 +109,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (user.isBlocked) {
+      throw new ForbiddenException('Your account has been blocked');
+    }
+
     const tokens = await this.issueTokens(user);
     return { user: toSafeUser(user), ...tokens };
   }
@@ -117,6 +121,10 @@ export class AuthService {
     const user = await this.usersService.findById(userId);
     if (!user || !user.refreshTokenHash) {
       throw new ForbiddenException('Access denied');
+    }
+
+    if (user.isBlocked) {
+      throw new ForbiddenException('Your account has been blocked');
     }
 
     const matches = await bcrypt.compare(refreshToken, user.refreshTokenHash);

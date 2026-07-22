@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { EnvConfig } from '../../config/env.validation';
+import { UsersService } from '../../users/users.service';
 
 export interface JwtAccessPayload {
   sub: string;
@@ -12,7 +13,10 @@ export interface JwtAccessPayload {
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access') {
-  constructor(configService: ConfigService<EnvConfig, true>) {
+  constructor(
+    configService: ConfigService<EnvConfig, true>,
+    private readonly usersService: UsersService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -20,7 +24,11 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt-access') 
     });
   }
 
-  validate(payload: JwtAccessPayload): JwtAccessPayload {
+  async validate(payload: JwtAccessPayload): Promise<JwtAccessPayload> {
+    const user = await this.usersService.findById(payload.sub);
+    if (!user || user.isBlocked) {
+      throw new UnauthorizedException('Account is blocked');
+    }
     return payload;
   }
 }

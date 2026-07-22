@@ -285,7 +285,20 @@
     "colOutfitTitle": "العنوان",
     "colProductCount": "عدد المنتجات",
     "colFeatured": "مميزة",
-    "confirmDeleteOutfit": "هل تريد حذف هذه الإطلالة نهائيًا؟"
+    "confirmDeleteOutfit": "هل تريد حذف هذه الإطلالة نهائيًا؟",
+    "tabUsers": "المستخدمون",
+    "colEmail": "البريد الإلكتروني",
+    "colRole": "الدور",
+    "colLanguage": "اللغة",
+    "colRegistered": "تاريخ التسجيل",
+    "block": "حظر",
+    "unblock": "إلغاء الحظر",
+    "confirmBlock": "هل تريد حظر هذا الحساب؟ سيتم فصل المستخدم فورًا.",
+    "viewOrders": "عرض الطلبات",
+    "hideOrders": "إخفاء الطلبات",
+    "noUsers": "لا يوجد مستخدمون.",
+    "roleAdmin": "إداري",
+    "roleCustomer": "زبون"
   },
   "stats": {
     "title": "الإحصائيات",

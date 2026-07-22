@@ -285,7 +285,20 @@
     "colOutfitTitle": "Titre",
     "colProductCount": "Nb. produits",
     "colFeatured": "Vedette",
-    "confirmDeleteOutfit": "Supprimer cette tenue définitivement ?"
+    "confirmDeleteOutfit": "Supprimer cette tenue définitivement ?",
+    "tabUsers": "Utilisateurs",
+    "colEmail": "Email",
+    "colRole": "Rôle",
+    "colLanguage": "Langue",
+    "colRegistered": "Inscrit le",
+    "block": "Bloquer",
+    "unblock": "Débloquer",
+    "confirmBlock": "Bloquer ce compte ? L'utilisateur sera déconnecté immédiatement.",
+    "viewOrders": "Voir les commandes",
+    "hideOrders": "Masquer les commandes",
+    "noUsers": "Aucun utilisateur.",
+    "roleAdmin": "Admin",
+    "roleCustomer": "Client"
   },
   "stats": {
     "title": "Statistiques",

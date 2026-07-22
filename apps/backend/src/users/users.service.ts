@@ -43,4 +43,26 @@ export class UsersService {
     }
     return user;
   }
+
+  findAllAdmin(): Promise<UserDocument[]> {
+    return this.userModel
+      .find()
+      .select('-passwordHash -refreshTokenHash')
+      .sort({ createdAt: -1 })
+      .exec();
+  }
+
+  async setBlocked(id: string, isBlocked: boolean): Promise<UserDocument> {
+    const user = await this.userModel
+      .findByIdAndUpdate(
+        id,
+        { isBlocked, ...(isBlocked ? { refreshTokenHash: null } : {}) },
+        { new: true },
+      )
+      .exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
 }

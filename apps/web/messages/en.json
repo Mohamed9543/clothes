@@ -285,7 +285,20 @@
     "colOutfitTitle": "Title",
     "colProductCount": "Products",
     "colFeatured": "Featured",
-    "confirmDeleteOutfit": "Delete this outfit permanently?"
+    "confirmDeleteOutfit": "Delete this outfit permanently?",
+    "tabUsers": "Users",
+    "colEmail": "Email",
+    "colRole": "Role",
+    "colLanguage": "Language",
+    "colRegistered": "Registered on",
+    "block": "Block",
+    "unblock": "Unblock",
+    "confirmBlock": "Block this account? The user will be logged out immediately.",
+    "viewOrders": "View orders",
+    "hideOrders": "Hide orders",
+    "noUsers": "No users.",
+    "roleAdmin": "Admin",
+    "roleCustomer": "Customer"
   },
   "stats": {
     "title": "Statistics",

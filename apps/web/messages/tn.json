@@ -285,7 +285,20 @@
     "colOutfitTitle": "العنوان",
     "colProductCount": "عدد الحوايج",
     "colFeatured": "مميزة",
-    "confirmDeleteOutfit": "تحب تمسح هالبسة نهائيًا؟"
+    "confirmDeleteOutfit": "تحب تمسح هالبسة نهائيًا؟",
+    "tabUsers": "المستخدمين",
+    "colEmail": "الإيمايل",
+    "colRole": "الدور",
+    "colLanguage": "اللغة",
+    "colRegistered": "تاريخ التسجيل",
+    "block": "حظر",
+    "unblock": "فك الحظر",
+    "confirmBlock": "تحب تحظر هالكونط؟ المستخدم باش يتفصل فورًا.",
+    "viewOrders": "شوف الطلبيات",
+    "hideOrders": "خبّي الطلبيات",
+    "noUsers": "ما فماش مستخدمين.",
+    "roleAdmin": "إداري",
+    "roleCustomer": "زبون"
   },
   "stats": {
     "title": "الإحصائيات",
