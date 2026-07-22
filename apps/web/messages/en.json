@@ -3,6 +3,11 @@
     "name": "Libas",
     "tagline": "Fashion, tried on before you buy."
   },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to home"
+  },
   "nav": {
     "home": "Home",
     "catalog": "Catalog",
