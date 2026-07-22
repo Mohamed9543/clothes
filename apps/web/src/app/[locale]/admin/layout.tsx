@@ -2,12 +2,23 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
+
+const NAV_ITEMS = [
+  { href: '/admin/produits', labelKey: 'tabProducts' },
+  { href: '/admin/commandes', labelKey: 'tabOrders' },
+  { href: '/admin/avis', labelKey: 'tabReviews' },
+  { href: '/admin/stats', labelKey: 'tabStats' },
+  { href: '/admin/tenues', labelKey: 'tabOutfits' },
+  { href: '/admin/utilisateurs', labelKey: 'tabUsers' },
+  { href: '/admin/modeles-3d', labelKey: 'tabModels3d' },
+] as const;
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const t = useTranslations('admin');
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isLoading } = useAuth();
 
   useEffect(() => {
@@ -38,51 +49,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold">{t('title')}</h1>
-      <nav className="mb-8 flex gap-4 border-b border-border">
-        <Link
-          href="/admin/produits"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabProducts')}
-        </Link>
-        <Link
-          href="/admin/commandes"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabOrders')}
-        </Link>
-        <Link
-          href="/admin/avis"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabReviews')}
-        </Link>
-        <Link
-          href="/admin/stats"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabStats')}
-        </Link>
-        <Link
-          href="/admin/tenues"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabOutfits')}
-        </Link>
-        <Link
-          href="/admin/utilisateurs"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabUsers')}
-        </Link>
-        <Link
-          href="/admin/modeles-3d"
-          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
-        >
-          {t('tabModels3d')}
-        </Link>
-      </nav>
-      {children}
+      <div className="flex flex-col gap-8 md:flex-row">
+        <nav className="flex shrink-0 flex-row gap-1 overflow-x-auto md:w-56 md:flex-col md:overflow-visible">
+          {NAV_ITEMS.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ${
+                  isActive
+                    ? 'bg-brand-terracotta text-white'
+                    : 'hover:bg-surface hover:text-brand-terracotta'
+                }`}
+              >
+                {t(item.labelKey)}
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="min-w-0 flex-1">{children}</div>
+      </div>
     </div>
   );
 }

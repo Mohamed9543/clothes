@@ -22,16 +22,19 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
-          <Link href="/catalogue" className="hover:text-brand-terracotta">
-            {t('catalog')}
-          </Link>
-          <Link href="/a-propos" className="hover:text-brand-terracotta">
-            {t('about')}
-          </Link>
-          {user?.role === 'admin' && (
+          {user?.role === 'admin' ? (
             <Link href="/admin" className="hover:text-brand-terracotta">
               {t('admin')}
             </Link>
+          ) : (
+            <>
+              <Link href="/catalogue" className="hover:text-brand-terracotta">
+                {t('catalog')}
+              </Link>
+              <Link href="/a-propos" className="hover:text-brand-terracotta">
+                {t('about')}
+              </Link>
+            </>
           )}
         </nav>
 
