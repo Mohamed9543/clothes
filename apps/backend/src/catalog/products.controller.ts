@@ -13,6 +13,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { UserRole } from '../users/schemas/user.schema';
+import { AdjustStockDto } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductsDto } from './dto/query-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -58,5 +59,19 @@ export class ProductsController {
   @Roles(UserRole.ADMIN)
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
+  }
+
+  @Get(':id/stock-movements')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  findStockMovements(@Param('id') id: string) {
+    return this.productsService.findStockMovements(id);
+  }
+
+  @Patch(':id/stock-adjust')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  adjustStock(@Param('id') id: string, @Body() dto: AdjustStockDto) {
+    return this.productsService.adjustStock(id, dto);
   }
 }

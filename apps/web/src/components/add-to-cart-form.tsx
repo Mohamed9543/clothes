@@ -20,7 +20,8 @@ export function AddToCartForm({ product }: { product: Product }) {
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const outOfStock = product.stock <= 0;
+  const selectedVariant = product.variants.find((variant) => variant.size === size);
+  const allOutOfStock = product.variants.every((variant) => variant.stock <= 0);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -53,16 +54,30 @@ export function AddToCartForm({ product }: { product: Product }) {
       <div>
         <p className="mb-2 text-sm font-medium">{t('size')}</p>
         <div className="flex flex-wrap gap-2">
-          {product.sizes.map((value) => (
-            <button
-              type="button"
-              key={value}
-              onClick={() => setSize(value)}
-              className={`rounded-md border px-3 py-1 text-sm ${size === value ? 'border-brand-terracotta text-brand-terracotta' : 'border-border'}`}
-            >
-              {value}
-            </button>
-          ))}
+          {product.variants.map((variant) => {
+            const isOut = variant.stock <= 0;
+            return (
+              <button
+                type="button"
+                key={variant.size}
+                disabled={isOut}
+                onClick={() => {
+                  setSize(variant.size);
+                  setQuantity(1);
+                }}
+                title={isOut ? t('outOfStock') : undefined}
+                className={`rounded-md border px-3 py-1 text-sm ${
+                  isOut
+                    ? 'cursor-not-allowed border-border text-muted line-through'
+                    : size === variant.size
+                      ? 'border-brand-terracotta text-brand-terracotta'
+                      : 'border-border'
+                }`}
+              >
+                {variant.size}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -74,10 +89,11 @@ export function AddToCartForm({ product }: { product: Product }) {
           id="quantity"
           type="number"
           min={1}
-          max={product.stock}
+          max={selectedVariant?.stock ?? 1}
           value={quantity}
           onChange={(event) => setQuantity(Number(event.target.value))}
-          className="w-20 rounded-md border border-border bg-surface px-2 py-1 text-sm"
+          disabled={!selectedVariant}
+          className="w-20 rounded-md border border-border bg-surface px-2 py-1 text-sm disabled:opacity-50"
         />
       </div>
 
@@ -86,10 +102,10 @@ export function AddToCartForm({ product }: { product: Product }) {
 
       <button
         type="submit"
-        disabled={outOfStock || isSubmitting}
+        disabled={allOutOfStock || isSubmitting}
         className="w-full rounded-full bg-brand-terracotta px-6 py-3 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
       >
-        {outOfStock ? t('outOfStock') : t('addToCart')}
+        {allOutOfStock ? t('outOfStock') : t('addToCart')}
       </button>
     </form>
   );

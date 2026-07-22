@@ -221,6 +221,25 @@
     "colItems": "Items",
     "colTotal": "Total",
     "colDate": "Date",
-    "saveError": "An error occurred while saving."
+    "saveError": "An error occurred while saving.",
+    "fieldVariants": "Sizes and stock",
+    "addSize": "Add a size",
+    "removeSize": "Remove",
+    "sizePlaceholder": "Size (e.g. M)",
+    "stockPlaceholder": "Stock",
+    "totalStock": "Total stock",
+    "adjustStock": "Adjust stock",
+    "adjustStockTitle": "Adjust stock",
+    "selectSize": "Size",
+    "quantityChange": "Quantity (+ or -)",
+    "reason": "Reason",
+    "reasonRestock": "Restock",
+    "reasonCorrection": "Inventory correction",
+    "reasonDamage": "Damage / loss",
+    "reasonOrder": "Order",
+    "note": "Note (optional)",
+    "history": "Stock movement history",
+    "noHistory": "No movements recorded.",
+    "close": "Close"
   }
 }

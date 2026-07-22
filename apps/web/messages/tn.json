@@ -221,6 +221,25 @@
     "colItems": "الحوايج",
     "colTotal": "المجموع",
     "colDate": "التاريخ",
-    "saveError": "صارت مشكلة كي حفظنا."
+    "saveError": "صارت مشكلة كي حفظنا.",
+    "fieldVariants": "المقاسات و الستوك",
+    "addSize": "زيد مقاس",
+    "removeSize": "نحّي",
+    "sizePlaceholder": "المقاس (مثلا M)",
+    "stockPlaceholder": "الستوك",
+    "totalStock": "الستوك الكل",
+    "adjustStock": "بدّل الستوك",
+    "adjustStockTitle": "بدّل الستوك",
+    "selectSize": "المقاس",
+    "quantityChange": "العدد (+ ولا -)",
+    "reason": "السبب",
+    "reasonRestock": "تجديد الستوك",
+    "reasonCorrection": "تصحيح الجرد",
+    "reasonDamage": "خسارة / تلف",
+    "reasonOrder": "طلبية",
+    "note": "ملاحظة (مش إجباري)",
+    "history": "تاريخ حركات الستوك",
+    "noHistory": "ما فماش حركات مسجّلة.",
+    "close": "سكّر"
   }
 }

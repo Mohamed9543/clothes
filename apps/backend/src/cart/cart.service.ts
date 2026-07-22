@@ -63,16 +63,19 @@ export class CartService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    if (product.stock < quantity) {
-      throw new BadRequestException('Not enough stock for this product');
-    }
 
     const cart = await this.getOrCreate(userId);
     const existing = cart.items.find(
       (item) => item.productId.toString() === productId && item.size === size,
     );
+    const nextQuantity = (existing?.quantity ?? 0) + quantity;
+
+    if (this.productsService.getVariantStock(product, size) < nextQuantity) {
+      throw new BadRequestException(`Not enough stock for size "${size}"`);
+    }
+
     if (existing) {
-      existing.quantity += quantity;
+      existing.quantity = nextQuantity;
     } else {
       cart.items.push({ productId: new Types.ObjectId(productId), quantity, size });
     }
@@ -87,6 +90,12 @@ export class CartService {
     if (!item) {
       throw new NotFoundException('Item not found in cart');
     }
+
+    const product = await this.productsService.findById(productId);
+    if (product && this.productsService.getVariantStock(product, item.size) < quantity) {
+      throw new BadRequestException(`Not enough stock for size "${item.size}"`);
+    }
+
     item.quantity = quantity;
     await cart.save();
     return this.getEnrichedCart(userId);

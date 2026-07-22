@@ -15,6 +15,11 @@ export type ProductType =
   | 'chaussure'
   | 'accessoire';
 
+export interface ProductVariant {
+  size: string;
+  stock: number;
+}
+
 export interface Product {
   _id: string;
   slug: string;
@@ -23,11 +28,29 @@ export interface Product {
   price: number;
   audience: ProductAudience;
   type: ProductType;
-  sizes: string[];
+  variants: ProductVariant[];
   colors: string[];
   images: string[];
-  stock: number;
   isActive: boolean;
+}
+
+export interface AdminProduct extends Product {
+  totalStock: number;
+  isLowStock: boolean;
+  isOutOfStock: boolean;
+}
+
+export type StockMovementReason = 'order' | 'restock' | 'correction' | 'damage';
+
+export interface StockMovement {
+  _id: string;
+  productId: string;
+  size: string;
+  quantityChange: number;
+  reason: StockMovementReason;
+  orderId: string | null;
+  note: string;
+  createdAt: string;
 }
 
 export interface PaginatedResult<T> {

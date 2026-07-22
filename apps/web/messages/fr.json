@@ -221,6 +221,25 @@
     "colItems": "Articles",
     "colTotal": "Total",
     "colDate": "Date",
-    "saveError": "Une erreur est survenue lors de l'enregistrement."
+    "saveError": "Une erreur est survenue lors de l'enregistrement.",
+    "fieldVariants": "Tailles et stock",
+    "addSize": "Ajouter une taille",
+    "removeSize": "Retirer",
+    "sizePlaceholder": "Taille (ex: M)",
+    "stockPlaceholder": "Stock",
+    "totalStock": "Stock total",
+    "adjustStock": "Ajuster le stock",
+    "adjustStockTitle": "Ajuster le stock",
+    "selectSize": "Taille",
+    "quantityChange": "Quantité (+ ou -)",
+    "reason": "Motif",
+    "reasonRestock": "Réassort",
+    "reasonCorrection": "Correction d'inventaire",
+    "reasonDamage": "Casse / perte",
+    "reasonOrder": "Commande",
+    "note": "Note (optionnel)",
+    "history": "Historique des mouvements",
+    "noHistory": "Aucun mouvement enregistré.",
+    "close": "Fermer"
   }
 }

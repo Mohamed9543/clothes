@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { apiFetch, ApiError } from '@/lib/api';
-import type { Product, ProductAudience, ProductType } from '@/types';
+import type { Product, ProductAudience, ProductType, ProductVariant } from '@/types';
 
 const AUDIENCES: ProductAudience[] = ['men', 'women', 'kids'];
 const TYPES: ProductType[] = [
@@ -38,13 +38,28 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   const [price, setPrice] = useState(product ? String(product.price) : '');
   const [audience, setAudience] = useState<ProductAudience>(product?.audience ?? 'men');
   const [type, setType] = useState<ProductType>(product?.type ?? 'pull');
-  const [sizes, setSizes] = useState(product?.sizes.join(', ') ?? '');
+  const [variants, setVariants] = useState<ProductVariant[]>(
+    product?.variants && product.variants.length > 0 ? product.variants : [{ size: '', stock: 0 }],
+  );
   const [colors, setColors] = useState(product?.colors.join(', ') ?? '');
   const [images, setImages] = useState(product?.images.join(', ') ?? '');
-  const [stock, setStock] = useState(product ? String(product.stock) : '');
   const [isActive, setIsActive] = useState(product?.isActive ?? true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function updateVariant(index: number, patch: Partial<ProductVariant>) {
+    setVariants((current) =>
+      current.map((variant, i) => (i === index ? { ...variant, ...patch } : variant)),
+    );
+  }
+
+  function addVariantRow() {
+    setVariants((current) => [...current, { size: '', stock: 0 }]);
+  }
+
+  function removeVariantRow(index: number) {
+    setVariants((current) => current.filter((_, i) => i !== index));
+  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -58,10 +73,11 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       price: Number(price),
       audience,
       type,
-      sizes: sizes.split(',').map((s) => s.trim()).filter(Boolean),
+      variants: variants
+        .filter((variant) => variant.size.trim() !== '')
+        .map((variant) => ({ size: variant.size.trim(), stock: Number(variant.stock) })),
       colors: colors.split(',').map((c) => c.trim()).filter(Boolean),
       images: images.split(',').map((i) => i.trim()).filter(Boolean),
-      stock: Number(stock),
       isActive,
     };
 
@@ -113,7 +129,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
         <textarea required placeholder={t('fieldDescTn')} value={descTn} onChange={(e) => setDescTn(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" rows={2} dir="rtl" />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-3">
         <div>
           <label className="mb-1 block text-xs text-muted">{t('fieldPrice')}</label>
           <input required type="number" min={0} step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
@@ -138,13 +154,46 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-xs text-muted">{t('fieldStock')}</label>
-          <input required type="number" min={0} value={stock} onChange={(e) => setStock(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
-        </div>
       </div>
 
-      <input placeholder={t('fieldSizes')} value={sizes} onChange={(e) => setSizes(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+      <div>
+        <label className="mb-1 block text-xs text-muted">{t('fieldVariants')}</label>
+        <div className="space-y-2">
+          {variants.map((variant, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <input
+                placeholder={t('sizePlaceholder')}
+                value={variant.size}
+                onChange={(e) => updateVariant(index, { size: e.target.value })}
+                className="w-28 rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+              <input
+                type="number"
+                min={0}
+                placeholder={t('stockPlaceholder')}
+                value={variant.stock}
+                onChange={(e) => updateVariant(index, { stock: Number(e.target.value) })}
+                className="w-28 rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => removeVariantRow(index)}
+                className="text-sm text-brand-terracotta underline"
+              >
+                {t('removeSize')}
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={addVariantRow}
+          className="mt-2 text-sm text-brand-terracotta underline"
+        >
+          {t('addSize')}
+        </button>
+      </div>
+
       <input placeholder={t('fieldColors')} value={colors} onChange={(e) => setColors(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
       <input placeholder={t('fieldImages')} value={images} onChange={(e) => setImages(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
 

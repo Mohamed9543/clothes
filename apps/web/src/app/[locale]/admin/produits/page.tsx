@@ -5,19 +5,21 @@ import { useLocale, useTranslations } from 'next-intl';
 import { apiFetch } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { ProductForm } from '@/components/admin/product-form';
-import type { PaginatedResult, Product } from '@/types';
+import { StockAdjustModal } from '@/components/admin/stock-adjust-modal';
+import type { AdminProduct, PaginatedResult } from '@/types';
 
 export default function AdminProductsPage() {
   const t = useTranslations('admin');
   const tCommon = useTranslations('common');
   const locale = useLocale();
 
-  const [products, setProducts] = useState<Product[] | null>(null);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<AdminProduct[] | null>(null);
+  const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [adjustingProduct, setAdjustingProduct] = useState<AdminProduct | null>(null);
 
   const loadProducts = useCallback(async () => {
-    const result = await apiFetch<PaginatedResult<Product>>('/products/admin/all?limit=100', {
+    const result = await apiFetch<PaginatedResult<AdminProduct>>('/products/admin/all?limit=100', {
       auth: true,
     });
     setProducts(result.items);
@@ -27,7 +29,7 @@ export default function AdminProductsPage() {
     void loadProducts();
   }, [loadProducts]);
 
-  async function toggleActive(product: Product) {
+  async function toggleActive(product: AdminProduct) {
     await apiFetch(`/products/${product._id}`, {
       method: 'PATCH',
       auth: true,
@@ -36,7 +38,7 @@ export default function AdminProductsPage() {
     void loadProducts();
   }
 
-  async function handleDelete(product: Product) {
+  async function handleDelete(product: AdminProduct) {
     if (!window.confirm(t('confirmDelete'))) return;
     await apiFetch(`/products/${product._id}`, { method: 'DELETE', auth: true });
     void loadProducts();
@@ -83,7 +85,7 @@ export default function AdminProductsPage() {
               <th className="p-3 text-start">{t('colPrice')}</th>
               <th className="p-3 text-start">{t('colAudience')}</th>
               <th className="p-3 text-start">{t('colType')}</th>
-              <th className="p-3 text-start">{t('colStock')}</th>
+              <th className="p-3 text-start">{t('totalStock')}</th>
               <th className="p-3 text-start">{t('colStatus')}</th>
               <th className="p-3 text-start">{t('colActions')}</th>
             </tr>
@@ -97,7 +99,19 @@ export default function AdminProductsPage() {
                 </td>
                 <td className="p-3">{product.audience}</td>
                 <td className="p-3">{product.type}</td>
-                <td className="p-3">{product.stock}</td>
+                <td className="p-3">
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs ${
+                      product.isOutOfStock
+                        ? 'bg-red-100 text-red-800'
+                        : product.isLowStock
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-green-100 text-green-800'
+                    }`}
+                  >
+                    {product.totalStock}
+                  </span>
+                </td>
                 <td className="p-3">
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs ${
@@ -116,6 +130,9 @@ export default function AdminProductsPage() {
                   >
                     {t('edit')}
                   </button>
+                  <button onClick={() => setAdjustingProduct(product)} className="underline">
+                    {t('adjustStock')}
+                  </button>
                   <button onClick={() => toggleActive(product)} className="underline">
                     {product.isActive ? t('deactivate') : t('activate')}
                   </button>
@@ -131,6 +148,14 @@ export default function AdminProductsPage() {
           </tbody>
         </table>
       </div>
+
+      {adjustingProduct && (
+        <StockAdjustModal
+          product={adjustingProduct}
+          onClose={() => setAdjustingProduct(null)}
+          onAdjusted={loadProducts}
+        />
+      )}
     </div>
   );
 }

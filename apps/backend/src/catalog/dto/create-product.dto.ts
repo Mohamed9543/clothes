@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { ProductAudience, ProductType } from '../schemas/product.schema';
 import { LocalizedTextDto } from './localized-text.dto';
+import { ProductVariantDto } from './product-variant.dto';
 
 export class CreateProductDto {
   @IsString()
@@ -37,8 +38,9 @@ export class CreateProductDto {
 
   @IsArray()
   @ArrayMinSize(1)
-  @IsString({ each: true })
-  sizes: string[];
+  @ValidateNested({ each: true })
+  @Type(() => ProductVariantDto)
+  variants: ProductVariantDto[];
 
   @IsArray()
   @IsString({ each: true })
@@ -49,10 +51,6 @@ export class CreateProductDto {
   @IsString({ each: true })
   @IsOptional()
   images?: string[];
-
-  @IsNumber()
-  @Min(0)
-  stock: number;
 
   @IsBoolean()
   @IsOptional()

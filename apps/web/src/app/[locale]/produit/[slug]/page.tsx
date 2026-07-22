@@ -45,7 +45,7 @@ export default async function ProductPage({
           </p>
 
           <p className="mt-2 text-sm">
-            {product.stock > 0 ? t('inStock') : t('outOfStock')}
+            {product.variants.some((variant) => variant.stock > 0) ? t('inStock') : t('outOfStock')}
           </p>
 
           <div className="mt-6">

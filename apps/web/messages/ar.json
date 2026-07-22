@@ -221,6 +221,25 @@
     "colItems": "المنتجات",
     "colTotal": "المجموع",
     "colDate": "التاريخ",
-    "saveError": "حدث خطأ أثناء الحفظ."
+    "saveError": "حدث خطأ أثناء الحفظ.",
+    "fieldVariants": "المقاسات والمخزون",
+    "addSize": "أضف مقاسًا",
+    "removeSize": "إزالة",
+    "sizePlaceholder": "المقاس (مثال: M)",
+    "stockPlaceholder": "المخزون",
+    "totalStock": "المخزون الإجمالي",
+    "adjustStock": "تعديل المخزون",
+    "adjustStockTitle": "تعديل المخزون",
+    "selectSize": "المقاس",
+    "quantityChange": "الكمية (+ أو -)",
+    "reason": "السبب",
+    "reasonRestock": "تجديد المخزون",
+    "reasonCorrection": "تصحيح الجرد",
+    "reasonDamage": "تلف / فقدان",
+    "reasonOrder": "طلب",
+    "note": "ملاحظة (اختياري)",
+    "history": "سجل حركات المخزون",
+    "noHistory": "لا توجد حركات مسجّلة.",
+    "close": "إغلاق"
   }
 }

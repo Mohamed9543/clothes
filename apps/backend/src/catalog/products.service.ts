@@ -1,10 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryFilter } from 'mongoose';
+import { AdjustStockDto, ManualStockReason } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductsDto } from './dto/query-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product, ProductDocument } from './schemas/product.schema';
+import { LOW_STOCK_THRESHOLD, Product, ProductDocument } from './schemas/product.schema';
+import {
+  StockMovement,
+  StockMovementDocument,
+  StockMovementReason,
+} from './schemas/stock-movement.schema';
 
 export interface PaginatedResult<T> {
   items: T[];
@@ -14,16 +20,40 @@ export interface PaginatedResult<T> {
   totalPages: number;
 }
 
+export interface AdminProduct {
+  totalStock: number;
+  isLowStock: boolean;
+  isOutOfStock: boolean;
+}
+
 @Injectable()
 export class ProductsService {
-  constructor(@InjectModel(Product.name) private readonly productModel: Model<ProductDocument>) {}
+  constructor(
+    @InjectModel(Product.name) private readonly productModel: Model<ProductDocument>,
+    @InjectModel(StockMovement.name)
+    private readonly stockMovementModel: Model<StockMovementDocument>,
+  ) {}
 
   async findAll(query: QueryProductsDto): Promise<PaginatedResult<ProductDocument>> {
     return this.findAllInternal(query, { isActive: true });
   }
 
-  async findAllAdmin(query: QueryProductsDto): Promise<PaginatedResult<ProductDocument>> {
-    return this.findAllInternal(query, {});
+  async findAllAdmin(
+    query: QueryProductsDto,
+  ): Promise<PaginatedResult<Product & AdminProduct>> {
+    const result = await this.findAllInternal(query, {});
+    return {
+      ...result,
+      items: result.items.map((item) => this.withStockSummary(item)),
+    };
+  }
+
+  private withStockSummary(product: ProductDocument): Product & AdminProduct {
+    const totalStock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
+    const isOutOfStock = product.variants.every((variant) => variant.stock === 0);
+    const isLowStock =
+      !isOutOfStock && product.variants.some((variant) => variant.stock <= LOW_STOCK_THRESHOLD);
+    return { ...product.toObject(), totalStock, isLowStock, isOutOfStock };
   }
 
   private async findAllInternal(
@@ -98,9 +128,73 @@ export class ProductsService {
     }
   }
 
-  async decrementStock(productId: string, quantity: number): Promise<void> {
-    await this.productModel
-      .updateOne({ _id: productId }, { $inc: { stock: -quantity } })
+  getVariantStock(product: ProductDocument, size: string): number {
+    return product.variants.find((variant) => variant.size === size)?.stock ?? 0;
+  }
+
+  async decrementStock(
+    productId: string,
+    size: string,
+    quantity: number,
+    orderId: string,
+  ): Promise<void> {
+    const result = await this.productModel
+      .updateOne(
+        { _id: productId, variants: { $elemMatch: { size, stock: { $gte: quantity } } } },
+        { $inc: { 'variants.$.stock': -quantity } },
+      )
+      .exec();
+
+    if (result.matchedCount === 0) {
+      throw new BadRequestException(`Not enough stock for size "${size}"`);
+    }
+
+    await this.stockMovementModel.create({
+      productId,
+      size,
+      quantityChange: -quantity,
+      reason: StockMovementReason.ORDER,
+      orderId,
+    });
+  }
+
+  async adjustStock(
+    productId: string,
+    dto: AdjustStockDto,
+  ): Promise<ProductDocument> {
+    const product = await this.productModel.findById(productId).exec();
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    const variant = product.variants.find((v) => v.size === dto.size);
+    if (!variant) {
+      throw new BadRequestException(`No variant found for size "${dto.size}"`);
+    }
+
+    const nextStock = variant.stock + dto.quantityChange;
+    if (nextStock < 0) {
+      throw new BadRequestException('Stock cannot go below 0');
+    }
+    variant.stock = nextStock;
+    await product.save();
+
+    await this.stockMovementModel.create({
+      productId,
+      size: dto.size,
+      quantityChange: dto.quantityChange,
+      reason: dto.reason as ManualStockReason,
+      note: dto.note ?? '',
+    });
+
+    return product;
+  }
+
+  findStockMovements(productId: string): Promise<StockMovementDocument[]> {
+    return this.stockMovementModel
+      .find({ productId })
+      .sort({ createdAt: -1 })
+      .limit(50)
       .exec();
   }
 }

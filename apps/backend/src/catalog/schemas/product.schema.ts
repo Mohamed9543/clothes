@@ -36,6 +36,19 @@ export class LocalizedText {
 
 export const LocalizedTextSchema = SchemaFactory.createForClass(LocalizedText);
 
+export const LOW_STOCK_THRESHOLD = 5;
+
+@Schema({ _id: false })
+export class ProductVariant {
+  @Prop({ required: true, trim: true })
+  size: string;
+
+  @Prop({ required: true, min: 0, default: 0 })
+  stock: number;
+}
+
+export const ProductVariantSchema = SchemaFactory.createForClass(ProductVariant);
+
 @Schema({ timestamps: true })
 export class Product {
   @Prop({ required: true, unique: true, trim: true, lowercase: true })
@@ -56,17 +69,14 @@ export class Product {
   @Prop({ type: String, enum: ProductType, required: true, index: true })
   type: ProductType;
 
-  @Prop({ type: [String], default: [] })
-  sizes: string[];
+  @Prop({ type: [ProductVariantSchema], default: [] })
+  variants: ProductVariant[];
 
   @Prop({ type: [String], default: [] })
   colors: string[];
 
   @Prop({ type: [String], default: [] })
   images: string[];
-
-  @Prop({ required: true, min: 0, default: 0 })
-  stock: number;
 
   @Prop({ default: true })
   isActive: boolean;

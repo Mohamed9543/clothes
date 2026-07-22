@@ -34,8 +34,10 @@ export class OrdersService {
           if (!product) {
             throw new NotFoundException('A product in your cart no longer exists');
           }
-          if (product.stock < item.quantity) {
-            throw new BadRequestException(`Not enough stock for "${product.name.fr}"`);
+          if (this.productsService.getVariantStock(product, item.size) < item.quantity) {
+            throw new BadRequestException(
+              `Not enough stock for "${product.name.fr}" (size ${item.size})`,
+            );
           }
 
           orderItems.push({
@@ -46,8 +48,6 @@ export class OrdersService {
             size: item.size,
           });
           totalAmount += product.price * item.quantity;
-
-          await this.productsService.decrementStock(product._id.toString(), item.quantity);
         }
 
         const created = await this.orderModel.create(
@@ -62,6 +62,15 @@ export class OrdersService {
           { session },
         );
         order = created[0];
+
+        for (const item of orderItems) {
+          await this.productsService.decrementStock(
+            item.productId.toString(),
+            item.size,
+            item.quantity,
+            order._id.toString(),
+          );
+        }
       });
 
       await this.cartService.clear(userId);

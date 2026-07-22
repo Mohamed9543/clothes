@@ -5,6 +5,17 @@ import { Model } from 'mongoose';
 import { AppModule } from '../app.module';
 import { Product, ProductAudience, ProductType } from './schemas/product.schema';
 
+interface ProductVariantSeed {
+  size: string;
+  stock: number;
+}
+
+// Spreads a total stock roughly evenly across sizes, with a bit of variation
+// so the demo catalog naturally shows a mix of well-stocked / low / out-of-stock sizes.
+function variants(sizes: string[], perSize: number[]): ProductVariantSeed[] {
+  return sizes.map((size, index) => ({ size, stock: perSize[index] ?? 0 }));
+}
+
 const DEMO_PRODUCTS = [
   {
     slug: 'pull-col-rond-homme-gris',
@@ -18,9 +29,8 @@ const DEMO_PRODUCTS = [
     price: 65,
     audience: ProductAudience.MEN,
     type: ProductType.PULL,
-    sizes: ['S', 'M', 'L', 'XL'],
+    variants: variants(['S', 'M', 'L', 'XL'], [8, 10, 6, 1]),
     colors: ['Gris'],
-    stock: 25,
   },
   {
     slug: 'pull-torsade-femme-beige',
@@ -34,9 +44,8 @@ const DEMO_PRODUCTS = [
     price: 79,
     audience: ProductAudience.WOMEN,
     type: ProductType.PULL,
-    sizes: ['XS', 'S', 'M', 'L'],
+    variants: variants(['XS', 'S', 'M', 'L'], [4, 6, 8, 0]),
     colors: ['Beige'],
-    stock: 18,
   },
   {
     slug: 'pantalon-chino-homme-marine',
@@ -50,9 +59,8 @@ const DEMO_PRODUCTS = [
     price: 89,
     audience: ProductAudience.MEN,
     type: ProductType.PANTALON,
-    sizes: ['38', '40', '42', '44', '46'],
+    variants: variants(['38', '40', '42', '44', '46'], [6, 8, 8, 6, 2]),
     colors: ['Marine'],
-    stock: 30,
   },
   {
     slug: 'pantalon-tailleur-femme-noir',
@@ -66,9 +74,8 @@ const DEMO_PRODUCTS = [
     price: 95,
     audience: ProductAudience.WOMEN,
     type: ProductType.PANTALON,
-    sizes: ['34', '36', '38', '40'],
+    variants: variants(['34', '36', '38', '40'], [5, 7, 6, 2]),
     colors: ['Noir'],
-    stock: 20,
   },
   {
     slug: 'chemise-lin-homme-blanche',
@@ -82,9 +89,8 @@ const DEMO_PRODUCTS = [
     price: 75,
     audience: ProductAudience.MEN,
     type: ProductType.CHEMISE,
-    sizes: ['S', 'M', 'L', 'XL'],
+    variants: variants(['S', 'M', 'L', 'XL'], [5, 8, 7, 2]),
     colors: ['Blanc'],
-    stock: 22,
   },
   {
     slug: 'robe-ete-femme-fleurie',
@@ -98,9 +104,8 @@ const DEMO_PRODUCTS = [
     price: 85,
     audience: ProductAudience.WOMEN,
     type: ProductType.ROBE,
-    sizes: ['XS', 'S', 'M', 'L'],
+    variants: variants(['XS', 'S', 'M', 'L'], [3, 5, 5, 2]),
     colors: ['Multicolore'],
-    stock: 15,
   },
   {
     slug: 'veste-jean-unisexe-bleu',
@@ -114,9 +119,8 @@ const DEMO_PRODUCTS = [
     price: 110,
     audience: ProductAudience.MEN,
     type: ProductType.VESTE,
-    sizes: ['S', 'M', 'L', 'XL'],
+    variants: variants(['S', 'M', 'L', 'XL'], [4, 6, 5, 2]),
     colors: ['Bleu'],
-    stock: 17,
   },
   {
     slug: 'chaussures-sneakers-blanches',
@@ -130,9 +134,8 @@ const DEMO_PRODUCTS = [
     price: 130,
     audience: ProductAudience.MEN,
     type: ProductType.CHAUSSURE,
-    sizes: ['40', '41', '42', '43', '44'],
+    variants: variants(['40', '41', '42', '43', '44'], [6, 7, 8, 5, 2]),
     colors: ['Blanc'],
-    stock: 28,
   },
   {
     slug: 'chaussures-talons-femme-noir',
@@ -146,9 +149,8 @@ const DEMO_PRODUCTS = [
     price: 120,
     audience: ProductAudience.WOMEN,
     type: ProductType.CHAUSSURE,
-    sizes: ['36', '37', '38', '39', '40'],
+    variants: variants(['36', '37', '38', '39', '40'], [3, 4, 4, 2, 1]),
     colors: ['Noir'],
-    stock: 14,
   },
   {
     slug: 'pull-enfant-rayures',
@@ -162,9 +164,8 @@ const DEMO_PRODUCTS = [
     price: 40,
     audience: ProductAudience.KIDS,
     type: ProductType.PULL,
-    sizes: ['4A', '6A', '8A', '10A'],
+    variants: variants(['4A', '6A', '8A', '10A'], [5, 6, 6, 3]),
     colors: ['Multicolore'],
-    stock: 20,
   },
   {
     slug: 'pantalon-jogger-enfant-gris',
@@ -178,9 +179,8 @@ const DEMO_PRODUCTS = [
     price: 35,
     audience: ProductAudience.KIDS,
     type: ProductType.PANTALON,
-    sizes: ['4A', '6A', '8A', '10A', '12A'],
+    variants: variants(['4A', '6A', '8A', '10A', '12A'], [6, 7, 6, 4, 1]),
     colors: ['Gris'],
-    stock: 24,
   },
   {
     slug: 'veste-femme-tailleur-camel',
@@ -194,9 +194,8 @@ const DEMO_PRODUCTS = [
     price: 145,
     audience: ProductAudience.WOMEN,
     type: ProductType.VESTE,
-    sizes: ['XS', 'S', 'M', 'L'],
+    variants: variants(['XS', 'S', 'M', 'L'], [0, 3, 4, 2]),
     colors: ['Camel'],
-    stock: 12,
   },
 ];
 
