@@ -8,6 +8,7 @@ import { validateEnv } from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
 import { OrdersModule } from './orders/orders.module';
+import { OutfitsModule } from './outfits/outfits.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { StatsModule } from './stats/stats.module';
 import { UsersModule } from './users/users.module';
@@ -28,6 +29,7 @@ import { UsersModule } from './users/users.module';
     ChatModule,
     ReviewsModule,
     StatsModule,
+    OutfitsModule,
   ],
 })
 export class AppModule {}

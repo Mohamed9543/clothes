@@ -35,7 +35,8 @@
     "categoryMen": "راجل",
     "categoryWomen": "مرا",
     "categoryKids": "صغار",
-    "featuredTitle": "الجديد"
+    "featuredTitle": "الجديد",
+    "outfitsTitle": "لبسات مختارة"
   },
   "catalog": {
     "title": "الكتالوق",
@@ -263,7 +264,28 @@
     "show": "ظهّر",
     "confirmDeleteReview": "تحب تمسح هالرأي نهائيًا؟",
     "noReviewsAdmin": "ما فماش آراء.",
-    "tabStats": "الإحصائيات"
+    "tabStats": "الإحصائيات",
+    "tabOutfits": "اللبسات",
+    "newOutfit": "لبسة جديدة",
+    "editOutfit": "بدّل اللبسة",
+    "fieldTitleFr": "العنوان (فرنسي)",
+    "fieldTitleEn": "العنوان (انڨليزي)",
+    "fieldTitleAr": "العنوان (عربي)",
+    "fieldTitleTn": "العنوان (تونسي)",
+    "fieldOutfitDescFr": "التفاصيل (فرنسي)",
+    "fieldOutfitDescEn": "التفاصيل (انڨليزي)",
+    "fieldOutfitDescAr": "التفاصيل (عربي)",
+    "fieldOutfitDescTn": "التفاصيل (تونسي)",
+    "fieldCoverImage": "رابط صورة الغلاف",
+    "fieldFeatured": "ظهّرها في الصفحة الرئيسية",
+    "fieldProducts": "الحوايج المتضمنة",
+    "addProduct": "زيد",
+    "removeProduct": "نحّي",
+    "selectProduct": "اختار حاجة",
+    "colOutfitTitle": "العنوان",
+    "colProductCount": "عدد الحوايج",
+    "colFeatured": "مميزة",
+    "confirmDeleteOutfit": "تحب تمسح هالبسة نهائيًا؟"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -292,5 +314,8 @@
     "ratingCount": "{count} رأي",
     "noReviews": "ما فماش آراء على هالحاجة لحد الآن.",
     "genericError": "صارت مشكلة."
+  },
+  "outfit": {
+    "includedProducts": "الحوايج المتضمنة في هالبسة"
   }
 }

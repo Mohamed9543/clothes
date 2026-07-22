@@ -1,12 +1,14 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { ProductCard } from '@/components/product-card';
+import { OutfitCard } from '@/components/outfit-card';
 import { serverApiFetch } from '@/lib/server-api';
-import type { PaginatedResult, Product } from '@/types';
+import type { Outfit, PaginatedResult, Product } from '@/types';
 
 export default async function HomePage() {
   const t = await getTranslations('home');
   const featured = await serverApiFetch<PaginatedResult<Product>>('/products?limit=8');
+  const outfits = await serverApiFetch<Outfit[]>('/outfits/featured');
 
   return (
     <div>
@@ -43,6 +45,17 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {outfits && outfits.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pb-12">
+          <h2 className="mb-6 text-xl font-semibold">{t('outfitsTitle')}</h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {outfits.map((outfit) => (
+              <OutfitCard key={outfit._id} outfit={outfit} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <h2 className="mb-6 text-xl font-semibold">{t('featuredTitle')}</h2>

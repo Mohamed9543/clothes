@@ -1,0 +1,33 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+import { LocalizedText, LocalizedTextSchema } from '../../catalog/schemas/product.schema';
+
+export type OutfitDocument = HydratedDocument<Outfit>;
+
+@Schema({ timestamps: true })
+export class Outfit {
+  @Prop({ required: true, unique: true, trim: true, lowercase: true })
+  slug: string;
+
+  @Prop({ type: LocalizedTextSchema, required: true })
+  title: LocalizedText;
+
+  @Prop({ type: LocalizedTextSchema, required: true })
+  description: LocalizedText;
+
+  @Prop({ required: true, trim: true })
+  coverImage: string;
+
+  @Prop({ type: [String], required: true })
+  productIds: string[];
+
+  @Prop({ default: true })
+  isActive: boolean;
+
+  @Prop({ default: false })
+  isFeatured: boolean;
+
+  createdAt: Date;
+}
+
+export const OutfitSchema = SchemaFactory.createForClass(Outfit);

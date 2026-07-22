@@ -35,7 +35,8 @@
     "categoryMen": "رجال",
     "categoryWomen": "نساء",
     "categoryKids": "أطفال",
-    "featuredTitle": "أحدث المنتجات"
+    "featuredTitle": "أحدث المنتجات",
+    "outfitsTitle": "إطلالات مختارة"
   },
   "catalog": {
     "title": "الكتالوج",
@@ -263,7 +264,28 @@
     "show": "إظهار",
     "confirmDeleteReview": "هل تريد حذف هذا الرأي نهائيًا؟",
     "noReviewsAdmin": "لا توجد آراء.",
-    "tabStats": "الإحصائيات"
+    "tabStats": "الإحصائيات",
+    "tabOutfits": "الإطلالات",
+    "newOutfit": "إطلالة جديدة",
+    "editOutfit": "تعديل الإطلالة",
+    "fieldTitleFr": "العنوان (فرنسي)",
+    "fieldTitleEn": "العنوان (إنجليزي)",
+    "fieldTitleAr": "العنوان (عربي)",
+    "fieldTitleTn": "العنوان (دارجة)",
+    "fieldOutfitDescFr": "الوصف (فرنسي)",
+    "fieldOutfitDescEn": "الوصف (إنجليزي)",
+    "fieldOutfitDescAr": "الوصف (عربي)",
+    "fieldOutfitDescTn": "الوصف (دارجة)",
+    "fieldCoverImage": "رابط صورة الغلاف",
+    "fieldFeatured": "إبرازها في الصفحة الرئيسية",
+    "fieldProducts": "المنتجات المتضمنة",
+    "addProduct": "إضافة",
+    "removeProduct": "إزالة",
+    "selectProduct": "اختر منتجًا",
+    "colOutfitTitle": "العنوان",
+    "colProductCount": "عدد المنتجات",
+    "colFeatured": "مميزة",
+    "confirmDeleteOutfit": "هل تريد حذف هذه الإطلالة نهائيًا؟"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -292,5 +314,8 @@
     "ratingCount": "{count} رأي",
     "noReviews": "لا توجد آراء لهذا المنتج بعد.",
     "genericError": "حدث خطأ ما."
+  },
+  "outfit": {
+    "includedProducts": "المنتجات المتضمنة في هذه الإطلالة"
   }
 }

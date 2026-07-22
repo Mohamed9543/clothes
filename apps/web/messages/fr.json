@@ -35,7 +35,8 @@
     "categoryMen": "Homme",
     "categoryWomen": "Femme",
     "categoryKids": "Enfant",
-    "featuredTitle": "Nouveautés"
+    "featuredTitle": "Nouveautés",
+    "outfitsTitle": "Tenues en vedette"
   },
   "catalog": {
     "title": "Catalogue",
@@ -263,7 +264,28 @@
     "show": "Afficher",
     "confirmDeleteReview": "Supprimer cet avis définitivement ?",
     "noReviewsAdmin": "Aucun avis.",
-    "tabStats": "Statistiques"
+    "tabStats": "Statistiques",
+    "tabOutfits": "Tenues",
+    "newOutfit": "Nouvelle tenue",
+    "editOutfit": "Modifier la tenue",
+    "fieldTitleFr": "Titre (français)",
+    "fieldTitleEn": "Titre (anglais)",
+    "fieldTitleAr": "Titre (arabe)",
+    "fieldTitleTn": "Titre (darija)",
+    "fieldOutfitDescFr": "Description (français)",
+    "fieldOutfitDescEn": "Description (anglais)",
+    "fieldOutfitDescAr": "Description (arabe)",
+    "fieldOutfitDescTn": "Description (darija)",
+    "fieldCoverImage": "URL de l'image de couverture",
+    "fieldFeatured": "Mettre en vedette sur l'accueil",
+    "fieldProducts": "Produits inclus",
+    "addProduct": "Ajouter",
+    "removeProduct": "Retirer",
+    "selectProduct": "Choisir un produit",
+    "colOutfitTitle": "Titre",
+    "colProductCount": "Nb. produits",
+    "colFeatured": "Vedette",
+    "confirmDeleteOutfit": "Supprimer cette tenue définitivement ?"
   },
   "stats": {
     "title": "Statistiques",
@@ -292,5 +314,8 @@
     "ratingCount": "{count} avis",
     "noReviews": "Aucun avis pour ce produit pour le moment.",
     "genericError": "Une erreur est survenue."
+  },
+  "outfit": {
+    "includedProducts": "Produits inclus dans cette tenue"
   }
 }

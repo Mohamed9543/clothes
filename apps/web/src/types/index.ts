@@ -124,6 +124,22 @@ export interface ChatbotConversion {
   rate: number;
 }
 
+export interface Outfit {
+  _id: string;
+  slug: string;
+  title: LocalizedText;
+  description: LocalizedText;
+  coverImage: string;
+  productIds: string[];
+  isActive: boolean;
+  isFeatured: boolean;
+  createdAt: string;
+}
+
+export interface OutfitWithProducts extends Outfit {
+  products: Product[];
+}
+
 export interface DashboardStats {
   totalRevenue: number;
   totalOrders: number;

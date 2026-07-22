@@ -35,7 +35,8 @@
     "categoryMen": "Men",
     "categoryWomen": "Women",
     "categoryKids": "Kids",
-    "featuredTitle": "New arrivals"
+    "featuredTitle": "New arrivals",
+    "outfitsTitle": "Featured outfits"
   },
   "catalog": {
     "title": "Catalog",
@@ -263,7 +264,28 @@
     "show": "Show",
     "confirmDeleteReview": "Delete this review permanently?",
     "noReviewsAdmin": "No reviews.",
-    "tabStats": "Stats"
+    "tabStats": "Stats",
+    "tabOutfits": "Outfits",
+    "newOutfit": "New outfit",
+    "editOutfit": "Edit outfit",
+    "fieldTitleFr": "Title (French)",
+    "fieldTitleEn": "Title (English)",
+    "fieldTitleAr": "Title (Arabic)",
+    "fieldTitleTn": "Title (Darija)",
+    "fieldOutfitDescFr": "Description (French)",
+    "fieldOutfitDescEn": "Description (English)",
+    "fieldOutfitDescAr": "Description (Arabic)",
+    "fieldOutfitDescTn": "Description (Darija)",
+    "fieldCoverImage": "Cover image URL",
+    "fieldFeatured": "Feature on homepage",
+    "fieldProducts": "Included products",
+    "addProduct": "Add",
+    "removeProduct": "Remove",
+    "selectProduct": "Choose a product",
+    "colOutfitTitle": "Title",
+    "colProductCount": "Products",
+    "colFeatured": "Featured",
+    "confirmDeleteOutfit": "Delete this outfit permanently?"
   },
   "stats": {
     "title": "Statistics",
@@ -292,5 +314,8 @@
     "ratingCount": "{count} review(s)",
     "noReviews": "No reviews for this product yet.",
     "genericError": "Something went wrong."
+  },
+  "outfit": {
+    "includedProducts": "Products included in this outfit"
   }
 }
