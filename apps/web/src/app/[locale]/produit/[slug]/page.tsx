@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { AddToCartForm } from '@/components/add-to-cart-form';
 import { TryOnButton } from '@/components/avatar/try-on-button';
+import { ProductReviews } from '@/components/product-reviews';
 import { serverApiFetch } from '@/lib/server-api';
 import { localize } from '@/lib/localized';
 import type { Product } from '@/types';
@@ -59,6 +60,8 @@ export default async function ProductPage({
           </div>
         </div>
       </div>
+
+      <ProductReviews slug={product.slug} />
     </div>
   );
 }

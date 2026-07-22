@@ -67,6 +67,28 @@ export interface PaginatedResult<T> {
   totalPages: number;
 }
 
+export interface Review {
+  _id: string;
+  productId: string;
+  userId: string;
+  authorName: string;
+  rating: number;
+  comment: string;
+  isHidden: boolean;
+  createdAt: string;
+}
+
+export interface ReviewWithProduct extends Review {
+  productName: LocalizedText;
+  productSlug: string;
+}
+
+export interface ProductReviewsResult {
+  reviews: Review[];
+  avgRating: number;
+  count: number;
+}
+
 export type Gender = 'male' | 'female' | 'other';
 
 export interface User {

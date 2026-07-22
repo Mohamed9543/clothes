@@ -253,6 +253,25 @@
     "importCreated": "تم إنشاء {count} منتج",
     "importUpdated": "تم تحديث {count} منتج",
     "importErrors": "{count} خطأ",
-    "importRowError": "السطر {row}: {message}"
+    "importRowError": "السطر {row}: {message}",
+    "tabReviews": "الآراء",
+    "colProduct": "المنتج",
+    "colReviewer": "الزبون",
+    "colRating": "التقييم",
+    "colComment": "التعليق",
+    "hide": "إخفاء",
+    "show": "إظهار",
+    "confirmDeleteReview": "هل تريد حذف هذا الرأي نهائيًا؟",
+    "noReviewsAdmin": "لا توجد آراء."
+  },
+  "review": {
+    "title": "آراء العملاء",
+    "writeReview": "أضف رأيك",
+    "rating": "التقييم",
+    "comment": "تعليقك",
+    "submit": "نشر الرأي",
+    "ratingCount": "{count} رأي",
+    "noReviews": "لا توجد آراء لهذا المنتج بعد.",
+    "genericError": "حدث خطأ ما."
   }
 }

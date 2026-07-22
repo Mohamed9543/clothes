@@ -253,6 +253,25 @@
     "importCreated": "تعملو {count} منتج",
     "importUpdated": "تبدّلو {count} منتج",
     "importErrors": "{count} خطأ",
-    "importRowError": "السطر {row}: {message}"
+    "importRowError": "السطر {row}: {message}",
+    "tabReviews": "الآراء",
+    "colProduct": "الحاجة",
+    "colReviewer": "الزبون",
+    "colRating": "التقييم",
+    "colComment": "التعليق",
+    "hide": "خبّي",
+    "show": "ظهّر",
+    "confirmDeleteReview": "تحب تمسح هالرأي نهائيًا؟",
+    "noReviewsAdmin": "ما فماش آراء."
+  },
+  "review": {
+    "title": "آراء الزبائن",
+    "writeReview": "زيد رأيك",
+    "rating": "التقييم",
+    "comment": "التعليق متاعك",
+    "submit": "نشر الرأي",
+    "ratingCount": "{count} رأي",
+    "noReviews": "ما فماش آراء على هالحاجة لحد الآن.",
+    "genericError": "صارت مشكلة."
   }
 }

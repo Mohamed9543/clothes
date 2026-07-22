@@ -253,6 +253,25 @@
     "importCreated": "{count} produit(s) créé(s)",
     "importUpdated": "{count} produit(s) mis à jour",
     "importErrors": "{count} erreur(s)",
-    "importRowError": "Ligne {row} : {message}"
+    "importRowError": "Ligne {row} : {message}",
+    "tabReviews": "Avis",
+    "colProduct": "Produit",
+    "colReviewer": "Client",
+    "colRating": "Note",
+    "colComment": "Commentaire",
+    "hide": "Masquer",
+    "show": "Afficher",
+    "confirmDeleteReview": "Supprimer cet avis définitivement ?",
+    "noReviewsAdmin": "Aucun avis."
+  },
+  "review": {
+    "title": "Avis clients",
+    "writeReview": "Laisser un avis",
+    "rating": "Note",
+    "comment": "Votre commentaire",
+    "submit": "Publier l'avis",
+    "ratingCount": "{count} avis",
+    "noReviews": "Aucun avis pour ce produit pour le moment.",
+    "genericError": "Une erreur est survenue."
   }
 }

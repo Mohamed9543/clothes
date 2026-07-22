@@ -51,6 +51,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           {t('tabOrders')}
         </Link>
+        <Link
+          href="/admin/avis"
+          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
+        >
+          {t('tabReviews')}
+        </Link>
       </nav>
       {children}
     </div>

@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -147,5 +147,16 @@ export class OrdersService {
       await this.findOneForUser(requester.sub, orderId);
     }
     return this.statusHistoryModel.find({ orderId }).sort({ createdAt: 1 }).exec();
+  }
+
+  async hasUserReceivedProduct(userId: string, productId: string): Promise<boolean> {
+    const count = await this.orderModel
+      .countDocuments({
+        userId,
+        status: OrderStatus.DELIVERED,
+        'items.productId': new Types.ObjectId(productId),
+      })
+      .exec();
+    return count > 0;
   }
 }

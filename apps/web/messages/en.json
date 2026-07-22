@@ -253,6 +253,25 @@
     "importCreated": "{count} product(s) created",
     "importUpdated": "{count} product(s) updated",
     "importErrors": "{count} error(s)",
-    "importRowError": "Row {row}: {message}"
+    "importRowError": "Row {row}: {message}",
+    "tabReviews": "Reviews",
+    "colProduct": "Product",
+    "colReviewer": "Customer",
+    "colRating": "Rating",
+    "colComment": "Comment",
+    "hide": "Hide",
+    "show": "Show",
+    "confirmDeleteReview": "Delete this review permanently?",
+    "noReviewsAdmin": "No reviews."
+  },
+  "review": {
+    "title": "Customer reviews",
+    "writeReview": "Write a review",
+    "rating": "Rating",
+    "comment": "Your comment",
+    "submit": "Post review",
+    "ratingCount": "{count} review(s)",
+    "noReviews": "No reviews for this product yet.",
+    "genericError": "Something went wrong."
   }
 }
