@@ -262,7 +262,26 @@
     "hide": "إخفاء",
     "show": "إظهار",
     "confirmDeleteReview": "هل تريد حذف هذا الرأي نهائيًا؟",
-    "noReviewsAdmin": "لا توجد آراء."
+    "noReviewsAdmin": "لا توجد آراء.",
+    "tabStats": "الإحصائيات"
+  },
+  "stats": {
+    "title": "الإحصائيات",
+    "totalRevenue": "إجمالي الإيرادات",
+    "totalOrders": "الطلبات",
+    "revenueByMonth": "الإيرادات حسب الشهر",
+    "topProducts": "المنتجات الأكثر مبيعًا",
+    "topCategories": "الفئات الأكثر مبيعًا",
+    "salesByAudience": "المبيعات حسب الفئة",
+    "languageDistribution": "لغات العملاء",
+    "chatbotConversion": "تحويل المساعد الذكي",
+    "totalRecommendations": "{count} توصية",
+    "converted": "{count} محوّلة",
+    "conversionRate": "معدل التحويل",
+    "colProduct": "المنتج",
+    "colQuantity": "الكمية",
+    "colRevenue": "الإيرادات",
+    "noData": "لا توجد بيانات بعد."
   },
   "review": {
     "title": "آراء العملاء",

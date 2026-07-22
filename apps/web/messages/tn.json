@@ -262,7 +262,26 @@
     "hide": "خبّي",
     "show": "ظهّر",
     "confirmDeleteReview": "تحب تمسح هالرأي نهائيًا؟",
-    "noReviewsAdmin": "ما فماش آراء."
+    "noReviewsAdmin": "ما فماش آراء.",
+    "tabStats": "الإحصائيات"
+  },
+  "stats": {
+    "title": "الإحصائيات",
+    "totalRevenue": "مجموع المداخيل",
+    "totalOrders": "الطلبيات",
+    "revenueByMonth": "المداخيل حسب الشهر",
+    "topProducts": "الحوايج الأكثر مبيعًا",
+    "topCategories": "الفئات الأكثر مبيعًا",
+    "salesByAudience": "المبيعات حسب الفئة",
+    "languageDistribution": "لغات الزبائن",
+    "chatbotConversion": "تحويل المساعد الذكي",
+    "totalRecommendations": "{count} توصية",
+    "converted": "{count} تحوّلت",
+    "conversionRate": "نسبة التحويل",
+    "colProduct": "الحاجة",
+    "colQuantity": "العدد",
+    "colRevenue": "المداخيل",
+    "noData": "ما فماش بيانات لحد الآن."
   },
   "review": {
     "title": "آراء الزبائن",

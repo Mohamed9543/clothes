@@ -18,6 +18,9 @@ export class ChatMessage {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+
+  @Prop({ type: [String], default: [] })
+  recommendedProductIds: string[];
 }
 
 export const ChatMessageSchema = SchemaFactory.createForClass(ChatMessage);

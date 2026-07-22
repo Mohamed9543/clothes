@@ -74,6 +74,8 @@ export class Order {
 
   @Prop({ type: ShippingAddressSchema, required: true })
   shippingAddress: ShippingAddress;
+
+  createdAt: Date;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

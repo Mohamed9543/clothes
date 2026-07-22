@@ -262,7 +262,26 @@
     "hide": "Hide",
     "show": "Show",
     "confirmDeleteReview": "Delete this review permanently?",
-    "noReviewsAdmin": "No reviews."
+    "noReviewsAdmin": "No reviews.",
+    "tabStats": "Stats"
+  },
+  "stats": {
+    "title": "Statistics",
+    "totalRevenue": "Total revenue",
+    "totalOrders": "Orders",
+    "revenueByMonth": "Revenue by month",
+    "topProducts": "Best-selling products",
+    "topCategories": "Best-selling categories",
+    "salesByAudience": "Sales by audience",
+    "languageDistribution": "Customer languages",
+    "chatbotConversion": "Chatbot conversion",
+    "totalRecommendations": "{count} recommendation(s)",
+    "converted": "{count} converted",
+    "conversionRate": "Conversion rate",
+    "colProduct": "Product",
+    "colQuantity": "Quantity",
+    "colRevenue": "Revenue",
+    "noData": "No data yet."
   },
   "review": {
     "title": "Customer reviews",

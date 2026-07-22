@@ -262,7 +262,26 @@
     "hide": "Masquer",
     "show": "Afficher",
     "confirmDeleteReview": "Supprimer cet avis définitivement ?",
-    "noReviewsAdmin": "Aucun avis."
+    "noReviewsAdmin": "Aucun avis.",
+    "tabStats": "Statistiques"
+  },
+  "stats": {
+    "title": "Statistiques",
+    "totalRevenue": "Chiffre d'affaires total",
+    "totalOrders": "Commandes",
+    "revenueByMonth": "Chiffre d'affaires par mois",
+    "topProducts": "Produits les plus vendus",
+    "topCategories": "Catégories les plus vendues",
+    "salesByAudience": "Ventes par public",
+    "languageDistribution": "Langues des clients",
+    "chatbotConversion": "Conversion chatbot",
+    "totalRecommendations": "{count} recommandation(s)",
+    "converted": "{count} converti(s)",
+    "conversionRate": "Taux de conversion",
+    "colProduct": "Produit",
+    "colQuantity": "Quantité",
+    "colRevenue": "Chiffre d'affaires",
+    "noData": "Pas encore de données."
   },
   "review": {
     "title": "Avis clients",

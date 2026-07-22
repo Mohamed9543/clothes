@@ -89,6 +89,52 @@ export interface ProductReviewsResult {
   count: number;
 }
 
+export interface MonthlyRevenue {
+  month: string;
+  revenue: number;
+}
+
+export interface TopProduct {
+  productId: string;
+  name: LocalizedText;
+  quantity: number;
+  revenue: number;
+}
+
+export interface CategorySales {
+  type: ProductType;
+  quantity: number;
+  revenue: number;
+}
+
+export interface AudienceSales {
+  audience: ProductAudience;
+  quantity: number;
+  revenue: number;
+}
+
+export interface LanguageDistributionEntry {
+  language: string;
+  count: number;
+}
+
+export interface ChatbotConversion {
+  totalRecommendations: number;
+  converted: number;
+  rate: number;
+}
+
+export interface DashboardStats {
+  totalRevenue: number;
+  totalOrders: number;
+  revenueByMonth: MonthlyRevenue[];
+  topProducts: TopProduct[];
+  topCategories: CategorySales[];
+  salesByAudience: AudienceSales[];
+  languageDistribution: LanguageDistributionEntry[];
+  chatbotConversion: ChatbotConversion;
+}
+
 export type Gender = 'male' | 'female' | 'other';
 
 export interface User {

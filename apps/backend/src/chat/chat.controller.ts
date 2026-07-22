@@ -50,7 +50,11 @@ export class ChatController {
     const reply = await this.claudeService.chat(history);
 
     await this.conversationsService.appendMessages(id, [
-      { role: ChatRole.ASSISTANT, content: reply.content },
+      {
+        role: ChatRole.ASSISTANT,
+        content: reply.content,
+        recommendedProductIds: reply.products.map((product) => product.id),
+      },
     ]);
 
     return { message: reply.content, products: reply.products };
