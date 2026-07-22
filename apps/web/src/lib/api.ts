@@ -94,3 +94,80 @@ export async function apiFetch<T>(
 
   return response.json();
 }
+
+export async function apiUpload<T>(
+  path: string,
+  formData: FormData,
+  options: { auth?: boolean } = {},
+): Promise<T> {
+  const { auth = false } = options;
+  const requestHeaders = new Headers();
+
+  if (auth) {
+    const { accessToken } = getTokens();
+    if (accessToken) {
+      requestHeaders.set('Authorization', `Bearer ${accessToken}`);
+    }
+  }
+
+  let response = await fetch(`${API_URL}${path}`, {
+    method: 'POST',
+    body: formData,
+    headers: requestHeaders,
+  });
+
+  if (response.status === 401 && auth) {
+    const newAccessToken = await refreshAccessToken();
+    if (newAccessToken) {
+      requestHeaders.set('Authorization', `Bearer ${newAccessToken}`);
+      response = await fetch(`${API_URL}${path}`, {
+        method: 'POST',
+        body: formData,
+        headers: requestHeaders,
+      });
+    }
+  }
+
+  if (!response.ok) {
+    let message = response.statusText;
+    try {
+      const body = await response.json();
+      message = Array.isArray(body.message) ? body.message.join(', ') : body.message ?? message;
+    } catch {
+      // ignore JSON parse errors on error responses
+    }
+    throw new ApiError(response.status, message);
+  }
+
+  return response.json();
+}
+
+export async function apiDownload(
+  path: string,
+  options: { auth?: boolean; filename: string },
+): Promise<void> {
+  const { auth = false, filename } = options;
+  const requestHeaders = new Headers();
+
+  if (auth) {
+    const { accessToken } = getTokens();
+    if (accessToken) {
+      requestHeaders.set('Authorization', `Bearer ${accessToken}`);
+    }
+  }
+
+  const response = await fetch(`${API_URL}${path}`, { headers: requestHeaders });
+  if (!response.ok) {
+    throw new ApiError(response.status, response.statusText);
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}

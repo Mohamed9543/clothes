@@ -40,6 +40,12 @@ export interface AdminProduct extends Product {
   isOutOfStock: boolean;
 }
 
+export interface ImportSummary {
+  created: number;
+  updated: number;
+  errors: { row: number; message: string }[];
+}
+
 export type StockMovementReason = 'order' | 'restock' | 'correction' | 'damage';
 
 export interface StockMovement {

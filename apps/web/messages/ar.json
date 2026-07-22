@@ -246,6 +246,13 @@
     "viewHistory": "عرض السجل",
     "hideHistory": "إخفاء السجل",
     "initialStatus": "تم إنشاء الطلب",
-    "changedByAdmin": "تغيير من طرف الإدارة"
+    "changedByAdmin": "تغيير من طرف الإدارة",
+    "exportCsv": "تصدير CSV",
+    "importCsv": "استيراد CSV",
+    "importResultTitle": "نتيجة الاستيراد",
+    "importCreated": "تم إنشاء {count} منتج",
+    "importUpdated": "تم تحديث {count} منتج",
+    "importErrors": "{count} خطأ",
+    "importRowError": "السطر {row}: {message}"
   }
 }

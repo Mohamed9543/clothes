@@ -246,6 +246,13 @@
     "viewHistory": "شوف التاريخ",
     "hideHistory": "خبّي التاريخ",
     "initialStatus": "الطلبية اتعملت",
-    "changedByAdmin": "تبديل من طرف الإدارة"
+    "changedByAdmin": "تبديل من طرف الإدارة",
+    "exportCsv": "صدّر CSV",
+    "importCsv": "استورد CSV",
+    "importResultTitle": "نتيجة الاستيراد",
+    "importCreated": "تعملو {count} منتج",
+    "importUpdated": "تبدّلو {count} منتج",
+    "importErrors": "{count} خطأ",
+    "importRowError": "السطر {row}: {message}"
   }
 }

@@ -1,6 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import { parse } from 'csv-parse/sync';
+import { stringify } from 'csv-stringify/sync';
 import { Model, QueryFilter } from 'mongoose';
+import { CSV_COLUMNS, productToRow, rowToProductDto } from './csv/product-csv.mapper';
 import { AdjustStockDto, ManualStockReason } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductsDto } from './dto/query-products.dto';
@@ -11,6 +16,12 @@ import {
   StockMovementDocument,
   StockMovementReason,
 } from './schemas/stock-movement.schema';
+
+export interface ImportSummary {
+  created: number;
+  updated: number;
+  errors: { row: number; message: string }[];
+}
 
 export interface PaginatedResult<T> {
   items: T[];
@@ -196,5 +207,52 @@ export class ProductsService {
       .sort({ createdAt: -1 })
       .limit(50)
       .exec();
+  }
+
+  async importFromCsv(buffer: Buffer): Promise<ImportSummary> {
+    const rows: Record<string, string>[] = parse(buffer, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+
+    const summary: ImportSummary = { created: 0, updated: 0, errors: [] };
+
+    for (const [index, row] of rows.entries()) {
+      const rowNumber = index + 2;
+      try {
+        const plainDto = rowToProductDto(row);
+        const dto = plainToInstance(CreateProductDto, plainDto);
+        const validationErrors = await validate(dto);
+        if (validationErrors.length > 0) {
+          const message = validationErrors
+            .map((error) => Object.values(error.constraints ?? {}).join(', '))
+            .join('; ');
+          throw new Error(message || 'Invalid row');
+        }
+
+        const existing = await this.productModel.findOne({ slug: dto.slug }).exec();
+        if (existing) {
+          await this.productModel.updateOne({ _id: existing._id }, dto).exec();
+          summary.updated += 1;
+        } else {
+          await this.productModel.create(dto);
+          summary.created += 1;
+        }
+      } catch (error) {
+        summary.errors.push({
+          row: rowNumber,
+          message: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    }
+
+    return summary;
+  }
+
+  async exportToCsv(): Promise<string> {
+    const products = await this.productModel.find().sort({ slug: 1 }).exec();
+    const rows = products.map((product) => productToRow(product));
+    return stringify(rows, { header: true, columns: CSV_COLUMNS });
   }
 }

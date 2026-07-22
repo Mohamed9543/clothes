@@ -246,6 +246,13 @@
     "viewHistory": "View history",
     "hideHistory": "Hide history",
     "initialStatus": "Order created",
-    "changedByAdmin": "changed by admin"
+    "changedByAdmin": "changed by admin",
+    "exportCsv": "Export CSV",
+    "importCsv": "Import CSV",
+    "importResultTitle": "Import result",
+    "importCreated": "{count} product(s) created",
+    "importUpdated": "{count} product(s) updated",
+    "importErrors": "{count} error(s)",
+    "importRowError": "Row {row}: {message}"
   }
 }

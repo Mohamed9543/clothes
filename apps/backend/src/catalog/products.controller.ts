@@ -3,12 +3,17 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -33,6 +38,23 @@ export class ProductsController {
   @Roles(UserRole.ADMIN)
   findAllAdmin(@Query() query: QueryProductsDto) {
     return this.productsService.findAllAdmin(query);
+  }
+
+  @Get('admin/export')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Header('Content-Type', 'text/csv; charset=utf-8')
+  @Header('Content-Disposition', 'attachment; filename="produits.csv"')
+  exportCsv() {
+    return this.productsService.exportToCsv();
+  }
+
+  @Post('admin/import')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
+  importCsv(@UploadedFile() file: Express.Multer.File) {
+    return this.productsService.importFromCsv(file.buffer);
   }
 
   @Get(':slug')

@@ -246,6 +246,13 @@
     "viewHistory": "Voir l'historique",
     "hideHistory": "Masquer l'historique",
     "initialStatus": "Commande créée",
-    "changedByAdmin": "changement effectué par l'admin"
+    "changedByAdmin": "changement effectué par l'admin",
+    "exportCsv": "Exporter CSV",
+    "importCsv": "Importer CSV",
+    "importResultTitle": "Résultat de l'import",
+    "importCreated": "{count} produit(s) créé(s)",
+    "importUpdated": "{count} produit(s) mis à jour",
+    "importErrors": "{count} erreur(s)",
+    "importRowError": "Ligne {row} : {message}"
   }
 }

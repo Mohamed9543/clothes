@@ -1,12 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { apiFetch } from '@/lib/api';
+import { apiDownload, apiFetch, apiUpload } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { ProductForm } from '@/components/admin/product-form';
 import { StockAdjustModal } from '@/components/admin/stock-adjust-modal';
-import type { AdminProduct, PaginatedResult } from '@/types';
+import type { AdminProduct, ImportSummary, PaginatedResult } from '@/types';
 
 export default function AdminProductsPage() {
   const t = useTranslations('admin');
@@ -17,6 +17,9 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [adjustingProduct, setAdjustingProduct] = useState<AdminProduct | null>(null);
+  const [importSummary, setImportSummary] = useState<ImportSummary | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadProducts = useCallback(async () => {
     const result = await apiFetch<PaginatedResult<AdminProduct>>('/products/admin/all?limit=100', {
@@ -28,6 +31,29 @@ export default function AdminProductsPage() {
   useEffect(() => {
     void loadProducts();
   }, [loadProducts]);
+
+  async function handleExport() {
+    await apiDownload('/products/admin/export', { auth: true, filename: 'produits.csv' });
+  }
+
+  async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    setIsImporting(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const summary = await apiUpload<ImportSummary>('/products/admin/import', formData, {
+        auth: true,
+      });
+      setImportSummary(summary);
+      void loadProducts();
+    } finally {
+      setIsImporting(false);
+    }
+  }
 
   async function toggleActive(product: AdminProduct) {
     await apiFetch(`/products/${product._id}`, {
@@ -68,7 +94,27 @@ export default function AdminProductsPage() {
 
   return (
     <div>
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex flex-wrap justify-end gap-2">
+        <button
+          onClick={handleExport}
+          className="rounded-full border border-border px-6 py-2 text-sm font-medium hover:bg-background"
+        >
+          {t('exportCsv')}
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv"
+          hidden
+          onChange={handleImportFile}
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isImporting}
+          className="rounded-full border border-border px-6 py-2 text-sm font-medium hover:bg-background disabled:opacity-50"
+        >
+          {t('importCsv')}
+        </button>
         <button
           onClick={() => setIsCreating(true)}
           className="rounded-full bg-brand-terracotta px-6 py-2 text-sm font-medium text-white hover:opacity-90"
@@ -76,6 +122,29 @@ export default function AdminProductsPage() {
           {t('newProduct')}
         </button>
       </div>
+
+      {importSummary && (
+        <div className="mb-4 rounded-xl border border-border bg-surface p-4 text-sm">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="font-medium">{t('importResultTitle')}</p>
+            <button onClick={() => setImportSummary(null)} className="text-muted underline">
+              {t('close')}
+            </button>
+          </div>
+          <p>{t('importCreated', { count: importSummary.created })}</p>
+          <p>{t('importUpdated', { count: importSummary.updated })}</p>
+          {importSummary.errors.length > 0 && (
+            <div className="mt-2">
+              <p className="text-red-700">{t('importErrors', { count: importSummary.errors.length })}</p>
+              <ul className="mt-1 list-inside list-disc text-red-700">
+                {importSummary.errors.map((error) => (
+                  <li key={error.row}>{t('importRowError', { row: error.row, message: error.message })}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="w-full text-start text-sm">
