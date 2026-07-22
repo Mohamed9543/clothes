@@ -92,7 +92,16 @@ export interface Cart {
   total: number;
 }
 
-export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+
+export interface OrderStatusHistoryEntry {
+  _id: string;
+  orderId: string;
+  fromStatus: OrderStatus | null;
+  toStatus: OrderStatus;
+  changedBy: string | null;
+  createdAt: string;
+}
 
 export interface OrderItem {
   productId: string;

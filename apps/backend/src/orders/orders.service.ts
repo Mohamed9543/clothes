@@ -4,12 +4,23 @@ import { Connection, Model } from 'mongoose';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import {
+  OrderStatusHistory,
+  OrderStatusHistoryDocument,
+} from './schemas/order-status-history.schema';
 import { Order, OrderDocument, OrderItem, OrderStatus } from './schemas/order.schema';
+
+export interface OrderRequester {
+  sub: string;
+  role: string;
+}
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
+    @InjectModel(OrderStatusHistory.name)
+    private readonly statusHistoryModel: Model<OrderStatusHistoryDocument>,
     @InjectConnection() private readonly connection: Connection,
     private readonly cartService: CartService,
     private readonly productsService: ProductsService,
@@ -73,6 +84,13 @@ export class OrdersService {
         }
       });
 
+      await this.statusHistoryModel.create({
+        orderId: (order as OrderDocument)._id.toString(),
+        fromStatus: null,
+        toStatus: OrderStatus.PENDING,
+        changedBy: null,
+      });
+
       await this.cartService.clear(userId);
       return order as OrderDocument;
     } finally {
@@ -99,11 +117,35 @@ export class OrdersService {
     return this.orderModel.find().sort({ createdAt: -1 }).exec();
   }
 
-  async updateStatus(orderId: string, status: OrderStatus): Promise<OrderDocument> {
+  async updateStatus(
+    orderId: string,
+    status: OrderStatus,
+    adminUserId: string,
+  ): Promise<OrderDocument> {
+    const previous = await this.orderModel.findById(orderId).exec();
+    if (!previous) {
+      throw new NotFoundException('Order not found');
+    }
+
     const order = await this.orderModel.findByIdAndUpdate(orderId, { status }, { new: true }).exec();
     if (!order) {
       throw new NotFoundException('Order not found');
     }
+
+    await this.statusHistoryModel.create({
+      orderId,
+      fromStatus: previous.status,
+      toStatus: status,
+      changedBy: adminUserId,
+    });
+
     return order;
+  }
+
+  async getHistory(requester: OrderRequester, orderId: string): Promise<OrderStatusHistoryDocument[]> {
+    if (requester.role !== 'admin') {
+      await this.findOneForUser(requester.sub, orderId);
+    }
+    return this.statusHistoryModel.find({ orderId }).sort({ createdAt: 1 }).exec();
   }
 }

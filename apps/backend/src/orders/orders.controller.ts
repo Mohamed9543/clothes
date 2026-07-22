@@ -34,8 +34,17 @@ export class OrdersController {
   @Patch('admin/:id/status')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  updateStatus(@Param('id') id: string, @Body() dto: UpdateOrderStatusDto) {
-    return this.ordersService.updateStatus(id, dto.status);
+  updateStatus(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('id') id: string,
+    @Body() dto: UpdateOrderStatusDto,
+  ) {
+    return this.ordersService.updateStatus(id, dto.status, user.sub);
+  }
+
+  @Get(':id/history')
+  getHistory(@CurrentUser() user: JwtAccessPayload, @Param('id') id: string) {
+    return this.ordersService.getHistory(user, id);
   }
 
   @Get(':id')

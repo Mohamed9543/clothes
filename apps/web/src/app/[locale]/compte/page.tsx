@@ -6,7 +6,8 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { apiFetch } from '@/lib/api';
 import { localize } from '@/lib/localized';
-import type { Order } from '@/types';
+import { OrderTimeline } from '@/components/order-timeline';
+import type { Order, OrderStatusHistoryEntry } from '@/types';
 
 export default function AccountPage() {
   const t = useTranslations('account');
@@ -19,6 +20,8 @@ export default function AccountPage() {
   const { user, isLoading: authLoading, logout } = useAuth();
 
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const [openHistoryId, setOpenHistoryId] = useState<string | null>(null);
+  const [histories, setHistories] = useState<Record<string, OrderStatusHistoryEntry[]>>({});
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -31,6 +34,20 @@ export default function AccountPage() {
       apiFetch<Order[]>('/orders', { auth: true }).then(setOrders);
     }
   }, [user]);
+
+  async function toggleHistory(orderId: string) {
+    if (openHistoryId === orderId) {
+      setOpenHistoryId(null);
+      return;
+    }
+    if (!histories[orderId]) {
+      const result = await apiFetch<OrderStatusHistoryEntry[]>(`/orders/${orderId}/history`, {
+        auth: true,
+      });
+      setHistories((prev) => ({ ...prev, [orderId]: result }));
+    }
+    setOpenHistoryId(orderId);
+  }
 
   if (!authLoading && !user) {
     return null;
@@ -85,6 +102,19 @@ export default function AccountPage() {
             <p className="mt-3 text-end font-medium">
               {order.totalAmount} {tCommon('currency')}
             </p>
+
+            <button
+              onClick={() => toggleHistory(order._id)}
+              className="mt-3 text-sm text-brand-terracotta underline"
+            >
+              {openHistoryId === order._id ? t('hideTracking') : t('trackOrder')}
+            </button>
+
+            {openHistoryId === order._id && histories[order._id] && (
+              <div className="mt-3">
+                <OrderTimeline entries={histories[order._id]} />
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -108,7 +108,9 @@
     "orderDate": "Date",
     "orderTotal": "Total",
     "orderStatus": "Status",
-    "noOrders": "You haven't placed any orders yet."
+    "noOrders": "You haven't placed any orders yet.",
+    "trackOrder": "Track my order",
+    "hideTracking": "Hide tracking"
   },
   "auth": {
     "loginTitle": "Login",
@@ -126,7 +128,7 @@
   },
   "orderStatus": {
     "pending": "Pending",
-    "confirmed": "Confirmed",
+    "paid": "Paid",
     "shipped": "Shipped",
     "delivered": "Delivered",
     "cancelled": "Cancelled"
@@ -240,6 +242,10 @@
     "note": "Note (optional)",
     "history": "Stock movement history",
     "noHistory": "No movements recorded.",
-    "close": "Close"
+    "close": "Close",
+    "viewHistory": "View history",
+    "hideHistory": "Hide history",
+    "initialStatus": "Order created",
+    "changedByAdmin": "changed by admin"
   }
 }

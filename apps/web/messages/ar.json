@@ -108,7 +108,9 @@
     "orderDate": "التاريخ",
     "orderTotal": "المجموع",
     "orderStatus": "الحالة",
-    "noOrders": "لم تقم بأي طلب بعد."
+    "noOrders": "لم تقم بأي طلب بعد.",
+    "trackOrder": "تتبّع طلبي",
+    "hideTracking": "إخفاء التتبع"
   },
   "auth": {
     "loginTitle": "تسجيل الدخول",
@@ -126,7 +128,7 @@
   },
   "orderStatus": {
     "pending": "قيد الانتظار",
-    "confirmed": "مؤكدة",
+    "paid": "مدفوعة",
     "shipped": "تم الشحن",
     "delivered": "تم التسليم",
     "cancelled": "ملغاة"
@@ -240,6 +242,10 @@
     "note": "ملاحظة (اختياري)",
     "history": "سجل حركات المخزون",
     "noHistory": "لا توجد حركات مسجّلة.",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "viewHistory": "عرض السجل",
+    "hideHistory": "إخفاء السجل",
+    "initialStatus": "تم إنشاء الطلب",
+    "changedByAdmin": "تغيير من طرف الإدارة"
   }
 }

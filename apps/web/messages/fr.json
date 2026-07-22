@@ -108,7 +108,9 @@
     "orderDate": "Date",
     "orderTotal": "Total",
     "orderStatus": "Statut",
-    "noOrders": "Vous n'avez pas encore passé de commande."
+    "noOrders": "Vous n'avez pas encore passé de commande.",
+    "trackOrder": "Suivre ma commande",
+    "hideTracking": "Masquer le suivi"
   },
   "auth": {
     "loginTitle": "Connexion",
@@ -126,7 +128,7 @@
   },
   "orderStatus": {
     "pending": "En attente",
-    "confirmed": "Confirmée",
+    "paid": "Payée",
     "shipped": "Expédiée",
     "delivered": "Livrée",
     "cancelled": "Annulée"
@@ -240,6 +242,10 @@
     "note": "Note (optionnel)",
     "history": "Historique des mouvements",
     "noHistory": "Aucun mouvement enregistré.",
-    "close": "Fermer"
+    "close": "Fermer",
+    "viewHistory": "Voir l'historique",
+    "hideHistory": "Masquer l'historique",
+    "initialStatus": "Commande créée",
+    "changedByAdmin": "changement effectué par l'admin"
   }
 }

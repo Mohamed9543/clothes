@@ -4,9 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { apiFetch } from '@/lib/api';
 import { localize } from '@/lib/localized';
-import type { Order, OrderStatus } from '@/types';
+import { OrderTimeline } from '@/components/order-timeline';
+import type { Order, OrderStatus, OrderStatusHistoryEntry } from '@/types';
 
-const STATUSES: OrderStatus[] = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+const STATUSES: OrderStatus[] = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
 
 export default function AdminOrdersPage() {
   const t = useTranslations('admin');
@@ -15,6 +16,8 @@ export default function AdminOrdersPage() {
   const locale = useLocale();
 
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const [openHistoryId, setOpenHistoryId] = useState<string | null>(null);
+  const [histories, setHistories] = useState<Record<string, OrderStatusHistoryEntry[]>>({});
 
   const loadOrders = useCallback(async () => {
     const result = await apiFetch<Order[]>('/orders/admin/all', { auth: true });
@@ -32,6 +35,20 @@ export default function AdminOrdersPage() {
       body: JSON.stringify({ status }),
     });
     void loadOrders();
+  }
+
+  async function toggleHistory(orderId: string) {
+    if (openHistoryId === orderId) {
+      setOpenHistoryId(null);
+      return;
+    }
+    if (!histories[orderId]) {
+      const result = await apiFetch<OrderStatusHistoryEntry[]>(`/orders/${orderId}/history`, {
+        auth: true,
+      });
+      setHistories((prev) => ({ ...prev, [orderId]: result }));
+    }
+    setOpenHistoryId(orderId);
   }
 
   if (orders?.length === 0) {
@@ -76,6 +93,19 @@ export default function AdminOrdersPage() {
           <p className="mt-3 text-end font-medium">
             {order.totalAmount} {tCommon('currency')}
           </p>
+
+          <button
+            onClick={() => toggleHistory(order._id)}
+            className="mt-3 text-sm text-brand-terracotta underline"
+          >
+            {openHistoryId === order._id ? t('hideHistory') : t('viewHistory')}
+          </button>
+
+          {openHistoryId === order._id && histories[order._id] && (
+            <div className="mt-3">
+              <OrderTimeline entries={histories[order._id]} />
+            </div>
+          )}
         </div>
       ))}
     </div>
