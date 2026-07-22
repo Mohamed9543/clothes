@@ -17,13 +17,18 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
-        <Link href="/" className="shrink-0 text-xl font-semibold tracking-tight text-foreground">
-          {tBrand('name')}
-        </Link>
+        {user?.role !== 'admin' && (
+          <Link href="/" className="shrink-0 text-xl font-semibold tracking-tight text-foreground">
+            {tBrand('name')}
+          </Link>
+        )}
 
         <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
           {user?.role === 'admin' ? (
-            <Link href="/admin" className="hover:text-brand-terracotta">
+            <Link
+              href="/admin"
+              className="shrink-0 text-xl font-semibold tracking-tight text-foreground hover:text-brand-terracotta"
+            >
               {t('admin')}
             </Link>
           ) : (
