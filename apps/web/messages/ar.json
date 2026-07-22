@@ -163,7 +163,8 @@
     "tryOn": "جرّب على الأفتار",
     "createAvatarFirst": "أنشئ أفتارك أولاً لتجربة هذا المنتج",
     "closeTryOn": "إغلاق",
-    "loadError": "تعذّر تحميل النموذج ثلاثي الأبعاد. حاول مرة أخرى لاحقًا."
+    "loadError": "تعذّر تحميل النموذج ثلاثي الأبعاد. حاول مرة أخرى لاحقًا.",
+    "avatarDisabledMessage": "تم تعطيل صورتك الرمزية من قبل مشرف، الرجاء إنشاء واحدة جديدة."
   },
   "chat": {
     "title": "مساعد لباس",
@@ -298,7 +299,20 @@
     "hideOrders": "إخفاء الطلبات",
     "noUsers": "لا يوجد مستخدمون.",
     "roleAdmin": "إداري",
-    "roleCustomer": "زبون"
+    "roleCustomer": "زبون",
+    "tabModels3d": "النماذج ثلاثية الأبعاد",
+    "colAvatarUser": "المستخدم",
+    "colAvatarStatus": "حالة الأفتار",
+    "viewAvatar": "عرض الأفتار",
+    "disableAvatar": "تعطيل",
+    "enableAvatar": "إعادة التفعيل",
+    "confirmDisableAvatar": "هل تريد تعطيل هذا الأفتار؟ سيحتاج المستخدم لإنشاء واحد جديد.",
+    "tryOnSection": "التجربة الافتراضية حسب المنتج",
+    "tryOnStatus": "التجربة",
+    "enableTryOn": "تفعيل التجربة",
+    "disableTryOn": "تعطيل التجربة",
+    "noAvatars": "لا توجد صور رمزية منشأة.",
+    "fieldTryOnEnabled": "التجربة الافتراضية مفعّلة لهذا المنتج"
   },
   "stats": {
     "title": "الإحصائيات",

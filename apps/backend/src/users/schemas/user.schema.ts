@@ -59,6 +59,9 @@ export class User {
   @Prop({ default: false })
   isBlocked: boolean;
 
+  @Prop({ default: false })
+  avatarDisabled: boolean;
+
   createdAt: Date;
 }
 

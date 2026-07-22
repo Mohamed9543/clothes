@@ -29,6 +29,7 @@ export interface SafeUser {
   role: string;
   preferredLanguage: string;
   avatarUrl: string | null;
+  avatarDisabled: boolean;
   heightCm: number | null;
   weightKg: number | null;
   gender: string | null;
@@ -43,6 +44,7 @@ function toSafeUser(user: UserDocument): SafeUser {
     role: user.role,
     preferredLanguage: user.preferredLanguage,
     avatarUrl: user.avatarUrl,
+    avatarDisabled: user.avatarDisabled,
     heightCm: user.heightCm,
     weightKg: user.weightKg,
     gender: user.gender,

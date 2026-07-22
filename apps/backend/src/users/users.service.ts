@@ -37,7 +37,16 @@ export class UsersService {
   }
 
   async updateProfile(userId: string, dto: UpdateProfileDto): Promise<UserDocument> {
-    const user = await this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
+    const update: UpdateProfileDto & { avatarDisabled?: boolean } = { ...dto };
+
+    if (dto.avatarUrl) {
+      const current = await this.userModel.findById(userId).select('avatarUrl').exec();
+      if (current && current.avatarUrl !== dto.avatarUrl) {
+        update.avatarDisabled = false;
+      }
+    }
+
+    const user = await this.userModel.findByIdAndUpdate(userId, update, { new: true }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -50,6 +59,24 @@ export class UsersService {
       .select('-passwordHash -refreshTokenHash')
       .sort({ createdAt: -1 })
       .exec();
+  }
+
+  findAllWithAvatars(): Promise<UserDocument[]> {
+    return this.userModel
+      .find({ avatarUrl: { $ne: null } })
+      .select('firstName lastName email avatarUrl avatarDisabled')
+      .sort({ updatedAt: -1 })
+      .exec();
+  }
+
+  async setAvatarDisabled(id: string, disabled: boolean): Promise<UserDocument> {
+    const user = await this.userModel
+      .findByIdAndUpdate(id, { avatarDisabled: disabled }, { new: true })
+      .exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async setBlocked(id: string, isBlocked: boolean): Promise<UserDocument> {

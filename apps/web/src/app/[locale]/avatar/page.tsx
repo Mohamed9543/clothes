@@ -144,6 +144,10 @@ export default function AvatarPage() {
           </div>
         )}
 
+        {user?.avatarUrl && user.avatarDisabled && !showCreator && (
+          <p className="mb-4 text-sm text-brand-terracotta">{t('avatarDisabledMessage')}</p>
+        )}
+
         {user?.avatarUrl ? (
           <AvatarViewer avatarUrl={user.avatarUrl} className="h-[420px] w-full overflow-hidden rounded-xl bg-background" />
         ) : (

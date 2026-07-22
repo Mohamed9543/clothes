@@ -44,6 +44,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   const [colors, setColors] = useState(product?.colors.join(', ') ?? '');
   const [images, setImages] = useState(product?.images.join(', ') ?? '');
   const [isActive, setIsActive] = useState(product?.isActive ?? true);
+  const [tryOnEnabled, setTryOnEnabled] = useState(product?.tryOnEnabled ?? true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,6 +80,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       colors: colors.split(',').map((c) => c.trim()).filter(Boolean),
       images: images.split(',').map((i) => i.trim()).filter(Boolean),
       isActive,
+      tryOnEnabled,
     };
 
     try {
@@ -200,6 +202,14 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
         {t('fieldActive')}
+      </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={tryOnEnabled}
+          onChange={(e) => setTryOnEnabled(e.target.checked)}
+        />
+        {t('fieldTryOnEnabled')}
       </label>
 
       {error && <p className="text-sm text-brand-terracotta">{error}</p>}

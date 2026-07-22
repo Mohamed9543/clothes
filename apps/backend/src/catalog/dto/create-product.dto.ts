@@ -55,4 +55,8 @@ export class CreateProductDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  tryOnEnabled?: boolean;
 }

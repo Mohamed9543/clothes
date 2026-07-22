@@ -163,7 +163,8 @@
     "tryOn": "Essayer sur mon avatar",
     "createAvatarFirst": "Crée d'abord ton avatar pour essayer ce produit",
     "closeTryOn": "Fermer",
-    "loadError": "Impossible de charger le modèle 3D. Réessaie plus tard."
+    "loadError": "Impossible de charger le modèle 3D. Réessaie plus tard.",
+    "avatarDisabledMessage": "Votre avatar a été désactivé par un modérateur, veuillez en créer un nouveau."
   },
   "chat": {
     "title": "Assistant Libas",
@@ -298,7 +299,20 @@
     "hideOrders": "Masquer les commandes",
     "noUsers": "Aucun utilisateur.",
     "roleAdmin": "Admin",
-    "roleCustomer": "Client"
+    "roleCustomer": "Client",
+    "tabModels3d": "Modèles 3D",
+    "colAvatarUser": "Utilisateur",
+    "colAvatarStatus": "Statut avatar",
+    "viewAvatar": "Voir l'avatar",
+    "disableAvatar": "Désactiver",
+    "enableAvatar": "Réactiver",
+    "confirmDisableAvatar": "Désactiver cet avatar ? L'utilisateur devra en recréer un nouveau.",
+    "tryOnSection": "Essayage virtuel par produit",
+    "tryOnStatus": "Essayage",
+    "enableTryOn": "Activer l'essayage",
+    "disableTryOn": "Désactiver l'essayage",
+    "noAvatars": "Aucun avatar créé.",
+    "fieldTryOnEnabled": "Essayage virtuel activé pour ce produit"
   },
   "stats": {
     "title": "Statistiques",

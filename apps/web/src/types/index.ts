@@ -32,6 +32,7 @@ export interface Product {
   colors: string[];
   images: string[];
   isActive: boolean;
+  tryOnEnabled: boolean;
 }
 
 export interface AdminProduct extends Product {
@@ -172,9 +173,19 @@ export interface User {
   role: 'customer' | 'admin';
   preferredLanguage: string;
   avatarUrl: string | null;
+  avatarDisabled: boolean;
   heightCm: number | null;
   weightKg: number | null;
   gender: Gender | null;
+}
+
+export interface AdminAvatarUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatarUrl: string | null;
+  avatarDisabled: boolean;
 }
 
 export interface CartItem {

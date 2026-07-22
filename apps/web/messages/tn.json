@@ -163,7 +163,8 @@
     "tryOn": "جرّب على الأفتار",
     "createAvatarFirst": "اعمل الأفتار الأول باش تجرب هالحاجة",
     "closeTryOn": "سكّر",
-    "loadError": "ما نجمناش نحمّلو النموذج ثلاثي الأبعاد. عاود جرب من بعد."
+    "loadError": "ما نجمناش نحمّلو النموذج ثلاثي الأبعاد. عاود جرب من بعد.",
+    "avatarDisabledMessage": "الأفتار متاعك تعطّل من طرف مشرف، لازمك تعمل واحد جديد."
   },
   "chat": {
     "title": "المساعد متاع لباس",
@@ -298,7 +299,20 @@
     "hideOrders": "خبّي الطلبيات",
     "noUsers": "ما فماش مستخدمين.",
     "roleAdmin": "إداري",
-    "roleCustomer": "زبون"
+    "roleCustomer": "زبون",
+    "tabModels3d": "النماذج ثلاثية الأبعاد",
+    "colAvatarUser": "المستخدم",
+    "colAvatarStatus": "حالة الأفتار",
+    "viewAvatar": "شوف الأفتار",
+    "disableAvatar": "عطّل",
+    "enableAvatar": "رجّع فعّلها",
+    "confirmDisableAvatar": "تحب تعطّل هالأفتار؟ المستخدم لازمو يعمل واحد جديد.",
+    "tryOnSection": "التجربة الافتراضية حسب الحاجة",
+    "tryOnStatus": "التجربة",
+    "enableTryOn": "فعّل التجربة",
+    "disableTryOn": "عطّل التجربة",
+    "noAvatars": "ما فماش أفتارات معمولة.",
+    "fieldTryOnEnabled": "التجربة الافتراضية مفعّلة لهالحاجة"
   },
   "stats": {
     "title": "الإحصائيات",

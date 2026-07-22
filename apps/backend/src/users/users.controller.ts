@@ -6,6 +6,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
 import { OrdersService } from '../orders/orders.service';
 import { BlockUserDto } from './dto/block-user.dto';
+import { SetAvatarStatusDto } from './dto/set-avatar-status.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UserRole } from './schemas/user.schema';
 import { UsersService } from './users.service';
@@ -29,6 +30,7 @@ export class UsersController {
       role: updated.role,
       preferredLanguage: updated.preferredLanguage,
       avatarUrl: updated.avatarUrl,
+      avatarDisabled: updated.avatarDisabled,
       heightCm: updated.heightCm,
       weightKg: updated.weightKg,
       gender: updated.gender,
@@ -67,5 +69,19 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   findOrdersForUser(@Param('id') id: string) {
     return this.ordersService.findAllForUser(id);
+  }
+
+  @Get('admin/avatars')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  findAllWithAvatars() {
+    return this.usersService.findAllWithAvatars();
+  }
+
+  @Patch('admin/:id/avatar-status')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  setAvatarDisabled(@Param('id') id: string, @Body() dto: SetAvatarStatusDto) {
+    return this.usersService.setAvatarDisabled(id, dto.disabled);
   }
 }

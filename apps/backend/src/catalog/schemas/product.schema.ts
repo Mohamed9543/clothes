@@ -80,6 +80,9 @@ export class Product {
 
   @Prop({ default: true })
   isActive: boolean;
+
+  @Prop({ default: true })
+  tryOnEnabled: boolean;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

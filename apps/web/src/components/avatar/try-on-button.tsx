@@ -14,6 +14,18 @@ export function TryOnButton({ product }: { product: Product }) {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
+  if (!product.tryOnEnabled) {
+    return null;
+  }
+
+  if (user?.avatarUrl && user.avatarDisabled) {
+    return (
+      <Link href="/avatar" className="block text-center text-sm text-brand-terracotta underline">
+        {t('avatarDisabledMessage')}
+      </Link>
+    );
+  }
+
   if (!user?.avatarUrl) {
     return (
       <Link href="/avatar" className="block text-center text-sm text-brand-terracotta underline">

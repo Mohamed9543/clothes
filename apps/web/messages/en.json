@@ -163,7 +163,8 @@
     "tryOn": "Try on my avatar",
     "createAvatarFirst": "Create your avatar first to try on this product",
     "closeTryOn": "Close",
-    "loadError": "Couldn't load the 3D model. Please try again later."
+    "loadError": "Couldn't load the 3D model. Please try again later.",
+    "avatarDisabledMessage": "Your avatar was disabled by a moderator, please create a new one."
   },
   "chat": {
     "title": "Libas Assistant",
@@ -298,7 +299,20 @@
     "hideOrders": "Hide orders",
     "noUsers": "No users.",
     "roleAdmin": "Admin",
-    "roleCustomer": "Customer"
+    "roleCustomer": "Customer",
+    "tabModels3d": "3D Models",
+    "colAvatarUser": "User",
+    "colAvatarStatus": "Avatar status",
+    "viewAvatar": "View avatar",
+    "disableAvatar": "Disable",
+    "enableAvatar": "Re-enable",
+    "confirmDisableAvatar": "Disable this avatar? The user will need to create a new one.",
+    "tryOnSection": "Virtual try-on per product",
+    "tryOnStatus": "Try-on",
+    "enableTryOn": "Enable try-on",
+    "disableTryOn": "Disable try-on",
+    "noAvatars": "No avatars created.",
+    "fieldTryOnEnabled": "Virtual try-on enabled for this product"
   },
   "stats": {
     "title": "Statistics",

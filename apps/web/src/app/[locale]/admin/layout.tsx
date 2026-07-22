@@ -75,6 +75,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           {t('tabUsers')}
         </Link>
+        <Link
+          href="/admin/modeles-3d"
+          className="border-b-2 border-transparent px-1 pb-3 text-sm font-medium hover:border-brand-gold"
+        >
+          {t('tabModels3d')}
+        </Link>
       </nav>
       {children}
     </div>
