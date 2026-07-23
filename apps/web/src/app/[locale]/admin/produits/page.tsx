@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
+import { Boxes, Pencil, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { apiDownload, apiFetch, apiUpload } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { ProductForm } from '@/components/admin/product-form';
@@ -150,6 +152,7 @@ export default function AdminProductsPage() {
         <table className="w-full text-start text-sm">
           <thead>
             <tr className="border-b border-border text-start text-xs text-muted">
+              <th className="p-3 text-start">{t('colPhoto')}</th>
               <th className="p-3 text-start">{t('colName')}</th>
               <th className="p-3 text-start">{t('colPrice')}</th>
               <th className="p-3 text-start">{t('colAudience')}</th>
@@ -162,6 +165,21 @@ export default function AdminProductsPage() {
           <tbody>
             {products?.map((product) => (
               <tr key={product._id} className="border-b border-border last:border-0">
+                <td className="p-3">
+                  {product.images[0] ? (
+                    <div className="relative h-12 w-12 overflow-hidden rounded-md border border-border bg-background">
+                      <Image
+                        src={product.images[0]}
+                        alt=""
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-12 w-12 rounded-md border border-border bg-background" />
+                  )}
+                </td>
                 <td className="p-3">{localize(product.name, locale)}</td>
                 <td className="p-3">
                   {product.price} {tCommon('currency')}
@@ -192,25 +210,45 @@ export default function AdminProductsPage() {
                     {product.isActive ? t('statusActive') : t('statusInactive')}
                   </span>
                 </td>
-                <td className="space-x-2 rtl:space-x-reverse p-3 whitespace-nowrap">
-                  <button
-                    onClick={() => setEditingProduct(product)}
-                    className="text-brand-terracotta underline"
-                  >
-                    {t('edit')}
-                  </button>
-                  <button onClick={() => setAdjustingProduct(product)} className="underline">
-                    {t('adjustStock')}
-                  </button>
-                  <button onClick={() => toggleActive(product)} className="underline">
-                    {product.isActive ? t('deactivate') : t('activate')}
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product)}
-                    className="text-red-600 underline"
-                  >
-                    {t('delete')}
-                  </button>
+                <td className="p-3 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setEditingProduct(product)}
+                      aria-label={t('edit')}
+                      title={t('edit')}
+                      className="text-brand-terracotta hover:opacity-70"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => setAdjustingProduct(product)}
+                      aria-label={t('adjustStock')}
+                      title={t('adjustStock')}
+                      className="hover:opacity-70"
+                    >
+                      <Boxes className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => toggleActive(product)}
+                      aria-label={product.isActive ? t('deactivate') : t('activate')}
+                      title={product.isActive ? t('deactivate') : t('activate')}
+                      className="hover:opacity-70"
+                    >
+                      {product.isActive ? (
+                        <ToggleRight className="h-4 w-4" />
+                      ) : (
+                        <ToggleLeft className="h-4 w-4" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product)}
+                      aria-label={t('delete')}
+                      title={t('delete')}
+                      className="text-red-600 hover:opacity-70"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

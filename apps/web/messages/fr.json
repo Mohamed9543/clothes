@@ -186,6 +186,7 @@
     "newProduct": "Nouveau produit",
     "editProduct": "Modifier le produit",
     "colSlug": "Slug",
+    "colPhoto": "Photo",
     "colName": "Nom",
     "colPrice": "Prix",
     "colAudience": "Public",
