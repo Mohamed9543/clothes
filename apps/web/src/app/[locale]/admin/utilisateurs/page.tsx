@@ -2,6 +2,7 @@
 
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { Ban, CircleCheck, Receipt } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
 import type { AdminUser, Order } from '@/types';
 
@@ -84,17 +85,30 @@ export default function AdminUsersPage() {
                     {user.isBlocked ? t('statusInactive') : t('statusActive')}
                   </span>
                 </td>
-                <td className="space-x-2 rtl:space-x-reverse p-3 whitespace-nowrap">
-                  <button
-                    onClick={() => toggleBlocked(user)}
-                    disabled={user.role === 'admin'}
-                    className="text-brand-terracotta underline disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    {user.isBlocked ? t('unblock') : t('block')}
-                  </button>
-                  <button onClick={() => toggleOrders(user._id)} className="underline">
-                    {openOrdersId === user._id ? t('hideOrders') : t('viewOrders')}
-                  </button>
+                <td className="p-3 whitespace-nowrap">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => toggleBlocked(user)}
+                      disabled={user.role === 'admin'}
+                      aria-label={user.isBlocked ? t('unblock') : t('block')}
+                      title={user.isBlocked ? t('unblock') : t('block')}
+                      className="text-brand-terracotta hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {user.isBlocked ? (
+                        <CircleCheck className="h-4 w-4" />
+                      ) : (
+                        <Ban className="h-4 w-4" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => toggleOrders(user._id)}
+                      aria-label={openOrdersId === user._id ? t('hideOrders') : t('viewOrders')}
+                      title={openOrdersId === user._id ? t('hideOrders') : t('viewOrders')}
+                      className="hover:opacity-70"
+                    >
+                      <Receipt className="h-4 w-4" />
+                    </button>
+                  </div>
                 </td>
               </tr>
               {openOrdersId === user._id && (
