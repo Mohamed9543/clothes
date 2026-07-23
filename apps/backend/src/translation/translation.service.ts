@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException, ServiceUnavailableException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  InternalServerErrorException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Anthropic from '@anthropic-ai/sdk';
 import { LocalizedText } from '../catalog/schemas/product.schema';
@@ -46,11 +51,20 @@ Description du produit (${dto.sourceLocale}): "${dto.description}"
 Réponds UNIQUEMENT avec un objet JSON valide, sans balises markdown, exactement sous cette forme :
 {"name":{"fr":"...","en":"...","ar":"...","tn":"..."},"description":{"fr":"...","en":"...","ar":"...","tn":"..."}}`;
 
-    const response = await this.client.messages.create({
-      model: this.model,
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
-    });
+    let response;
+    try {
+      response = await this.client.messages.create({
+        model: this.model,
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: prompt }],
+      });
+    } catch (error) {
+      const apiMessage =
+        error instanceof Anthropic.APIError
+          ? ((error.error as { error?: { message?: string } })?.error?.message ?? error.message)
+          : "Erreur inconnue lors de l'appel à l'API de traduction.";
+      throw new BadGatewayException(`Échec de la traduction automatique : ${apiMessage}`);
+    }
 
     const text = response.content
       .filter((block) => block.type === 'text')
