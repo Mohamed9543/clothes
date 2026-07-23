@@ -22,7 +22,7 @@
     "seed": "ts-node -r tsconfig-paths/register src/catalog/seed.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.112.3",
+    "@google/genai": "^2.13.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",

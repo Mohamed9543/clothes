@@ -5,7 +5,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Anthropic from '@anthropic-ai/sdk';
+import { ApiError, GoogleGenAI } from '@google/genai';
 import { LocalizedText } from '../catalog/schemas/product.schema';
 import { EnvConfig } from '../config/env.validation';
 import { TranslateProductDto } from './dto/translate-product.dto';
@@ -24,19 +24,19 @@ export interface ProductTranslation {
 
 @Injectable()
 export class TranslationService {
-  private readonly client: Anthropic | null;
+  private readonly client: GoogleGenAI | null;
   private readonly model: string;
 
   constructor(private readonly configService: ConfigService<EnvConfig, true>) {
-    const apiKey = this.configService.get('ANTHROPIC_API_KEY', { infer: true });
-    this.model = this.configService.get('ANTHROPIC_MODEL', { infer: true });
-    this.client = apiKey ? new Anthropic({ apiKey }) : null;
+    const apiKey = this.configService.get('GEMINI_API_KEY', { infer: true });
+    this.model = this.configService.get('GEMINI_MODEL', { infer: true });
+    this.client = apiKey ? new GoogleGenAI({ apiKey }) : null;
   }
 
   async translateProduct(dto: TranslateProductDto): Promise<ProductTranslation> {
     if (!this.client) {
       throw new ServiceUnavailableException(
-        "La traduction automatique n'est pas configurée (ANTHROPIC_API_KEY manquante).",
+        "La traduction automatique n'est pas configurée (GEMINI_API_KEY manquante).",
       );
     }
 
@@ -51,26 +51,18 @@ Description du produit (${dto.sourceLocale}): "${dto.description}"
 Réponds UNIQUEMENT avec un objet JSON valide, sans balises markdown, exactement sous cette forme :
 {"name":{"fr":"...","en":"...","ar":"...","tn":"..."},"description":{"fr":"...","en":"...","ar":"...","tn":"..."}}`;
 
-    let response;
+    let text: string;
     try {
-      response = await this.client.messages.create({
+      const response = await this.client.models.generateContent({
         model: this.model,
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: prompt }],
+        contents: prompt,
       });
+      text = (response.text ?? '').trim();
     } catch (error) {
       const apiMessage =
-        error instanceof Anthropic.APIError
-          ? ((error.error as { error?: { message?: string } })?.error?.message ?? error.message)
-          : "Erreur inconnue lors de l'appel à l'API de traduction.";
+        error instanceof ApiError ? error.message : "Erreur inconnue lors de l'appel à l'API de traduction.";
       throw new BadGatewayException(`Échec de la traduction automatique : ${apiMessage}`);
     }
-
-    const text = response.content
-      .filter((block) => block.type === 'text')
-      .map((block) => (block.type === 'text' ? block.text : ''))
-      .join('')
-      .trim();
 
     const jsonText = text.replace(/^```(json)?/i, '').replace(/```$/, '').trim();
 

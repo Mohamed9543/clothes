@@ -2,9 +2,9 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
-import { ClaudeService } from './claude.service';
 import { ConversationsService } from './conversations.service';
 import { SendMessageDto } from './dto/send-message.dto';
+import { GeminiService } from './gemini.service';
 import { ChatRole } from './schemas/conversation.schema';
 
 @Controller('chat/conversations')
@@ -12,7 +12,7 @@ import { ChatRole } from './schemas/conversation.schema';
 export class ChatController {
   constructor(
     private readonly conversationsService: ConversationsService,
-    private readonly claudeService: ClaudeService,
+    private readonly geminiService: GeminiService,
   ) {}
 
   @Post()
@@ -47,7 +47,7 @@ export class ChatController {
       { role: ChatRole.USER, content: dto.content },
     ];
 
-    const reply = await this.claudeService.chat(history);
+    const reply = await this.geminiService.chat(history);
 
     await this.conversationsService.appendMessages(id, [
       {

@@ -1,12 +1,6 @@
-import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { BadGatewayException, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Anthropic from '@anthropic-ai/sdk';
-import type {
-  MessageParam,
-  Tool,
-  ToolResultBlockParam,
-  ToolUnion,
-} from '@anthropic-ai/sdk/resources/messages';
+import { ApiError, Content, Part, createPartFromFunctionResponse, GoogleGenAI, Tool } from '@google/genai';
 import { EnvConfig } from '../config/env.validation';
 import { ProductsService } from '../catalog/products.service';
 import { LocalizedText, ProductAudience, ProductType } from '../catalog/schemas/product.schema';
@@ -29,47 +23,51 @@ Rôle :
 const PRODUCT_TYPES = Object.values(ProductType);
 const PRODUCT_AUDIENCES = Object.values(ProductAudience);
 
-const TOOLS: ToolUnion[] = [
+const TOOLS: Tool[] = [
   {
-    name: 'search_products',
-    description:
-      "Recherche des produits dans le catalogue Libas avec des filtres. Utilise-le pour trouver des vêtements par public, type, fourchette de prix ou mots-clés (ex: occasion, couleur, style).",
-    input_schema: {
-      type: 'object',
-      properties: {
-        audience: { type: 'string', enum: PRODUCT_AUDIENCES, description: 'Public visé' },
-        type: { type: 'string', enum: PRODUCT_TYPES, description: 'Type de vêtement' },
-        minPrice: { type: 'number', description: 'Prix minimum en TND' },
-        maxPrice: { type: 'number', description: 'Prix maximum en TND' },
-        search: { type: 'string', description: 'Mots-clés de recherche (nom, style, couleur...)' },
-        limit: { type: 'number', description: 'Nombre max de résultats (défaut 5)' },
+    functionDeclarations: [
+      {
+        name: 'search_products',
+        description:
+          "Recherche des produits dans le catalogue Libas avec des filtres. Utilise-le pour trouver des vêtements par public, type, fourchette de prix ou mots-clés (ex: occasion, couleur, style).",
+        parametersJsonSchema: {
+          type: 'object',
+          properties: {
+            audience: { type: 'string', enum: PRODUCT_AUDIENCES, description: 'Public visé' },
+            type: { type: 'string', enum: PRODUCT_TYPES, description: 'Type de vêtement' },
+            minPrice: { type: 'number', description: 'Prix minimum en TND' },
+            maxPrice: { type: 'number', description: 'Prix maximum en TND' },
+            search: { type: 'string', description: 'Mots-clés de recherche (nom, style, couleur...)' },
+            limit: { type: 'number', description: 'Nombre max de résultats (défaut 5)' },
+          },
+        },
       },
-    },
-  },
-  {
-    name: 'get_product',
-    description: "Récupère les détails complets d'un produit à partir de son slug.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        slug: { type: 'string', description: 'Le slug du produit' },
+      {
+        name: 'get_product',
+        description: "Récupère les détails complets d'un produit à partir de son slug.",
+        parametersJsonSchema: {
+          type: 'object',
+          properties: {
+            slug: { type: 'string', description: 'Le slug du produit' },
+          },
+          required: ['slug'],
+        },
       },
-      required: ['slug'],
-    },
-  },
-  {
-    name: 'find_matching_products',
-    description:
-      "Trouve des produits d'un certain type qui se marient bien avec un produit donné (même public, couleurs compatibles). Utile pour répondre à 'quel pull va avec ce pantalon ?'.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        productId: { type: 'string', description: "L'identifiant (_id) du produit de référence" },
-        type: { type: 'string', enum: PRODUCT_TYPES, description: 'Type de vêtement recherché' },
-        limit: { type: 'number', description: 'Nombre max de résultats (défaut 3)' },
+      {
+        name: 'find_matching_products',
+        description:
+          "Trouve des produits d'un certain type qui se marient bien avec un produit donné (même public, couleurs compatibles). Utile pour répondre à 'quel pull va avec ce pantalon ?'.",
+        parametersJsonSchema: {
+          type: 'object',
+          properties: {
+            productId: { type: 'string', description: "L'identifiant (_id) du produit de référence" },
+            type: { type: 'string', enum: PRODUCT_TYPES, description: 'Type de vêtement recherché' },
+            limit: { type: 'number', description: 'Nombre max de résultats (défaut 3)' },
+          },
+          required: ['productId', 'type'],
+        },
       },
-      required: ['productId', 'type'],
-    },
+    ],
   },
 ];
 
@@ -89,18 +87,18 @@ export interface ChatReply {
 }
 
 @Injectable()
-export class ClaudeService {
-  private readonly logger = new Logger(ClaudeService.name);
-  private readonly client: Anthropic | null;
+export class GeminiService {
+  private readonly logger = new Logger(GeminiService.name);
+  private readonly client: GoogleGenAI | null;
   private readonly model: string;
 
   constructor(
     private readonly configService: ConfigService<EnvConfig, true>,
     private readonly productsService: ProductsService,
   ) {
-    const apiKey = this.configService.get('ANTHROPIC_API_KEY', { infer: true });
-    this.model = this.configService.get('ANTHROPIC_MODEL', { infer: true });
-    this.client = apiKey ? new Anthropic({ apiKey }) : null;
+    const apiKey = this.configService.get('GEMINI_API_KEY', { infer: true });
+    this.model = this.configService.get('GEMINI_MODEL', { infer: true });
+    this.client = apiKey ? new GoogleGenAI({ apiKey }) : null;
   }
 
   private toToolProduct(product: {
@@ -177,70 +175,73 @@ export class ClaudeService {
   async chat(history: Array<{ role: ChatRole; content: string }>): Promise<ChatReply> {
     if (!this.client) {
       throw new ServiceUnavailableException(
-        'Le chatbot IA n\'est pas configuré (ANTHROPIC_API_KEY manquante).',
+        "Le chatbot IA n'est pas configuré (GEMINI_API_KEY manquante).",
       );
     }
 
-    const messages: MessageParam[] = history.map((m) => ({
-      role: m.role === ChatRole.USER ? 'user' : 'assistant',
-      content: m.content,
+    const contents: Content[] = history.map((m) => ({
+      role: m.role === ChatRole.USER ? 'user' : 'model',
+      parts: [{ text: m.content }],
     }));
 
     const collectedProducts: ChatToolProduct[] = [];
     const seenProductIds = new Set<string>();
 
     for (let iteration = 0; iteration < 4; iteration += 1) {
-      const response = await this.client.messages.create({
-        model: this.model,
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        tools: TOOLS as Tool[],
-        messages,
-      });
-
-      messages.push({ role: 'assistant', content: response.content });
-
-      if (response.stop_reason !== 'tool_use') {
-        const text = response.content
-          .filter((block) => block.type === 'text')
-          .map((block) => (block.type === 'text' ? block.text : ''))
-          .join('\n')
-          .trim();
-        return { content: text, products: collectedProducts };
+      let response;
+      try {
+        response = await this.client.models.generateContent({
+          model: this.model,
+          contents,
+          config: {
+            systemInstruction: SYSTEM_PROMPT,
+            tools: TOOLS,
+          },
+        });
+      } catch (error) {
+        const apiMessage =
+          error instanceof ApiError ? error.message : "Erreur inconnue lors de l'appel à l'API du chatbot.";
+        throw new BadGatewayException(`Échec de la génération de réponse : ${apiMessage}`);
       }
 
-      const toolUseBlocks = response.content.filter((block) => block.type === 'tool_use');
-      const toolResults: ToolResultBlockParam[] = [];
+      const functionCalls = response.functionCalls;
 
-      for (const block of toolUseBlocks) {
+      if (!functionCalls || functionCalls.length === 0) {
+        return { content: (response.text ?? '').trim(), products: collectedProducts };
+      }
+
+      const modelContent = response.candidates?.[0]?.content;
+      if (modelContent) {
+        contents.push(modelContent);
+      }
+
+      const responseParts: Part[] = [];
+      for (const call of functionCalls) {
+        const toolName = call.name ?? '';
         try {
-          const { result, products } = await this.runTool(
-            block.name,
-            (block.input ?? {}) as Record<string, unknown>,
-          );
+          const { result, products } = await this.runTool(toolName, call.args ?? {});
           for (const product of products) {
             if (!seenProductIds.has(product.id)) {
               seenProductIds.add(product.id);
               collectedProducts.push(product);
             }
           }
-          toolResults.push({
-            type: 'tool_result' as const,
-            tool_use_id: block.id,
-            content: JSON.stringify(result),
-          });
+          responseParts.push(
+            createPartFromFunctionResponse(call.id ?? toolName, toolName, {
+              output: result,
+            }),
+          );
         } catch (error) {
-          this.logger.error(`Tool ${block.name} failed`, error as Error);
-          toolResults.push({
-            type: 'tool_result' as const,
-            tool_use_id: block.id,
-            content: 'An error occurred while executing this tool.',
-            is_error: true,
-          });
+          this.logger.error(`Tool ${toolName} failed`, error as Error);
+          responseParts.push(
+            createPartFromFunctionResponse(call.id ?? toolName, toolName, {
+              error: 'An error occurred while executing this tool.',
+            }),
+          );
         }
       }
 
-      messages.push({ role: 'user', content: toolResults });
+      contents.push({ role: 'user', parts: responseParts });
     }
 
     return {
