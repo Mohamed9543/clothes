@@ -28,3 +28,7 @@ Thumbs.db
 
 # Coverage / tests
 coverage/
+
+# Uploaded files (generated at runtime, not versioned)
+apps/backend/uploads/*
+!apps/backend/uploads/.gitkeep

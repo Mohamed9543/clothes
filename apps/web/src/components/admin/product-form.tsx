@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { apiFetch, ApiError } from '@/lib/api';
+import { API_URL, apiFetch, apiUpload, ApiError } from '@/lib/api';
 import type { Product, ProductAudience, ProductType, ProductVariant } from '@/types';
 
 const AUDIENCES: ProductAudience[] = ['men', 'women', 'kids'];
@@ -42,11 +42,13 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
     product?.variants && product.variants.length > 0 ? product.variants : [{ size: '', stock: 0 }],
   );
   const [colors, setColors] = useState(product?.colors.join(', ') ?? '');
-  const [images, setImages] = useState(product?.images.join(', ') ?? '');
+  const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [isActive, setIsActive] = useState(product?.isActive ?? true);
   const [tryOnEnabled, setTryOnEnabled] = useState(product?.tryOnEnabled ?? true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function updateVariant(index: number, patch: Partial<ProductVariant>) {
     setVariants((current) =>
@@ -60,6 +62,34 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
 
   function removeVariantRow(index: number) {
     setVariants((current) => current.filter((_, i) => i !== index));
+  }
+
+  function removeImage(index: number) {
+    setImages((current) => current.filter((_, i) => i !== index));
+  }
+
+  async function handleImageFiles(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    const fileList = Array.from(files);
+    event.target.value = '';
+
+    setIsUploading(true);
+    setError(null);
+    try {
+      for (const file of fileList) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const result = await apiUpload<{ url: string }>('/uploads/image', formData, {
+          auth: true,
+        });
+        setImages((current) => [...current, `${API_URL}${result.url}`]);
+      }
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t('saveError'));
+    } finally {
+      setIsUploading(false);
+    }
   }
 
   async function handleSubmit(event: React.FormEvent) {
@@ -78,7 +108,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
         .filter((variant) => variant.size.trim() !== '')
         .map((variant) => ({ size: variant.size.trim(), stock: Number(variant.stock) })),
       colors: colors.split(',').map((c) => c.trim()).filter(Boolean),
-      images: images.split(',').map((i) => i.trim()).filter(Boolean),
+      images,
       isActive,
       tryOnEnabled,
     };
@@ -197,7 +227,48 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       </div>
 
       <input placeholder={t('fieldColors')} value={colors} onChange={(e) => setColors(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
-      <input placeholder={t('fieldImages')} value={images} onChange={(e) => setImages(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+
+      <div>
+        <label className="mb-1 block text-xs text-muted">{t('fieldImages')}</label>
+        {images.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-2">
+            {images.map((url, index) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <div key={url} className="relative">
+                <img
+                  src={url}
+                  alt=""
+                  className="h-20 w-20 rounded-md border border-border object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  aria-label={t('removeImage')}
+                  className="absolute -end-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-terracotta text-xs text-white"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          onChange={handleImageFiles}
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="rounded-md border border-border px-4 py-2 text-sm hover:border-brand-gold disabled:opacity-50"
+        >
+          {isUploading ? t('uploading') : t('uploadImages')}
+        </button>
+      </div>
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
@@ -217,7 +288,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       <div className="flex gap-3">
         <button
           type="submit"
-          disabled={isSaving}
+          disabled={isSaving || isUploading}
           className="rounded-full bg-brand-terracotta px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
         >
           {t('save')}
