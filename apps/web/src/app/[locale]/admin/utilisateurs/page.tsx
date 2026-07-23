@@ -2,8 +2,8 @@
 
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Ban, CircleCheck, Receipt } from 'lucide-react';
-import { apiFetch } from '@/lib/api';
+import { Ban, CircleCheck, Eye, Pencil, Receipt, Trash2, X } from 'lucide-react';
+import { apiFetch, ApiError } from '@/lib/api';
 import type { AdminUser, Order } from '@/types';
 
 export default function AdminUsersPage() {
@@ -15,6 +15,12 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<AdminUser[] | null>(null);
   const [openOrdersId, setOpenOrdersId] = useState<string | null>(null);
   const [ordersByUser, setOrdersByUser] = useState<Record<string, Order[]>>({});
+  const [viewingUser, setViewingUser] = useState<AdminUser | null>(null);
+  const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
+  const [editFirstName, setEditFirstName] = useState('');
+  const [editLastName, setEditLastName] = useState('');
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
 
   const loadUsers = useCallback(async () => {
     const result = await apiFetch<AdminUser[]>('/users/admin/all', { auth: true });
@@ -32,6 +38,39 @@ export default function AdminUsersPage() {
       auth: true,
       body: JSON.stringify({ isBlocked: !user.isBlocked }),
     });
+    void loadUsers();
+  }
+
+  function openEdit(user: AdminUser) {
+    setEditingUser(user);
+    setEditFirstName(user.firstName);
+    setEditLastName(user.lastName);
+    setEditError(null);
+  }
+
+  async function handleSaveEdit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!editingUser) return;
+    setIsSavingEdit(true);
+    setEditError(null);
+    try {
+      await apiFetch(`/users/admin/${editingUser._id}`, {
+        method: 'PATCH',
+        auth: true,
+        body: JSON.stringify({ firstName: editFirstName, lastName: editLastName }),
+      });
+      setEditingUser(null);
+      void loadUsers();
+    } catch (err) {
+      setEditError(err instanceof ApiError ? err.message : t('saveError'));
+    } finally {
+      setIsSavingEdit(false);
+    }
+  }
+
+  async function handleDeleteUser(user: AdminUser) {
+    if (!window.confirm(t('confirmDeleteUser'))) return;
+    await apiFetch(`/users/admin/${user._id}`, { method: 'DELETE', auth: true });
     void loadUsers();
   }
 
@@ -88,6 +127,22 @@ export default function AdminUsersPage() {
                 <td className="p-3 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <button
+                      onClick={() => setViewingUser(user)}
+                      aria-label={t('viewUser')}
+                      title={t('viewUser')}
+                      className="hover:opacity-70"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => openEdit(user)}
+                      aria-label={t('edit')}
+                      title={t('edit')}
+                      className="text-brand-terracotta hover:opacity-70"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
                       onClick={() => toggleBlocked(user)}
                       disabled={user.role === 'admin'}
                       aria-label={user.isBlocked ? t('unblock') : t('block')}
@@ -107,6 +162,15 @@ export default function AdminUsersPage() {
                       className="hover:opacity-70"
                     >
                       <Receipt className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user)}
+                      disabled={user.role === 'admin'}
+                      aria-label={t('delete')}
+                      title={t('delete')}
+                      className="text-red-600 hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </td>
@@ -137,6 +201,97 @@ export default function AdminUsersPage() {
           ))}
         </tbody>
       </table>
+
+      {viewingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="relative w-full max-w-md rounded-xl bg-surface p-6">
+            <button
+              onClick={() => setViewingUser(null)}
+              aria-label={t('close')}
+              className="absolute end-4 top-4"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <h2 className="mb-4 font-medium">{t('viewUser')}</h2>
+            <dl className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-muted">{t('colName')}</dt>
+                <dd>{viewingUser.firstName} {viewingUser.lastName}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted">{t('colEmail')}</dt>
+                <dd>{viewingUser.email}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted">{t('colRole')}</dt>
+                <dd>{viewingUser.role === 'admin' ? t('roleAdmin') : t('roleCustomer')}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted">{t('colLanguage')}</dt>
+                <dd>{viewingUser.preferredLanguage}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted">{t('colRegistered')}</dt>
+                <dd>{new Date(viewingUser.createdAt).toLocaleDateString(locale)}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-muted">{t('colStatus')}</dt>
+                <dd>{viewingUser.isBlocked ? t('statusInactive') : t('statusActive')}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      )}
+
+      {editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <form
+            onSubmit={handleSaveEdit}
+            className="relative w-full max-w-md space-y-4 rounded-xl bg-surface p-6"
+          >
+            <button
+              type="button"
+              onClick={() => setEditingUser(null)}
+              aria-label={t('close')}
+              className="absolute end-4 top-4"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <h2 className="font-medium">{t('editUser')}</h2>
+            <input
+              required
+              value={editFirstName}
+              onChange={(e) => setEditFirstName(e.target.value)}
+              placeholder={t('colName')}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+            <input
+              required
+              value={editLastName}
+              onChange={(e) => setEditLastName(e.target.value)}
+              placeholder={t('colName')}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+            {editError && <p className="text-sm text-red-600">{editError}</p>}
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={isSavingEdit}
+                className="rounded-full bg-brand-terracotta px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+              >
+                {t('save')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditingUser(null)}
+                className="rounded-full border border-border px-6 py-2 text-sm hover:border-brand-gold"
+              >
+                {t('cancel')}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

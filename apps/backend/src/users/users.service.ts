@@ -92,4 +92,19 @@ export class UsersService {
     }
     return user;
   }
+
+  async updateAdmin(id: string, dto: { firstName?: string; lastName?: string }): Promise<UserDocument> {
+    const user = await this.userModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  async remove(id: string): Promise<void> {
+    const result = await this.userModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException('User not found');
+    }
+  }
 }

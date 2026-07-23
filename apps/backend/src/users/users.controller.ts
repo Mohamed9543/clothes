@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Patch, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -8,8 +8,26 @@ import { OrdersService } from '../orders/orders.service';
 import { BlockUserDto } from './dto/block-user.dto';
 import { SetAvatarStatusDto } from './dto/set-avatar-status.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { UserRole } from './schemas/user.schema';
+import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
+import { UserDocument, UserRole } from './schemas/user.schema';
 import { UsersService } from './users.service';
+
+function toAdminUserView(user: UserDocument) {
+  return {
+    id: user._id.toString(),
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    role: user.role,
+    preferredLanguage: user.preferredLanguage,
+    isBlocked: user.isBlocked,
+    avatarUrl: user.avatarUrl,
+    heightCm: user.heightCm,
+    weightKg: user.weightKg,
+    gender: user.gender,
+    createdAt: user.createdAt,
+  };
+}
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -83,5 +101,38 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   setAvatarDisabled(@Param('id') id: string, @Body() dto: SetAvatarStatusDto) {
     return this.usersService.setAvatarDisabled(id, dto.disabled);
+  }
+
+  @Get('admin/:id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async findOneAdmin(@Param('id') id: string) {
+    const user = await this.usersService.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return toAdminUserView(user);
+  }
+
+  @Patch('admin/:id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async updateUserAdmin(@Param('id') id: string, @Body() dto: UpdateUserAdminDto) {
+    const user = await this.usersService.updateAdmin(id, dto);
+    return toAdminUserView(user);
+  }
+
+  @Delete('admin/:id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async removeUser(@CurrentUser() currentUser: JwtAccessPayload, @Param('id') id: string) {
+    if (id === currentUser.sub) {
+      throw new BadRequestException('You cannot delete your own account');
+    }
+    const target = await this.usersService.findById(id);
+    if (target?.role === UserRole.ADMIN) {
+      throw new BadRequestException('You cannot delete another admin account');
+    }
+    await this.usersService.remove(id);
   }
 }
