@@ -43,23 +43,25 @@ export function Navbar() {
           )}
         </nav>
 
-        <SearchBar />
+        {user?.role !== 'admin' && <SearchBar />}
 
         <div className="ms-auto flex items-center gap-3">
           <LocaleSwitcher />
 
-          <Link
-            href="/panier"
-            className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
-            aria-label={t('cart')}
-          >
-            <ShoppingBag className="h-5 w-5" />
-            {itemCount > 0 && (
-              <span className="absolute -top-1 -end-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-terracotta px-1 text-[10px] font-semibold text-white">
-                {itemCount}
-              </span>
-            )}
-          </Link>
+          {user?.role !== 'admin' && (
+            <Link
+              href="/panier"
+              className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
+              aria-label={t('cart')}
+            >
+              <ShoppingBag className="h-5 w-5" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -end-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-terracotta px-1 text-[10px] font-semibold text-white">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          )}
 
           <Link
             href={user ? '/compte' : '/login'}
