@@ -50,6 +50,14 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <script
+          // Runs before paint to avoid a flash of the wrong theme.
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('libas_theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>

@@ -7,6 +7,7 @@ import { useCart } from '@/context/cart-context';
 import { Link } from '@/i18n/navigation';
 import { LocaleSwitcher } from './locale-switcher';
 import { SearchBar } from './search-bar';
+import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
   const t = useTranslations('nav');
@@ -46,6 +47,7 @@ export function Navbar() {
         {user?.role !== 'admin' && <SearchBar />}
 
         <div className="ms-auto flex items-center gap-3">
+          <ThemeToggle />
           <LocaleSwitcher />
 
           {user?.role !== 'admin' && (
