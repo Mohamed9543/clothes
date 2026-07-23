@@ -1,9 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { API_URL, apiFetch, apiUpload, ApiError } from '@/lib/api';
-import type { Product, ProductAudience, ProductType, ProductVariant } from '@/types';
+import type { LocalizedText, Product, ProductAudience, ProductType, ProductVariant } from '@/types';
 
 const AUDIENCES: ProductAudience[] = ['men', 'women', 'kids'];
 const TYPES: ProductType[] = [
@@ -25,16 +25,11 @@ interface ProductFormProps {
 export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   const t = useTranslations('admin');
   const tCatalog = useTranslations('catalog');
+  const locale = useLocale() as keyof LocalizedText;
 
   const [slug, setSlug] = useState(product?.slug ?? '');
-  const [nameFr, setNameFr] = useState(product?.name.fr ?? '');
-  const [nameEn, setNameEn] = useState(product?.name.en ?? '');
-  const [nameAr, setNameAr] = useState(product?.name.ar ?? '');
-  const [nameTn, setNameTn] = useState(product?.name.tn ?? '');
-  const [descFr, setDescFr] = useState(product?.description.fr ?? '');
-  const [descEn, setDescEn] = useState(product?.description.en ?? '');
-  const [descAr, setDescAr] = useState(product?.description.ar ?? '');
-  const [descTn, setDescTn] = useState(product?.description.tn ?? '');
+  const [name, setName] = useState(product?.name[locale] ?? '');
+  const [description, setDescription] = useState(product?.description[locale] ?? '');
   const [price, setPrice] = useState(product ? String(product.price) : '');
   const [audience, setAudience] = useState<ProductAudience>(product?.audience ?? 'men');
   const [type, setType] = useState<ProductType>(product?.type ?? 'pull');
@@ -47,6 +42,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   const [tryOnEnabled, setTryOnEnabled] = useState(product?.tryOnEnabled ?? true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -97,10 +93,29 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
     setIsSaving(true);
     setError(null);
 
+    let translated: { name: LocalizedText; description: LocalizedText };
+    try {
+      setIsTranslating(true);
+      translated = await apiFetch<{ name: LocalizedText; description: LocalizedText }>(
+        '/products/admin/translate',
+        {
+          method: 'POST',
+          auth: true,
+          body: JSON.stringify({ name, description, sourceLocale: locale }),
+        },
+      );
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t('translationError'));
+      setIsSaving(false);
+      setIsTranslating(false);
+      return;
+    }
+    setIsTranslating(false);
+
     const body = {
       slug,
-      name: { fr: nameFr, en: nameEn, ar: nameAr, tn: nameTn },
-      description: { fr: descFr, en: descEn, ar: descAr, tn: descTn },
+      name: translated.name,
+      description: translated.description,
       price: Number(price),
       audience,
       type,
@@ -147,19 +162,25 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
         className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
       />
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <input required placeholder={t('fieldNameFr')} value={nameFr} onChange={(e) => setNameFr(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
-        <input required placeholder={t('fieldNameEn')} value={nameEn} onChange={(e) => setNameEn(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" />
-        <input required placeholder={t('fieldNameAr')} value={nameAr} onChange={(e) => setNameAr(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" dir="rtl" />
-        <input required placeholder={t('fieldNameTn')} value={nameTn} onChange={(e) => setNameTn(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" dir="rtl" />
+      <div>
+        <input
+          required
+          placeholder={t('fieldName')}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+        />
+        <p className="mt-1 text-xs text-muted">{t('autoTranslateHint')}</p>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <textarea required placeholder={t('fieldDescFr')} value={descFr} onChange={(e) => setDescFr(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" rows={2} />
-        <textarea required placeholder={t('fieldDescEn')} value={descEn} onChange={(e) => setDescEn(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" rows={2} />
-        <textarea required placeholder={t('fieldDescAr')} value={descAr} onChange={(e) => setDescAr(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" rows={2} dir="rtl" />
-        <textarea required placeholder={t('fieldDescTn')} value={descTn} onChange={(e) => setDescTn(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-sm" rows={2} dir="rtl" />
-      </div>
+      <textarea
+        required
+        placeholder={t('fieldDescription')}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+        rows={3}
+      />
 
       <div className="grid gap-3 sm:grid-cols-3">
         <div>
@@ -291,7 +312,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
           disabled={isSaving || isUploading}
           className="rounded-full bg-brand-terracotta px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
         >
-          {t('save')}
+          {isTranslating ? t('translating') : t('save')}
         </button>
         <button
           type="button"

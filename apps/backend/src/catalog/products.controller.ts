@@ -17,6 +17,8 @@ import { memoryStorage } from 'multer';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { TranslationService } from '../translation/translation.service';
+import { TranslateProductDto } from '../translation/dto/translate-product.dto';
 import { UserRole } from '../users/schemas/user.schema';
 import { AdjustStockDto } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -26,7 +28,10 @@ import { ProductsService } from './products.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly translationService: TranslationService,
+  ) {}
 
   @Get()
   findAll(@Query() query: QueryProductsDto) {
@@ -55,6 +60,13 @@ export class ProductsController {
   @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
   importCsv(@UploadedFile() file: Express.Multer.File) {
     return this.productsService.importFromCsv(file.buffer);
+  }
+
+  @Post('admin/translate')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  translate(@Body() dto: TranslateProductDto) {
+    return this.translationService.translateProduct(dto);
   }
 
   @Get(':slug')
