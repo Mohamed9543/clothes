@@ -1,11 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { apiFetch } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { OrderTimeline } from '@/components/order-timeline';
-import type { Order, OrderStatus, OrderStatusHistoryEntry } from '@/types';
+import type { AdminProduct, Order, OrderStatus, OrderStatusHistoryEntry, PaginatedResult } from '@/types';
 
 const STATUSES: OrderStatus[] = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
 
@@ -18,15 +19,28 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [openHistoryId, setOpenHistoryId] = useState<string | null>(null);
   const [histories, setHistories] = useState<Record<string, OrderStatusHistoryEntry[]>>({});
+  const [productImages, setProductImages] = useState<Record<string, string>>({});
 
   const loadOrders = useCallback(async () => {
     const result = await apiFetch<Order[]>('/orders/admin/all', { auth: true });
     setOrders(result);
   }, []);
 
+  const loadProductImages = useCallback(async () => {
+    const result = await apiFetch<PaginatedResult<AdminProduct>>('/products/admin/all?limit=100', {
+      auth: true,
+    });
+    const images: Record<string, string> = {};
+    for (const product of result.items) {
+      if (product.images[0]) images[product._id] = product.images[0];
+    }
+    setProductImages(images);
+  }, []);
+
   useEffect(() => {
     void loadOrders();
-  }, [loadOrders]);
+    void loadProductImages();
+  }, [loadOrders, loadProductImages]);
 
   async function updateStatus(order: Order, status: OrderStatus) {
     await apiFetch(`/orders/admin/${order._id}/status`, {
@@ -82,10 +96,25 @@ export default function AdminOrdersPage() {
             </select>
           </div>
 
-          <ul className="mt-3 space-y-1 text-sm">
+          <ul className="mt-3 space-y-2 text-sm">
             {order.items.map((item) => (
-              <li key={`${order._id}-${item.productId}`}>
-                {item.quantity} × {localize(item.name, locale)} ({item.size})
+              <li key={`${order._id}-${item.productId}`} className="flex items-center gap-3">
+                {productImages[item.productId] ? (
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border bg-background">
+                    <Image
+                      src={productImages[item.productId]}
+                      alt=""
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-10 w-10 shrink-0 rounded-md border border-border bg-background" />
+                )}
+                <span>
+                  {item.quantity} × {localize(item.name, locale)} ({item.size})
+                </span>
               </li>
             ))}
           </ul>
