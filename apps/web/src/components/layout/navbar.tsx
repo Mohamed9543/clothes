@@ -1,10 +1,11 @@
 'use client';
 
-import { ShoppingBag, User as UserIcon } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { Link } from '@/i18n/navigation';
+import { AccountMenu } from './account-menu';
 import { LocaleSwitcher } from './locale-switcher';
 import { SearchBar } from './search-bar';
 import { ThemeToggle } from './theme-toggle';
@@ -65,13 +66,7 @@ export function Navbar() {
             </Link>
           )}
 
-          <Link
-            href={user ? '/compte' : '/login'}
-            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
-            aria-label={t('account')}
-          >
-            <UserIcon className="h-5 w-5" />
-          </Link>
+          <AccountMenu />
         </div>
       </div>
     </header>
