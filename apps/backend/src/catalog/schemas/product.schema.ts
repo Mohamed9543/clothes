@@ -83,6 +83,9 @@ export class Product {
 
   @Prop({ default: true })
   tryOnEnabled: boolean;
+
+  @Prop({ type: String, default: null })
+  modelUrl: string | null;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

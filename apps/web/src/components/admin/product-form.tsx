@@ -38,13 +38,16 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   );
   const [colors, setColors] = useState(product?.colors.join(', ') ?? '');
   const [images, setImages] = useState<string[]>(product?.images ?? []);
+  const [modelUrl, setModelUrl] = useState<string | null>(product?.modelUrl ?? null);
   const [isActive, setIsActive] = useState(product?.isActive ?? true);
   const [tryOnEnabled, setTryOnEnabled] = useState(product?.tryOnEnabled ?? true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingModel, setIsUploadingModel] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const modelInputRef = useRef<HTMLInputElement>(null);
 
   function updateVariant(index: number, patch: Partial<ProductVariant>) {
     setVariants((current) =>
@@ -88,6 +91,28 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
     }
   }
 
+  async function handleModelFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    event.target.value = '';
+
+    setIsUploadingModel(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const result = await apiUpload<{ url: string }>('/uploads/model', formData, {
+        auth: true,
+      });
+      setModelUrl(`${API_URL}${result.url}`);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : t('saveError'));
+    } finally {
+      setIsUploadingModel(false);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setIsSaving(true);
@@ -124,6 +149,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
         .map((variant) => ({ size: variant.size.trim(), stock: Number(variant.stock) })),
       colors: colors.split(',').map((c) => c.trim()).filter(Boolean),
       images,
+      modelUrl,
       isActive,
       tryOnEnabled,
     };
@@ -291,6 +317,37 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
         </button>
       </div>
 
+      <div>
+        <label className="mb-1 block text-xs text-muted">{t('fieldModel')}</label>
+        {modelUrl ? (
+          <div className="mb-2 flex items-center gap-2 text-sm">
+            <span className="truncate text-muted">{modelUrl.split('/').pop()}</span>
+            <button
+              type="button"
+              onClick={() => setModelUrl(null)}
+              className="text-sm text-brand-terracotta underline"
+            >
+              {t('removeModel')}
+            </button>
+          </div>
+        ) : null}
+        <input
+          ref={modelInputRef}
+          type="file"
+          accept=".glb,.gltf"
+          hidden
+          onChange={handleModelFile}
+        />
+        <button
+          type="button"
+          onClick={() => modelInputRef.current?.click()}
+          disabled={isUploadingModel}
+          className="rounded-md border border-border px-4 py-2 text-sm hover:border-brand-gold disabled:opacity-50"
+        >
+          {isUploadingModel ? t('uploading') : t('uploadModel')}
+        </button>
+      </div>
+
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
         {t('fieldActive')}
@@ -309,7 +366,7 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       <div className="flex gap-3">
         <button
           type="submit"
-          disabled={isSaving || isUploading}
+          disabled={isSaving || isUploading || isUploadingModel}
           className="rounded-full bg-brand-terracotta px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
         >
           {isTranslating ? t('translating') : t('save')}

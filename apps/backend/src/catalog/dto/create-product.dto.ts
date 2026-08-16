@@ -59,4 +59,8 @@ export class CreateProductDto {
   @IsBoolean()
   @IsOptional()
   tryOnEnabled?: boolean;
+
+  @IsString()
+  @IsOptional()
+  modelUrl?: string;
 }
