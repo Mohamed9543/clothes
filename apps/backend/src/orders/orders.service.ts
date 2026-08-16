@@ -8,7 +8,7 @@ import {
   OrderStatusHistory,
   OrderStatusHistoryDocument,
 } from './schemas/order-status-history.schema';
-import { Order, OrderDocument, OrderItem, OrderStatus } from './schemas/order.schema';
+import { Order, OrderDocument, OrderItem, OrderStatus, PaymentMethod } from './schemas/order.schema';
 
 export interface OrderRequester {
   sub: string;
@@ -31,6 +31,10 @@ export class OrdersService {
     if (cart.items.length === 0) {
       throw new BadRequestException('Cart is empty');
     }
+
+    const paymentMethod = dto.paymentMethod ?? PaymentMethod.COD;
+    const initialStatus =
+      paymentMethod === PaymentMethod.CARD ? OrderStatus.PAID : OrderStatus.PENDING;
 
     const session = await this.connection.startSession();
     try {
@@ -68,6 +72,8 @@ export class OrdersService {
               items: orderItems,
               totalAmount,
               shippingAddress: dto.shippingAddress,
+              paymentMethod,
+              status: initialStatus,
             },
           ],
           { session },
@@ -87,7 +93,7 @@ export class OrdersService {
       await this.statusHistoryModel.create({
         orderId: (order as OrderDocument)._id.toString(),
         fromStatus: null,
-        toStatus: OrderStatus.PENDING,
+        toStatus: initialStatus,
         changedBy: null,
       });
 

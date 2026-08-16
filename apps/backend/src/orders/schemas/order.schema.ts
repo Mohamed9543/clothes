@@ -13,6 +13,7 @@ export enum OrderStatus {
 
 export enum PaymentMethod {
   COD = 'cod',
+  CARD = 'card',
 }
 
 @Schema({ _id: false })

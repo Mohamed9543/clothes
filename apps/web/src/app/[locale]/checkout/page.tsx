@@ -20,6 +20,10 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('Tunisie');
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card'>('cod');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<Order | null>(null);
@@ -44,6 +48,7 @@ export default function CheckoutPage() {
         auth: true,
         body: JSON.stringify({
           shippingAddress: { fullName, phone, address, city, country },
+          paymentMethod,
         }),
       });
       setOrder(created);
@@ -61,7 +66,7 @@ export default function CheckoutPage() {
         <h1 className="text-2xl font-semibold">{t('orderSuccessTitle')}</h1>
         <p className="mt-2 text-muted">{t('orderSuccessText')}</p>
         <Link
-          href="/compte"
+          href="/commandes"
           className="mt-6 inline-block rounded-full bg-brand-terracotta px-6 py-3 text-sm font-medium text-white hover:opacity-90"
         >
           {t('viewOrder')}
@@ -113,9 +118,63 @@ export default function CheckoutPage() {
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
 
-        <div className="rounded-md border border-border bg-surface px-3 py-2 text-sm">
-          <p className="font-medium">{t('paymentMethod')}</p>
-          <p className="text-muted">{t('cod')}</p>
+        <div>
+          <p className="mb-2 font-medium">{t('paymentMethod')}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('cod')}
+              className={`rounded-md border px-3 py-2 text-sm ${
+                paymentMethod === 'cod'
+                  ? 'border-brand-terracotta bg-surface'
+                  : 'border-border bg-surface text-muted'
+              }`}
+            >
+              {t('cod')}
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('card')}
+              className={`rounded-md border px-3 py-2 text-sm ${
+                paymentMethod === 'card'
+                  ? 'border-brand-terracotta bg-surface'
+                  : 'border-border bg-surface text-muted'
+              }`}
+            >
+              {t('card')}
+            </button>
+          </div>
+
+          {paymentMethod === 'card' && (
+            <div className="mt-3 space-y-3">
+              <input
+                required
+                placeholder={t('cardNumber')}
+                value={cardNumber}
+                onChange={(event) => setCardNumber(event.target.value)}
+                maxLength={19}
+                className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  required
+                  placeholder={t('cardExpiry')}
+                  value={cardExpiry}
+                  onChange={(event) => setCardExpiry(event.target.value)}
+                  maxLength={5}
+                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+                />
+                <input
+                  required
+                  placeholder={t('cardCvv')}
+                  value={cardCvv}
+                  onChange={(event) => setCardCvv(event.target.value)}
+                  maxLength={4}
+                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {cart && (

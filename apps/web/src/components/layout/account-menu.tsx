@@ -11,6 +11,7 @@ export function AccountMenu() {
   const tAuth = useTranslations('auth');
   const tAdmin = useTranslations('admin');
   const tAvatar = useTranslations('avatar');
+  const tAccount = useTranslations('account');
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +48,15 @@ export function AccountMenu() {
               >
                 {t('account')}
               </Link>
+              {user.role !== 'admin' && (
+                <Link
+                  href="/commandes"
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-2 text-sm hover:bg-background"
+                >
+                  {tAccount('myOrders')}
+                </Link>
+              )}
               {user.role === 'admin' ? (
                 <Link
                   href="/admin"

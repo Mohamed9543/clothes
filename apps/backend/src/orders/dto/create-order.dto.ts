@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsString, MinLength, ValidateNested } from 'class-validator';
+import { IsEnum, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import { PaymentMethod } from '../schemas/order.schema';
 
 class ShippingAddressDto {
   @IsString()
@@ -27,4 +28,8 @@ export class CreateOrderDto {
   @ValidateNested()
   @Type(() => ShippingAddressDto)
   shippingAddress: ShippingAddressDto;
+
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod;
 }
