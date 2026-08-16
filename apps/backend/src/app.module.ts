@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { AvatarAssetsModule } from './avatar-assets/avatar-assets.module';
 import { CartModule } from './cart/cart.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ChatModule } from './chat/chat.module';
@@ -32,6 +33,7 @@ import { UsersModule } from './users/users.module';
     StatsModule,
     OutfitsModule,
     UploadsModule,
+    AvatarAssetsModule,
   ],
 })
 export class AppModule {}

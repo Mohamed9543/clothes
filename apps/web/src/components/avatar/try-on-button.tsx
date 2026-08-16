@@ -55,7 +55,13 @@ export function TryOnButton({ product }: { product: Product }) {
             </button>
             <AvatarViewer
               avatarUrl={user.avatarUrl}
-              overlay={{ type: product.type, colorHex: colorNameToHex(product.colors[0]) }}
+              overlay={{
+                type: product.type,
+                colorHex: colorNameToHex(product.colors[0]),
+                modelUrl: product.modelUrl,
+              }}
+              heightCm={user.heightCm}
+              weightKg={user.weightKg}
               className="h-[480px] w-full overflow-hidden rounded-lg bg-background"
             />
           </div>

@@ -33,6 +33,7 @@ export interface Product {
   images: string[];
   isActive: boolean;
   tryOnEnabled: boolean;
+  modelUrl: string | null;
 }
 
 export interface AdminProduct extends Product {
@@ -177,6 +178,17 @@ export interface User {
   heightCm: number | null;
   weightKg: number | null;
   gender: Gender | null;
+}
+
+export type AvatarAssetType = 'body' | 'hair';
+
+export interface AvatarAsset {
+  _id: string;
+  type: AvatarAssetType;
+  name: string;
+  modelUrl: string;
+  thumbnailUrl: string | null;
+  isActive: boolean;
 }
 
 export interface AdminAvatarUser {

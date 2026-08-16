@@ -5,7 +5,9 @@ import { useTranslations } from 'next-intl';
 import { Canvas } from '@react-three/fiber';
 import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import { ClothingOverlay } from './clothing-overlay';
+import { GarmentModel } from './garment-model';
 import { GltfErrorBoundary } from './gltf-error-boundary';
+import { computeAvatarScale } from '@/lib/avatar-scale';
 import type { ProductType } from '@/types';
 
 function AvatarModel({ url }: { url: string }) {
@@ -15,11 +17,19 @@ function AvatarModel({ url }: { url: string }) {
 
 interface AvatarViewerProps {
   avatarUrl: string;
-  overlay?: { type: ProductType; colorHex: string };
+  overlay?: { type: ProductType; colorHex: string; modelUrl?: string | null };
+  heightCm?: number | null;
+  weightKg?: number | null;
   className?: string;
 }
 
-export function AvatarViewer({ avatarUrl, overlay, className }: AvatarViewerProps) {
+export function AvatarViewer({
+  avatarUrl,
+  overlay,
+  heightCm,
+  weightKg,
+  className,
+}: AvatarViewerProps) {
   const t = useTranslations('avatar');
 
   return (
@@ -36,8 +46,15 @@ export function AvatarViewer({ avatarUrl, overlay, className }: AvatarViewerProp
           <ambientLight intensity={0.7} />
           <directionalLight position={[2, 4, 3]} intensity={1} />
           <Suspense fallback={null}>
-            <AvatarModel url={avatarUrl} />
-            {overlay && <ClothingOverlay type={overlay.type} colorHex={overlay.colorHex} />}
+            <group scale={computeAvatarScale(heightCm, weightKg)}>
+              <AvatarModel url={avatarUrl} />
+              {overlay &&
+                (overlay.modelUrl ? (
+                  <GarmentModel url={overlay.modelUrl} />
+                ) : (
+                  <ClothingOverlay type={overlay.type} colorHex={overlay.colorHex} />
+                ))}
+            </group>
             <Environment preset="city" />
           </Suspense>
           <OrbitControls

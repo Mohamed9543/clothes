@@ -1,0 +1,47 @@
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { UserRole } from '../users/schemas/user.schema';
+import { AvatarAssetsService } from './avatar-assets.service';
+import { CreateAvatarAssetDto } from './dto/create-avatar-asset.dto';
+import { UpdateAvatarAssetDto } from './dto/update-avatar-asset.dto';
+
+@Controller('avatar-assets')
+@UseGuards(JwtAuthGuard)
+export class AvatarAssetsController {
+  constructor(private readonly avatarAssetsService: AvatarAssetsService) {}
+
+  @Get()
+  findAllActive() {
+    return this.avatarAssetsService.findAllActive();
+  }
+
+  @Get('admin/all')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  findAllAdmin() {
+    return this.avatarAssetsService.findAllAdmin();
+  }
+
+  @Post()
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  create(@Body() dto: CreateAvatarAssetDto) {
+    return this.avatarAssetsService.create(dto);
+  }
+
+  @Patch(':id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  update(@Param('id') id: string, @Body() dto: UpdateAvatarAssetDto) {
+    return this.avatarAssetsService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  remove(@Param('id') id: string) {
+    return this.avatarAssetsService.remove(id);
+  }
+}

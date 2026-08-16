@@ -3,8 +3,8 @@ import { Gender } from '../schemas/user.schema';
 
 export class UpdateProfileDto {
   @IsOptional()
-  @IsUrl()
-  avatarUrl?: string;
+  @IsUrl({ require_tld: false })
+  avatarUrl?: string | null;
 
   @IsOptional()
   @IsInt()

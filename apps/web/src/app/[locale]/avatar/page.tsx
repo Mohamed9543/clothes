@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { apiFetch } from '@/lib/api';
+import { AvatarCreator } from '@/components/avatar/avatar-creator';
 import { AvatarViewer } from '@/components/avatar/avatar-viewer';
-import { RpmCreator } from '@/components/avatar/rpm-creator';
 import type { Gender } from '@/types';
 
 export default function AvatarPage() {
@@ -60,14 +60,28 @@ export default function AvatarPage() {
     }
   }
 
-  async function handleAvatarExported(glbUrl: string) {
+  async function handleDeleteAvatar() {
+    if (!window.confirm(t('confirmDeleteAvatar'))) return;
     await apiFetch('/users/me', {
       method: 'PATCH',
       auth: true,
-      body: JSON.stringify({ avatarUrl: glbUrl }),
+      body: JSON.stringify({ avatarUrl: null }),
     });
     await refreshUser();
-    setShowCreator(false);
+  }
+
+  if (showCreator) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <AvatarCreator
+          onClose={() => setShowCreator(false)}
+          onSaved={async () => {
+            await refreshUser();
+            setShowCreator(false);
+          }}
+        />
+      </div>
+    );
   }
 
   return (
@@ -76,7 +90,8 @@ export default function AvatarPage() {
       <p className="mb-8 text-sm text-muted">{t('intro')}</p>
 
       <section className="mb-8 rounded-xl border border-border bg-surface p-4">
-        <h2 className="mb-4 font-medium">{t('measurements')}</h2>
+        <h2 className="mb-1 font-medium">{t('measurements')}</h2>
+        <p className="mb-4 text-sm text-muted">{t('measurementsHint')}</p>
         <form onSubmit={saveMeasurements} className="grid gap-4 sm:grid-cols-3">
           <div>
             <label className="mb-1 block text-sm">{t('height')}</label>
@@ -127,31 +142,39 @@ export default function AvatarPage() {
       </section>
 
       <section className="rounded-xl border border-border bg-surface p-4">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between gap-2">
           <h2 className="font-medium">{t('myAvatar')}</h2>
-          <button
-            onClick={() => setShowCreator((value) => !value)}
-            className="rounded-full border border-border px-4 py-2 text-sm hover:border-brand-gold"
-          >
-            {t('createAvatar')}
-          </button>
+          <div className="flex gap-2">
+            {user?.avatarUrl && (
+              <button
+                onClick={handleDeleteAvatar}
+                className="rounded-full border border-border px-4 py-2 text-sm text-brand-terracotta hover:border-brand-terracotta"
+              >
+                {t('deleteAvatar')}
+              </button>
+            )}
+            <button
+              onClick={() => setShowCreator(true)}
+              className="rounded-full border border-border px-4 py-2 text-sm hover:border-brand-gold"
+            >
+              {t('createAvatar')}
+            </button>
+          </div>
         </div>
 
-        {showCreator && (
-          <div className="mb-4">
-            <p className="mb-2 text-sm text-muted">{t('creatorHint')}</p>
-            <RpmCreator onAvatarExported={handleAvatarExported} />
-          </div>
-        )}
-
-        {user?.avatarUrl && user.avatarDisabled && !showCreator && (
+        {user?.avatarUrl && user.avatarDisabled && (
           <p className="mb-4 text-sm text-brand-terracotta">{t('avatarDisabledMessage')}</p>
         )}
 
         {user?.avatarUrl ? (
-          <AvatarViewer avatarUrl={user.avatarUrl} className="h-[420px] w-full overflow-hidden rounded-xl bg-background" />
+          <AvatarViewer
+            avatarUrl={user.avatarUrl}
+            heightCm={user.heightCm}
+            weightKg={user.weightKg}
+            className="h-[420px] w-full overflow-hidden rounded-xl bg-background"
+          />
         ) : (
-          !showCreator && <p className="text-sm text-muted">{t('noAvatarYet')}</p>
+          <p className="text-sm text-muted">{t('noAvatarYet')}</p>
         )}
       </section>
     </div>
