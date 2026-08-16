@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
-import { Boxes, Pencil, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Boxes, ImageOff, Pencil, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { apiDownload, apiFetch, apiUpload } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { ProductForm } from '@/components/admin/product-form';
@@ -177,7 +177,9 @@ export default function AdminProductsPage() {
                       />
                     </div>
                   ) : (
-                    <div className="h-12 w-12 rounded-md border border-border bg-background" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-md border border-border bg-background text-muted">
+                      <ImageOff className="h-4 w-4" />
+                    </div>
                   )}
                 </td>
                 <td className="p-3">{localize(product.name, locale)}</td>

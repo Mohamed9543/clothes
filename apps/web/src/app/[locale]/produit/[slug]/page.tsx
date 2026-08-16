@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { ImageOff } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { AddToCartForm } from '@/components/add-to-cart-form';
@@ -27,7 +28,7 @@ export default async function ProductPage({
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="grid gap-10 md:grid-cols-2">
         <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-border bg-surface">
-          {product.images[0] && (
+          {product.images[0] ? (
             <Image
               src={product.images[0]}
               alt={localize(product.name, locale)}
@@ -36,6 +37,10 @@ export default async function ProductPage({
               sizes="(max-width: 768px) 100vw, 50vw"
               priority
             />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-muted">
+              <ImageOff className="h-12 w-12" />
+            </div>
           )}
         </div>
 

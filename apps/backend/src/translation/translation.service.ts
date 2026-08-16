@@ -40,7 +40,7 @@ export class TranslationService {
       );
     }
 
-    const prompt = `Tu es un traducteur professionnel pour "Libas", une boutique de mode en ligne tunisienne.
+    const prompt = `Tu es un traducteur professionnel pour "StyleForm", une boutique de mode en ligne tunisienne.
 Traduis le nom et la description de produit suivants, rédigés en ${LANGUAGE_NAMES[dto.sourceLocale]}, vers les 4 langues : français (fr), anglais (en), arabe standard (ar), et arabe tunisien / darija (tn).
 La langue source (${dto.sourceLocale}) doit contenir le texte original, éventuellement nettoyé, mais pas retraduit.
 Les traductions doivent être naturelles, concises, adaptées à une fiche produit e-commerce.

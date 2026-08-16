@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { AdminRedirect } from '@/components/admin-redirect';
@@ -14,10 +15,21 @@ export default async function HomePage() {
   return (
     <div>
       <AdminRedirect />
-      <section className="border-b border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-20 text-center">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{t('heroTitle')}</h1>
-          <p className="mx-auto mt-4 max-w-xl text-muted">{t('heroSubtitle')}</p>
+      <section className="relative overflow-hidden border-b border-border">
+        <Image
+          src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80"
+          alt=""
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative mx-auto max-w-6xl px-4 py-20 text-center">
+          <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            {t('heroTitle')}
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-white/80">{t('heroSubtitle')}</p>
           <Link
             href="/catalogue"
             className="mt-8 inline-block rounded-full bg-brand-terracotta px-6 py-3 text-sm font-medium text-white hover:opacity-90"

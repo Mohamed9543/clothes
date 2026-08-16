@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { ImageOff } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { localize } from '@/lib/localized';
@@ -16,7 +17,7 @@ export function ProductCard({ product }: { product: Product }) {
       className="group block overflow-hidden rounded-xl border border-border bg-surface"
     >
       <div className="relative aspect-[3/4] overflow-hidden bg-background">
-        {product.images[0] && (
+        {product.images[0] ? (
           <Image
             src={product.images[0]}
             alt={localize(product.name, locale)}
@@ -24,6 +25,10 @@ export function ProductCard({ product }: { product: Product }) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 50vw, 25vw"
           />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-muted">
+            <ImageOff className="h-8 w-8" />
+          </div>
         )}
       </div>
       <div className="p-3">

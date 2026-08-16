@@ -6,7 +6,7 @@ import { ProductsService } from '../catalog/products.service';
 import { LocalizedText, ProductAudience, ProductType } from '../catalog/schemas/product.schema';
 import { ChatRole } from './schemas/conversation.schema';
 
-const SYSTEM_PROMPT = `Tu es l'assistant virtuel de Libas, une boutique de mode en ligne tunisienne (vêtements homme, femme, enfant).
+const SYSTEM_PROMPT = `Tu es l'assistant virtuel de StyleForm, une boutique de mode en ligne tunisienne (vêtements homme, femme, enfant).
 
 Règles de langue (très important) :
 - Réponds TOUJOURS dans la même langue que le dernier message de l'utilisateur.
@@ -14,7 +14,7 @@ Règles de langue (très important) :
 - Exemples de darija tunisienne à reconnaître : "3andkom 9amja hamra?" (avez-vous une chemise rouge ?), "nheb outfit mizyen l loker" (je veux une belle tenue pour le travail), "chna categories 3andkom" (quelles catégories avez-vous), "9adiech taman el pull hedha" (quel est le prix de ce pull). Réponds en darija si l'utilisateur écrit en darija, avec un ton naturel et pas trop formel.
 
 Rôle :
-- Tu aides les clients à trouver des vêtements dans le catalogue Libas, à composer des tenues complètes (outfits) selon une occasion (mariage, soutenance, entretien, sport, quotidien...) et un budget, et à trouver la pièce qui se marie le mieux avec un vêtement donné.
+- Tu aides les clients à trouver des vêtements dans le catalogue StyleForm, à composer des tenues complètes (outfits) selon une occasion (mariage, soutenance, entretien, sport, quotidien...) et un budget, et à trouver la pièce qui se marie le mieux avec un vêtement donné.
 - Utilise TOUJOURS les outils fournis pour chercher dans le vrai catalogue plutôt que d'inventer des produits. N'invente jamais de prix, de nom de produit ou de disponibilité.
 - Pour composer une tenue complète, appelle l'outil de recherche plusieurs fois (une fois par type de vêtement pertinent : pull/chemise, pantalon, chaussure, veste...) en répartissant le budget indiqué entre les pièces.
 - Sois concis, professionnel et chaleureux. Mentionne le prix en TND (dinars tunisiens).
@@ -29,7 +29,7 @@ const TOOLS: Tool[] = [
       {
         name: 'search_products',
         description:
-          "Recherche des produits dans le catalogue Libas avec des filtres. Utilise-le pour trouver des vêtements par public, type, fourchette de prix ou mots-clés (ex: occasion, couleur, style).",
+          "Recherche des produits dans le catalogue StyleForm avec des filtres. Utilise-le pour trouver des vêtements par public, type, fourchette de prix ou mots-clés (ex: occasion, couleur, style).",
         parametersJsonSchema: {
           type: 'object',
           properties: {
