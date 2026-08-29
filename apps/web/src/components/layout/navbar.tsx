@@ -1,9 +1,10 @@
 'use client';
 
-import { ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
+import { useWishlist } from '@/context/wishlist-context';
 import { Link } from '@/i18n/navigation';
 import { AccountMenu } from './account-menu';
 import { LocaleSwitcher } from './locale-switcher';
@@ -15,6 +16,7 @@ export function Navbar() {
   const tBrand = useTranslations('brand');
   const { user } = useAuth();
   const { itemCount } = useCart();
+  const { defaultList } = useWishlist();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
@@ -50,6 +52,21 @@ export function Navbar() {
         <div className="ms-auto flex items-center gap-3">
           <ThemeToggle />
           <LocaleSwitcher />
+
+          {user?.role !== 'admin' && (
+            <Link
+              href="/wishlist"
+              className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
+              aria-label={t('wishlist')}
+            >
+              <Heart className="h-5 w-5" />
+              {(defaultList?.productIds.length ?? 0) > 0 && (
+                <span className="absolute -top-1 -end-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-terracotta px-1 text-[10px] font-semibold text-white">
+                  {defaultList?.productIds.length}
+                </span>
+              )}
+            </Link>
+          )}
 
           {user?.role !== 'admin' && (
             <Link

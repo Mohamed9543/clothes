@@ -156,6 +156,16 @@ export class ProductsService {
     return this.withPublicStockSummary(product);
   }
 
+  // Used by the wishlist page to resolve a set of product ids regardless of
+  // catalogue size — the slug-keyed public endpoints can't batch-resolve by id.
+  async findByIdsPublic(ids: string[]): Promise<(Product & PublicStockSummary)[]> {
+    const validIds = ids.filter((id) => Types.ObjectId.isValid(id));
+    const products = await this.productModel
+      .find({ _id: { $in: validIds }, isActive: true })
+      .exec();
+    return products.map((product) => this.withPublicStockSummary(product));
+  }
+
   async findById(id: string): Promise<ProductDocument | null> {
     return this.productModel.findById(id).exec();
   }

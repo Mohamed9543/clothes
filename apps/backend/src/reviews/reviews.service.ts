@@ -24,6 +24,9 @@ export interface EnrichedReview {
   authorName: string;
   rating: number;
   comment: string;
+  fit: string | null;
+  photos: string[];
+  reportCount: number;
   isHidden: boolean;
   createdAt: Date;
 }
@@ -85,8 +88,20 @@ export class ReviewsService {
       userId,
       rating: dto.rating,
       comment: dto.comment,
+      fit: dto.fit ?? null,
+      photos: dto.photos ?? [],
       isHidden: false,
     });
+  }
+
+  async report(id: string): Promise<ReviewDocument> {
+    const review = await this.reviewModel
+      .findByIdAndUpdate(id, { $inc: { reportCount: 1 } }, { new: true })
+      .exec();
+    if (!review) {
+      throw new BadRequestException('Review not found');
+    }
+    return review;
   }
 
   async findForProduct(slug: string): Promise<ProductReviewsResult> {

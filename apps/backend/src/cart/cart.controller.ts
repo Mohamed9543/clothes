@@ -4,6 +4,7 @@ import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { CartService } from './cart.service';
 import { AddCartItemDto } from './dto/add-cart-item.dto';
+import { MoveCartItemDto } from './dto/move-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
 @Controller('cart')
@@ -43,5 +44,23 @@ export class CartController {
   @Delete()
   clear(@CurrentUser() user: JwtAccessPayload) {
     return this.cartService.clear(user.sub).then(() => ({ success: true }));
+  }
+
+  @Post('items/:productId/save-for-later')
+  saveForLater(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('productId') productId: string,
+    @Body() dto: MoveCartItemDto,
+  ) {
+    return this.cartService.saveForLater(user.sub, productId, dto.size, dto.color);
+  }
+
+  @Post('saved/:productId/move-to-cart')
+  moveToCart(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('productId') productId: string,
+    @Body() dto: MoveCartItemDto,
+  ) {
+    return this.cartService.moveToCart(user.sub, productId, dto.size, dto.color);
   }
 }

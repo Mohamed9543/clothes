@@ -27,6 +27,9 @@ export class Cart {
 
   @Prop({ type: [CartItemSchema], default: [] })
   items: CartItem[];
+
+  @Prop({ type: [CartItemSchema], default: [] })
+  savedForLater: CartItem[];
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);

@@ -13,6 +13,8 @@ interface CartContextValue {
   addItem: (productId: string, quantity: number, size: string, color: string) => Promise<void>;
   updateItem: (productId: string, size: string, color: string, quantity: number) => Promise<void>;
   removeItem: (productId: string, size: string, color: string) => Promise<void>;
+  saveForLater: (productId: string, size: string, color: string) => Promise<void>;
+  moveToCart: (productId: string, size: string, color: string) => Promise<void>;
   clear: () => Promise<void>;
 }
 
@@ -70,16 +72,45 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCart(data);
   }, []);
 
+  const saveForLater = useCallback(async (productId: string, size: string, color: string) => {
+    const data = await apiFetch<Cart>(`/cart/items/${productId}/save-for-later`, {
+      method: 'POST',
+      auth: true,
+      body: JSON.stringify({ size, color }),
+    });
+    setCart(data);
+  }, []);
+
+  const moveToCart = useCallback(async (productId: string, size: string, color: string) => {
+    const data = await apiFetch<Cart>(`/cart/saved/${productId}/move-to-cart`, {
+      method: 'POST',
+      auth: true,
+      body: JSON.stringify({ size, color }),
+    });
+    setCart(data);
+  }, []);
+
   const clear = useCallback(async () => {
     await apiFetch('/cart', { method: 'DELETE', auth: true });
-    setCart({ items: [], total: 0 });
+    setCart((current) => ({ items: [], savedForLater: current?.savedForLater ?? [], total: 0 }));
   }, []);
 
   const itemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
 
   return (
     <CartContext.Provider
-      value={{ cart, itemCount, isLoading, refresh, addItem, updateItem, removeItem, clear }}
+      value={{
+        cart,
+        itemCount,
+        isLoading,
+        refresh,
+        addItem,
+        updateItem,
+        removeItem,
+        saveForLater,
+        moveToCart,
+        clear,
+      }}
     >
       {children}
     </CartContext.Provider>

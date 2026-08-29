@@ -17,7 +17,8 @@
     "login": "دخول",
     "logout": "خروج",
     "searchPlaceholder": "قلّب على حاجة...",
-    "admin": "الإدارة"
+    "admin": "الإدارة",
+    "wishlist": "ليستة متاعي"
   },
   "footer": {
     "about": "على ستايل فورم",
@@ -86,7 +87,10 @@
     "lowStock": "باقي شوية",
     "sizeGuide": "دليل المقاسات",
     "sizeGuideTitle": "دليل المقاسات",
-    "sizeGuideChest": "دور الصدر"
+    "sizeGuideChest": "دور الصدر",
+    "wishlistToggle": "زيدها في الليستة",
+    "wishlistAdd": "زيدها في الليستة",
+    "wishlistRemove": "نحّيها من الليستة"
   },
   "cart": {
     "title": "الكارتة متاعي",
@@ -100,7 +104,10 @@
     "subtotal": "المجموع الفرعي",
     "total": "المجموع",
     "remove": "نحّي",
-    "checkout": "كمل الطلبية"
+    "checkout": "كمل الطلبية",
+    "saveForLater": "إحفظ لوقت آخر",
+    "moveToCart": "رجّعها للكارتة",
+    "savedForLaterTitle": "محفوظ لوقت آخر"
   },
   "checkout": {
     "title": "كمل الطلبية",
@@ -148,7 +155,11 @@
       "tozeur": "توزر",
       "tunis": "تونس",
       "zaghouan": "زغوان"
-    }
+    },
+    "promoCode": "كود التخفيض",
+    "applyCode": "طبّق",
+    "discount": "التخفيض",
+    "invalidCode": "الكود مش صحيح"
   },
   "account": {
     "title": "الكونط متاعي",
@@ -411,7 +422,17 @@
     "modelSelected": "اتّختار النموذج ✓",
     "chooseThumbnail": "اختار صورة صغيرة (اختياري)",
     "thumbnailSelected": "اتّختارت الصورة الصغيرة ✓",
-    "confirmDeleteAsset": "تحب تمسح هالحاجة من المكتبة نهائيًا؟"
+    "confirmDeleteAsset": "تحب تمسح هالحاجة من المكتبة نهائيًا؟",
+    "tabPromotions": "العروض",
+    "newCoupon": "كود تخفيض جديد",
+    "couponCode": "الكود",
+    "discountPercent": "نسبة",
+    "discountFixed": "مبلغ ثابت",
+    "couponValue": "القيمة",
+    "minOrderAmount": "أقل مبلغ للطلبية",
+    "expiresAt": "تاريخ الانتهاء",
+    "confirmDeleteCoupon": "تنحّي هالكود نهائيًا؟",
+    "colReports": "البلاغات"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -439,7 +460,19 @@
     "submit": "نشر الرأي",
     "ratingCount": "{count} رأي",
     "noReviews": "ما فماش آراء على هالحاجة لحد الآن.",
-    "genericError": "صارت مشكلة."
+    "genericError": "صارت مشكلة.",
+    "verifiedPurchase": "شرا متأكد منه",
+    "fitLabel": "القياس",
+    "fitUnset": "مش محدد",
+    "fit": {
+      "small": "يصغر شوية",
+      "true_to_size": "قياسه مظبوط",
+      "large": "يكبر شوية"
+    },
+    "report": "بلّغ",
+    "reportSuccess": "تبلّغ",
+    "addPhotos": "زيد تصاور",
+    "uploading": "قاعد يتلوّد..."
   },
   "outfit": {
     "includedProducts": "الحوايج المتضمنة في هالبسة"
@@ -453,5 +486,13 @@
     "simulatedFailedTitle": "التجربة فشلت",
     "viewOrders": "شوف الطلبيات متاعي",
     "simulateError": "صار مشكل خلال التجربة."
+  },
+  "wishlist": {
+    "title": "ليستة متاعي",
+    "empty": "الليستة متاعك فارغة.",
+    "browseCatalog": "شوف الكتالوق",
+    "remove": "نحّي",
+    "newListPlaceholder": "اسم الليستة الجديدة",
+    "createList": "إنشاء"
   }
 }

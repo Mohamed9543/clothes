@@ -1,10 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BadgeCheck, Flag } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useAuth } from '@/context/auth-context';
-import { apiFetch, ApiError } from '@/lib/api';
-import type { ProductReviewsResult } from '@/types';
+import { API_URL, apiFetch, apiUpload, ApiError } from '@/lib/api';
+import type { ReviewFit, ProductReviewsResult } from '@/types';
+
+const FITS: ReviewFit[] = ['small', 'true_to_size', 'large'];
 
 function Stars({ value }: { value: number }) {
   return (
@@ -23,8 +27,13 @@ export function ProductReviews({ slug }: { slug: string }) {
   const [data, setData] = useState<ProductReviewsResult | null>(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
+  const [fit, setFit] = useState<ReviewFit | ''>('');
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reportedIds, setReportedIds] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     const result = await apiFetch<ProductReviewsResult>(`/reviews/product/${slug}`);
@@ -35,6 +44,23 @@ export function ProductReviews({ slug }: { slug: string }) {
     void load();
   }, [load]);
 
+  async function handlePhotoUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    event.target.value = '';
+    setIsUploading(true);
+    try {
+      for (const file of Array.from(files).slice(0, 5 - photos.length)) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const result = await apiUpload<{ url: string }>('/uploads/image', formData, { auth: true });
+        setPhotos((current) => [...current, `${API_URL}${result.url}`]);
+      }
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
@@ -43,16 +69,23 @@ export function ProductReviews({ slug }: { slug: string }) {
       await apiFetch(`/reviews/product/${slug}`, {
         method: 'POST',
         auth: true,
-        body: JSON.stringify({ rating, comment }),
+        body: JSON.stringify({ rating, comment, fit: fit || undefined, photos }),
       });
       setComment('');
       setRating(5);
+      setFit('');
+      setPhotos([]);
       void load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('genericError'));
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  async function handleReport(reviewId: string) {
+    await apiFetch(`/reviews/${reviewId}/report`, { method: 'POST', auth: true });
+    setReportedIds((current) => [...current, reviewId]);
   }
 
   return (
@@ -71,13 +104,40 @@ export function ProductReviews({ slug }: { slug: string }) {
         {data?.reviews.map((review) => (
           <div key={review._id} className="rounded-xl border border-border bg-surface p-4">
             <div className="flex items-center justify-between">
-              <p className="font-medium">{review.authorName}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium">{review.authorName}</p>
+                <span
+                  title={t('verifiedPurchase')}
+                  className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800"
+                >
+                  <BadgeCheck className="h-3 w-3" />
+                  {t('verifiedPurchase')}
+                </span>
+              </div>
               <Stars value={review.rating} />
             </div>
             <p className="mt-1 text-xs text-muted">
               {new Date(review.createdAt).toLocaleDateString(locale)}
             </p>
+            {review.fit && <p className="mt-1 text-xs text-muted">{t(`fit.${review.fit}`)}</p>}
             <p className="mt-2 text-sm">{review.comment}</p>
+            {review.photos.length > 0 && (
+              <div className="mt-2 flex gap-2">
+                {review.photos.map((photo) => (
+                  <div key={photo} className="relative h-16 w-16 overflow-hidden rounded-lg border border-border">
+                    <Image src={photo} alt="" fill className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
+            <button
+              onClick={() => handleReport(review._id)}
+              disabled={reportedIds.includes(review._id)}
+              className="mt-2 flex items-center gap-1 text-xs text-muted underline disabled:no-underline disabled:opacity-50"
+            >
+              <Flag className="h-3 w-3" />
+              {reportedIds.includes(review._id) ? t('reportSuccess') : t('report')}
+            </button>
           </div>
         ))}
       </div>
@@ -99,6 +159,21 @@ export function ProductReviews({ slug }: { slug: string }) {
               ))}
             </select>
           </label>
+          <label className="mb-2 block text-sm">
+            {t('fitLabel')}
+            <select
+              value={fit}
+              onChange={(event) => setFit(event.target.value as ReviewFit | '')}
+              className="ms-2 rounded-md border border-border bg-background px-2 py-1 text-sm"
+            >
+              <option value="">{t('fitUnset')}</option>
+              {FITS.map((value) => (
+                <option key={value} value={value}>
+                  {t(`fit.${value}`)}
+                </option>
+              ))}
+            </select>
+          </label>
           <textarea
             value={comment}
             onChange={(event) => setComment(event.target.value)}
@@ -109,6 +184,35 @@ export function ProductReviews({ slug }: { slug: string }) {
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
             placeholder={t('comment')}
           />
+
+          <div className="mt-2">
+            {photos.length > 0 && (
+              <div className="mb-2 flex gap-2">
+                {photos.map((photo) => (
+                  <div key={photo} className="relative h-14 w-14 overflow-hidden rounded-lg border border-border">
+                    <Image src={photo} alt="" fill className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              onChange={handlePhotoUpload}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading || photos.length >= 5}
+              className="rounded-md border border-border px-3 py-1 text-xs hover:border-brand-gold disabled:opacity-50"
+            >
+              {isUploading ? t('uploading') : t('addPhotos')}
+            </button>
+          </div>
+
           {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
           <button
             type="submit"

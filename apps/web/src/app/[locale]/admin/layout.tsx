@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/admin/avis', labelKey: 'tabReviews' },
   { href: '/admin/stats', labelKey: 'tabStats' },
   { href: '/admin/tenues', labelKey: 'tabOutfits' },
+  { href: '/admin/promotions', labelKey: 'tabPromotions' },
   { href: '/admin/utilisateurs', labelKey: 'tabUsers' },
   { href: '/admin/modeles-3d', labelKey: 'tabModels3d' },
 ] as const;

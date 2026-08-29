@@ -16,7 +16,7 @@ export default function AdminReviewsPage() {
     const result = await apiFetch<PaginatedResult<ReviewWithProduct>>('/reviews/admin/all?limit=100', {
       auth: true,
     });
-    setReviews(result.items);
+    setReviews([...result.items].sort((a, b) => b.reportCount - a.reportCount));
   }, []);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ export default function AdminReviewsPage() {
             <th className="p-3 text-start">{t('colRating')}</th>
             <th className="p-3 text-start">{t('colComment')}</th>
             <th className="p-3 text-start">{t('colDate')}</th>
+            <th className="p-3 text-start">{t('colReports')}</th>
             <th className="p-3 text-start">{t('colStatus')}</th>
             <th className="p-3 text-start">{t('colActions')}</th>
           </tr>
@@ -64,6 +65,15 @@ export default function AdminReviewsPage() {
               <td className="p-3">{review.rating} / 5</td>
               <td className="max-w-xs p-3">{review.comment}</td>
               <td className="p-3">{new Date(review.createdAt).toLocaleDateString(locale)}</td>
+              <td className="p-3">
+                {review.reportCount > 0 ? (
+                  <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800">
+                    {review.reportCount}
+                  </span>
+                ) : (
+                  '—'
+                )}
+              </td>
               <td className="p-3">
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs ${

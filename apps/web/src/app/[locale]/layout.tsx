@@ -9,6 +9,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/context/auth-context';
 import { CartProvider } from '@/context/cart-context';
+import { WishlistProvider } from '@/context/wishlist-context';
 import { ChatWidget } from '@/components/chat/chat-widget';
 import '../globals.css';
 
@@ -87,10 +88,12 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <CartProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-              <ChatWidget />
+              <WishlistProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <ChatWidget />
+              </WishlistProvider>
             </CartProvider>
           </AuthProvider>
         </NextIntlClientProvider>

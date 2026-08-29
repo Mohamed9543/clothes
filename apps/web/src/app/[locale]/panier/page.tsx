@@ -7,6 +7,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { localize } from '@/lib/localized';
+import type { CartItem } from '@/types';
 
 export default function CartPage() {
   const t = useTranslations('cart');
@@ -14,7 +15,7 @@ export default function CartPage() {
   const locale = useLocale();
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
-  const { cart, isLoading, updateItem, removeItem } = useCart();
+  const { cart, isLoading, updateItem, removeItem, saveForLater, moveToCart } = useCart();
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -24,6 +25,67 @@ export default function CartPage() {
 
   if (!authLoading && !user) {
     return null;
+  }
+
+  function renderLine(item: CartItem, savedForLater: boolean) {
+    return (
+      <div
+        key={`${item.productId}-${item.size}-${item.color}`}
+        className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4"
+      >
+        {item.image && (
+          <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-background">
+            <Image src={item.image} alt={localize(item.name, locale)} fill className="object-cover" />
+          </div>
+        )}
+        <div className="flex-1">
+          <p className="font-medium">{localize(item.name, locale)}</p>
+          <p className="text-sm text-muted">
+            {t('size')}: {item.size} · {t('color')}: {item.color}
+          </p>
+          <p className="text-sm text-muted">
+            {item.unitPrice} {tCommon('currency')}
+          </p>
+        </div>
+        {!savedForLater && (
+          <input
+            type="number"
+            min={1}
+            value={item.quantity}
+            onChange={(event) =>
+              updateItem(item.productId, item.size, item.color, Number(event.target.value))
+            }
+            className="w-16 rounded-md border border-border bg-background px-2 py-1 text-sm"
+          />
+        )}
+        <p className="w-20 text-end font-medium">
+          {item.subtotal} {tCommon('currency')}
+        </p>
+        <div className="flex flex-col items-end gap-1">
+          {savedForLater ? (
+            <button
+              onClick={() => moveToCart(item.productId, item.size, item.color)}
+              className="text-sm text-brand-terracotta underline"
+            >
+              {t('moveToCart')}
+            </button>
+          ) : (
+            <button
+              onClick={() => saveForLater(item.productId, item.size, item.color)}
+              className="text-xs text-muted underline"
+            >
+              {t('saveForLater')}
+            </button>
+          )}
+          <button
+            onClick={() => removeItem(item.productId, item.size, item.color)}
+            className="text-sm text-brand-terracotta underline"
+          >
+            {t('remove')}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -41,45 +103,7 @@ export default function CartPage() {
 
       {cart && cart.items.length > 0 && (
         <div className="space-y-4">
-          {cart.items.map((item) => (
-            <div
-              key={`${item.productId}-${item.size}-${item.color}`}
-              className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4"
-            >
-              {item.image && (
-                <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-background">
-                  <Image src={item.image} alt={localize(item.name, locale)} fill className="object-cover" />
-                </div>
-              )}
-              <div className="flex-1">
-                <p className="font-medium">{localize(item.name, locale)}</p>
-                <p className="text-sm text-muted">
-                  {t('size')}: {item.size} · {t('color')}: {item.color}
-                </p>
-                <p className="text-sm text-muted">
-                  {item.unitPrice} {tCommon('currency')}
-                </p>
-              </div>
-              <input
-                type="number"
-                min={1}
-                value={item.quantity}
-                onChange={(event) =>
-                  updateItem(item.productId, item.size, item.color, Number(event.target.value))
-                }
-                className="w-16 rounded-md border border-border bg-background px-2 py-1 text-sm"
-              />
-              <p className="w-20 text-end font-medium">
-                {item.subtotal} {tCommon('currency')}
-              </p>
-              <button
-                onClick={() => removeItem(item.productId, item.size, item.color)}
-                className="text-sm text-brand-terracotta underline"
-              >
-                {t('remove')}
-              </button>
-            </div>
-          ))}
+          {cart.items.map((item) => renderLine(item, false))}
 
           <div className="flex items-center justify-between border-t border-border pt-4">
             <p className="text-lg font-semibold">{t('total')}</p>
@@ -94,6 +118,13 @@ export default function CartPage() {
           >
             {t('checkout')}
           </Link>
+        </div>
+      )}
+
+      {cart && cart.savedForLater.length > 0 && (
+        <div className="mt-10">
+          <h2 className="mb-4 text-lg font-semibold">{t('savedForLaterTitle')}</h2>
+          <div className="space-y-4">{cart.savedForLater.map((item) => renderLine(item, true))}</div>
         </div>
       )}
     </div>

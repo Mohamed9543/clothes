@@ -92,6 +92,9 @@ export interface Review {
   authorName: string;
   rating: number;
   comment: string;
+  fit: ReviewFit | null;
+  photos: string[];
+  reportCount: number;
   isHidden: boolean;
   createdAt: string;
 }
@@ -230,8 +233,33 @@ export interface CartItem {
 
 export interface Cart {
   items: CartItem[];
+  savedForLater: CartItem[];
   total: number;
 }
+
+export interface Wishlist {
+  _id: string;
+  userId: string;
+  name: string;
+  productIds: string[];
+  isDefault: boolean;
+  createdAt: string;
+}
+
+export type DiscountType = 'percent' | 'fixed';
+
+export interface Coupon {
+  _id: string;
+  code: string;
+  discountType: DiscountType;
+  value: number;
+  isActive: boolean;
+  expiresAt: string | null;
+  minOrderAmount: number;
+  createdAt: string;
+}
+
+export type ReviewFit = 'small' | 'true_to_size' | 'large';
 
 export type OrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
 
@@ -271,6 +299,8 @@ export interface Order {
   items: OrderItem[];
   totalAmount: number;
   shippingFee: number;
+  couponCode: string | null;
+  discountAmount: number;
   status: OrderStatus;
   paymentMethod: 'cod' | 'card';
   paymentStatus: PaymentStatus;
@@ -281,6 +311,7 @@ export interface Order {
 export interface OrderQuote {
   itemsSubtotal: number;
   shippingFee: number;
+  discountAmount: number;
   total: number;
 }
 

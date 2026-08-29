@@ -5,6 +5,7 @@ import { TryOnButton } from '@/components/avatar/try-on-button';
 import { ProductGallery } from '@/components/product-gallery';
 import { ProductReviews } from '@/components/product-reviews';
 import { SizeGuide } from '@/components/size-guide';
+import { WishlistButton } from '@/components/wishlist-button';
 import { serverApiFetch } from '@/lib/server-api';
 import { localize } from '@/lib/localized';
 import type { PublicProduct } from '@/types';
@@ -60,6 +61,7 @@ export default async function ProductPage({
           <div className="mt-8 space-y-3">
             <AddToCartForm product={product} />
             <TryOnButton product={product} />
+            <WishlistButton productId={product._id} />
           </div>
         </div>
       </div>

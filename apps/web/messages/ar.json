@@ -17,7 +17,8 @@
     "login": "تسجيل الدخول",
     "logout": "تسجيل الخروج",
     "searchPlaceholder": "ابحث عن ملابس...",
-    "admin": "الإدارة"
+    "admin": "الإدارة",
+    "wishlist": "قائمتي"
   },
   "footer": {
     "about": "عن ستايل فورم",
@@ -86,7 +87,10 @@
     "lowStock": "كمية قليلة",
     "sizeGuide": "دليل المقاسات",
     "sizeGuideTitle": "دليل المقاسات",
-    "sizeGuideChest": "محيط الصدر"
+    "sizeGuideChest": "محيط الصدر",
+    "wishlistToggle": "أضف إلى قائمة الأمنيات",
+    "wishlistAdd": "أضف إلى قائمتي",
+    "wishlistRemove": "إزالة من قائمتي"
   },
   "cart": {
     "title": "سلتي",
@@ -100,7 +104,10 @@
     "subtotal": "المجموع الفرعي",
     "total": "المجموع",
     "remove": "إزالة",
-    "checkout": "إتمام الطلب"
+    "checkout": "إتمام الطلب",
+    "saveForLater": "احفظ لوقت لاحق",
+    "moveToCart": "أعد إلى السلة",
+    "savedForLaterTitle": "محفوظ لوقت لاحق"
   },
   "checkout": {
     "title": "إتمام الطلب",
@@ -148,7 +155,11 @@
       "tozeur": "توزر",
       "tunis": "تونس",
       "zaghouan": "زغوان"
-    }
+    },
+    "promoCode": "رمز الخصم",
+    "applyCode": "تطبيق",
+    "discount": "الخصم",
+    "invalidCode": "رمز الخصم غير صالح"
   },
   "account": {
     "title": "حسابي",
@@ -411,7 +422,17 @@
     "modelSelected": "تم اختيار النموذج ✓",
     "chooseThumbnail": "اختر صورة مصغرة (اختياري)",
     "thumbnailSelected": "تم اختيار الصورة المصغرة ✓",
-    "confirmDeleteAsset": "هل تريد حذف هذا العنصر من المكتبة نهائيًا؟"
+    "confirmDeleteAsset": "هل تريد حذف هذا العنصر من المكتبة نهائيًا؟",
+    "tabPromotions": "العروض",
+    "newCoupon": "كود خصم جديد",
+    "couponCode": "الرمز",
+    "discountPercent": "نسبة مئوية",
+    "discountFixed": "مبلغ ثابت",
+    "couponValue": "القيمة",
+    "minOrderAmount": "الحد الأدنى لقيمة الطلب",
+    "expiresAt": "تاريخ الانتهاء",
+    "confirmDeleteCoupon": "حذف كود الخصم هذا نهائيًا؟",
+    "colReports": "البلاغات"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -439,7 +460,19 @@
     "submit": "نشر الرأي",
     "ratingCount": "{count} رأي",
     "noReviews": "لا توجد آراء لهذا المنتج بعد.",
-    "genericError": "حدث خطأ ما."
+    "genericError": "حدث خطأ ما.",
+    "verifiedPurchase": "شراء موثّق",
+    "fitLabel": "القياس",
+    "fitUnset": "غير محدد",
+    "fit": {
+      "small": "يصغر عن المقاس",
+      "true_to_size": "مقاس مضبوط",
+      "large": "يكبر عن المقاس"
+    },
+    "report": "إبلاغ",
+    "reportSuccess": "تم الإبلاغ",
+    "addPhotos": "أضف صورًا",
+    "uploading": "جارٍ الرفع..."
   },
   "outfit": {
     "includedProducts": "المنتجات المتضمنة في هذه الإطلالة"
@@ -453,5 +486,13 @@
     "simulatedFailedTitle": "فشلت محاكاة الدفع",
     "viewOrders": "مشاهدة طلباتي",
     "simulateError": "حدث خطأ أثناء المحاكاة."
+  },
+  "wishlist": {
+    "title": "قائمة أمنياتي",
+    "empty": "قائمة أمنياتك فارغة.",
+    "browseCatalog": "تصفح الكتالوج",
+    "remove": "إزالة",
+    "newListPlaceholder": "اسم القائمة الجديدة",
+    "createList": "إنشاء"
   }
 }

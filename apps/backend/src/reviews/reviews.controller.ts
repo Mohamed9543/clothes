@@ -49,4 +49,10 @@ export class ReviewsController {
   ) {
     return this.reviewsService.create(user.sub, slug, dto);
   }
+
+  @Post(':id/report')
+  @UseGuards(JwtAuthGuard)
+  report(@Param('id') id: string) {
+    return this.reviewsService.report(id).then(() => ({ success: true }));
+  }
 }

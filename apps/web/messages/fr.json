@@ -17,7 +17,8 @@
     "login": "Connexion",
     "logout": "Déconnexion",
     "searchPlaceholder": "Rechercher un vêtement...",
-    "admin": "Admin"
+    "admin": "Admin",
+    "wishlist": "Ma liste"
   },
   "footer": {
     "about": "À propos de StyleForm",
@@ -86,7 +87,10 @@
     "lowStock": "Stock faible",
     "sizeGuide": "Guide des tailles",
     "sizeGuideTitle": "Guide des tailles",
-    "sizeGuideChest": "Tour de poitrine"
+    "sizeGuideChest": "Tour de poitrine",
+    "wishlistToggle": "Ajouter à la liste de souhaits",
+    "wishlistAdd": "Ajouter à ma liste",
+    "wishlistRemove": "Retirer de ma liste"
   },
   "cart": {
     "title": "Mon panier",
@@ -100,7 +104,10 @@
     "subtotal": "Sous-total",
     "total": "Total",
     "remove": "Retirer",
-    "checkout": "Passer la commande"
+    "checkout": "Passer la commande",
+    "saveForLater": "Sauvegarder pour plus tard",
+    "moveToCart": "Remettre au panier",
+    "savedForLaterTitle": "Sauvegardé pour plus tard"
   },
   "checkout": {
     "title": "Finaliser la commande",
@@ -148,7 +155,11 @@
       "tozeur": "Tozeur",
       "tunis": "Tunis",
       "zaghouan": "Zaghouan"
-    }
+    },
+    "promoCode": "Code promo",
+    "applyCode": "Appliquer",
+    "discount": "Réduction",
+    "invalidCode": "Code promo invalide"
   },
   "account": {
     "title": "Mon compte",
@@ -411,7 +422,17 @@
     "modelSelected": "Modèle sélectionné ✓",
     "chooseThumbnail": "Choisir une vignette (optionnel)",
     "thumbnailSelected": "Vignette sélectionnée ✓",
-    "confirmDeleteAsset": "Supprimer cet élément de la bibliothèque définitivement ?"
+    "confirmDeleteAsset": "Supprimer cet élément de la bibliothèque définitivement ?",
+    "tabPromotions": "Promotions",
+    "newCoupon": "Nouveau code promo",
+    "couponCode": "Code",
+    "discountPercent": "Pourcentage",
+    "discountFixed": "Montant fixe",
+    "couponValue": "Valeur",
+    "minOrderAmount": "Montant minimum de commande",
+    "expiresAt": "Date d'expiration",
+    "confirmDeleteCoupon": "Supprimer ce code promo définitivement ?",
+    "colReports": "Signalements"
   },
   "stats": {
     "title": "Statistiques",
@@ -439,7 +460,19 @@
     "submit": "Publier l'avis",
     "ratingCount": "{count} avis",
     "noReviews": "Aucun avis pour ce produit pour le moment.",
-    "genericError": "Une erreur est survenue."
+    "genericError": "Une erreur est survenue.",
+    "verifiedPurchase": "Achat vérifié",
+    "fitLabel": "Coupe",
+    "fitUnset": "Non précisé",
+    "fit": {
+      "small": "Taille petit",
+      "true_to_size": "Taille normalement",
+      "large": "Taille grand"
+    },
+    "report": "Signaler",
+    "reportSuccess": "Signalé",
+    "addPhotos": "Ajouter des photos",
+    "uploading": "Envoi en cours..."
   },
   "outfit": {
     "includedProducts": "Produits inclus dans cette tenue"
@@ -453,5 +486,13 @@
     "simulatedFailedTitle": "Paiement simulé échoué",
     "viewOrders": "Voir mes commandes",
     "simulateError": "Une erreur est survenue pendant la simulation."
+  },
+  "wishlist": {
+    "title": "Ma liste de souhaits",
+    "empty": "Votre liste de souhaits est vide.",
+    "browseCatalog": "Parcourir le catalogue",
+    "remove": "Retirer",
+    "newListPlaceholder": "Nom de la nouvelle liste",
+    "createList": "Créer"
   }
 }

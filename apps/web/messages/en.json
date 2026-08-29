@@ -17,7 +17,8 @@
     "login": "Login",
     "logout": "Logout",
     "searchPlaceholder": "Search for clothes...",
-    "admin": "Admin"
+    "admin": "Admin",
+    "wishlist": "Wishlist"
   },
   "footer": {
     "about": "About StyleForm",
@@ -86,7 +87,10 @@
     "lowStock": "Low stock",
     "sizeGuide": "Size guide",
     "sizeGuideTitle": "Size guide",
-    "sizeGuideChest": "Chest"
+    "sizeGuideChest": "Chest",
+    "wishlistToggle": "Add to wishlist",
+    "wishlistAdd": "Add to wishlist",
+    "wishlistRemove": "Remove from wishlist"
   },
   "cart": {
     "title": "My cart",
@@ -100,7 +104,10 @@
     "subtotal": "Subtotal",
     "total": "Total",
     "remove": "Remove",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "saveForLater": "Save for later",
+    "moveToCart": "Move to cart",
+    "savedForLaterTitle": "Saved for later"
   },
   "checkout": {
     "title": "Checkout",
@@ -148,7 +155,11 @@
       "tozeur": "Tozeur",
       "tunis": "Tunis",
       "zaghouan": "Zaghouan"
-    }
+    },
+    "promoCode": "Promo code",
+    "applyCode": "Apply",
+    "discount": "Discount",
+    "invalidCode": "Invalid promo code"
   },
   "account": {
     "title": "My account",
@@ -411,7 +422,17 @@
     "modelSelected": "Model selected ✓",
     "chooseThumbnail": "Choose a thumbnail (optional)",
     "thumbnailSelected": "Thumbnail selected ✓",
-    "confirmDeleteAsset": "Delete this library item permanently?"
+    "confirmDeleteAsset": "Delete this library item permanently?",
+    "tabPromotions": "Promotions",
+    "newCoupon": "New coupon",
+    "couponCode": "Code",
+    "discountPercent": "Percentage",
+    "discountFixed": "Fixed amount",
+    "couponValue": "Value",
+    "minOrderAmount": "Minimum order amount",
+    "expiresAt": "Expiry date",
+    "confirmDeleteCoupon": "Permanently delete this coupon?",
+    "colReports": "Reports"
   },
   "stats": {
     "title": "Statistics",
@@ -439,7 +460,19 @@
     "submit": "Post review",
     "ratingCount": "{count} review(s)",
     "noReviews": "No reviews for this product yet.",
-    "genericError": "Something went wrong."
+    "genericError": "Something went wrong.",
+    "verifiedPurchase": "Verified purchase",
+    "fitLabel": "Fit",
+    "fitUnset": "Not specified",
+    "fit": {
+      "small": "Runs small",
+      "true_to_size": "True to size",
+      "large": "Runs large"
+    },
+    "report": "Report",
+    "reportSuccess": "Reported",
+    "addPhotos": "Add photos",
+    "uploading": "Uploading..."
   },
   "outfit": {
     "includedProducts": "Products included in this outfit"
@@ -453,5 +486,13 @@
     "simulatedFailedTitle": "Simulated payment failed",
     "viewOrders": "View my orders",
     "simulateError": "Something went wrong during the simulation."
+  },
+  "wishlist": {
+    "title": "My wishlist",
+    "empty": "Your wishlist is empty.",
+    "browseCatalog": "Browse the catalog",
+    "remove": "Remove",
+    "newListPlaceholder": "New list name",
+    "createList": "Create"
   }
 }

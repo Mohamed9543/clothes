@@ -88,6 +88,11 @@ export class ProductsController {
     return this.translationService.translateProduct(dto);
   }
 
+  @Get('by-ids')
+  findByIds(@Query('ids') ids: string) {
+    return this.productsService.findByIdsPublic(ids ? ids.split(',') : []);
+  }
+
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.productsService.findBySlugPublic(slug);

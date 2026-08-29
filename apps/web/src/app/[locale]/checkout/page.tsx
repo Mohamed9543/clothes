@@ -24,6 +24,9 @@ export default function CheckoutPage() {
   const [country, setCountry] = useState('Tunisie');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card'>('cod');
   const [quote, setQuote] = useState<OrderQuote | null>(null);
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState('');
+  const [couponError, setCouponError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<Order | null>(null);
@@ -45,18 +48,28 @@ export default function CheckoutPage() {
     apiFetch<OrderQuote>('/orders/quote', {
       method: 'POST',
       auth: true,
-      body: JSON.stringify({ governorate }),
+      body: JSON.stringify({ governorate, couponCode: appliedCoupon || undefined }),
     })
       .then((data) => {
         if (!cancelled) setQuote(data);
       })
-      .catch(() => {
-        if (!cancelled) setQuote(null);
+      .catch((err) => {
+        if (cancelled) return;
+        setQuote(null);
+        if (appliedCoupon) {
+          setCouponError(err instanceof ApiError ? err.message : t('invalidCode'));
+          setAppliedCoupon('');
+        }
       });
     return () => {
       cancelled = true;
     };
-  }, [governorate]);
+  }, [governorate, appliedCoupon, t]);
+
+  function applyCoupon() {
+    setCouponError(null);
+    setAppliedCoupon(couponInput.trim());
+  }
 
   if (!authLoading && !user) {
     return null;
@@ -79,6 +92,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           shippingAddress: { fullName, phone, address, governorate, delegation, country },
           paymentMethod,
+          couponCode: appliedCoupon || undefined,
         }),
       });
       await refresh();
@@ -198,6 +212,30 @@ export default function CheckoutPage() {
           )}
         </div>
 
+        <div>
+          <p className="mb-2 font-medium">{t('promoCode')}</p>
+          <div className="flex gap-2">
+            <input
+              value={couponInput}
+              onChange={(event) => setCouponInput(event.target.value)}
+              placeholder={t('promoCode')}
+              className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+            />
+            <button
+              type="button"
+              onClick={applyCoupon}
+              disabled={!couponInput.trim()}
+              className="shrink-0 rounded-md border border-border px-4 py-2 text-sm hover:border-brand-gold disabled:opacity-50"
+            >
+              {t('applyCode')}
+            </button>
+          </div>
+          {couponError && <p className="mt-1 text-xs text-brand-terracotta">{couponError}</p>}
+          {appliedCoupon && !couponError && (
+            <p className="mt-1 text-xs text-green-700">{appliedCoupon}</p>
+          )}
+        </div>
+
         {cart && (
           <div className="space-y-1 border-t border-border pt-4 text-sm">
             <div className="flex items-center justify-between text-muted">
@@ -206,6 +244,14 @@ export default function CheckoutPage() {
                 {cart.total} {tCommon('currency')}
               </span>
             </div>
+            {(quote?.discountAmount ?? 0) > 0 && (
+              <div className="flex items-center justify-between text-green-700">
+                <span>{t('discount')}</span>
+                <span>
+                  -{quote?.discountAmount} {tCommon('currency')}
+                </span>
+              </div>
+            )}
             <div className="flex items-center justify-between text-muted">
               <span>{t('shippingFee')}</span>
               <span>

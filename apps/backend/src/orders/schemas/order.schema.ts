@@ -84,6 +84,12 @@ export class Order {
   @Prop({ required: true, min: 0, default: 0 })
   shippingFee: number;
 
+  @Prop({ type: String, default: null })
+  couponCode: string | null;
+
+  @Prop({ required: true, min: 0, default: 0 })
+  discountAmount: number;
+
   @Prop({ type: String, enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 

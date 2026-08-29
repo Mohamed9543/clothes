@@ -4,6 +4,7 @@ import { Connection, Model, Types } from 'mongoose';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
 import { PaymentsService } from '../payments/payments.service';
+import { PromotionsService } from '../promotions/promotions.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { QuoteOrderDto } from './dto/quote-order.dto';
 import { ShippingFeeService } from './shipping-fee.service';
@@ -16,6 +17,7 @@ import { Order, OrderDocument, OrderItem, OrderStatus, PaymentMethod } from './s
 export interface OrderQuote {
   itemsSubtotal: number;
   shippingFee: number;
+  discountAmount: number;
   total: number;
 }
 
@@ -40,15 +42,20 @@ export class OrdersService {
     private readonly productsService: ProductsService,
     private readonly shippingFeeService: ShippingFeeService,
     private readonly paymentsService: PaymentsService,
+    private readonly promotionsService: PromotionsService,
   ) {}
 
   async quote(userId: string, dto: QuoteOrderDto): Promise<OrderQuote> {
     const cart = await this.cartService.getEnrichedCart(userId);
     const shippingFee = this.shippingFeeService.computeShippingFee(dto.governorate);
+    const discountAmount = dto.couponCode
+      ? (await this.promotionsService.validateCoupon(dto.couponCode, cart.total)).discountAmount
+      : 0;
     return {
       itemsSubtotal: cart.total,
       shippingFee,
-      total: cart.total + shippingFee,
+      discountAmount,
+      total: cart.total - discountAmount + shippingFee,
     };
   }
 
@@ -103,7 +110,14 @@ export class OrdersService {
         const shippingFee = this.shippingFeeService.computeShippingFee(
           dto.shippingAddress.governorate,
         );
-        totalAmount += shippingFee;
+
+        let discountAmount = 0;
+        if (dto.couponCode) {
+          const result = await this.promotionsService.validateCoupon(dto.couponCode, totalAmount);
+          discountAmount = result.discountAmount;
+        }
+
+        totalAmount = totalAmount - discountAmount + shippingFee;
 
         const created = await this.orderModel.create(
           [
@@ -112,6 +126,8 @@ export class OrdersService {
               items: orderItems,
               totalAmount,
               shippingFee,
+              couponCode: dto.couponCode ? dto.couponCode.trim().toUpperCase() : null,
+              discountAmount,
               shippingAddress: dto.shippingAddress,
               paymentMethod,
               status: initialStatus,
