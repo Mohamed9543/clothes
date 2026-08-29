@@ -1,6 +1,9 @@
-import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsBoolean, IsEnum, IsIn, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 import { ProductAudience, ProductType } from '../schemas/product.schema';
+
+export type ProductSort = 'newest' | 'price_asc' | 'price_desc';
+export const PRODUCT_SORTS: ProductSort[] = ['newest', 'price_asc', 'price_desc'];
 
 export class QueryProductsDto {
   @IsOptional()
@@ -10,6 +13,19 @@ export class QueryProductsDto {
   @IsOptional()
   @IsEnum(ProductType)
   type?: ProductType;
+
+  @IsOptional()
+  @IsString()
+  color?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true')
+  @IsBoolean()
+  inStockOnly?: boolean;
+
+  @IsOptional()
+  @IsIn(PRODUCT_SORTS)
+  sort?: ProductSort;
 
   @IsOptional()
   @Type(() => Number)

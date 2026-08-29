@@ -90,7 +90,7 @@ export class ProductsController {
 
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
-    return this.productsService.findBySlug(slug);
+    return this.productsService.findBySlugPublic(slug);
   }
 
   @Post()

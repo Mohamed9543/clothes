@@ -60,7 +60,17 @@
     "apply": "أكد",
     "reset": "رجّع",
     "noResults": "ما فماش حاجة تنجم تعجبك.",
-    "resultsCount": "{count} حاجة موجودة"
+    "resultsCount": "{count} حاجة موجودة",
+    "color": "اللون",
+    "availableOnly": "المتوفر برك",
+    "page": "صفحة {page} من {totalPages}",
+    "previous": "اللي قبل",
+    "next": "اللي بعد",
+    "sort": {
+      "newest": "الجداد",
+      "price_asc": "السعر: من الأقل للأعلى",
+      "price_desc": "السعر: من الأعلى للأقل"
+    }
   },
   "product": {
     "addToCart": "زيد في الكارتة",
@@ -72,7 +82,11 @@
     "inStock": "موجود",
     "description": "التفاصيل",
     "selectSize": "اختار مقاس",
-    "selectColorFirst": "اختار اللون قبل"
+    "selectColorFirst": "اختار اللون قبل",
+    "lowStock": "باقي شوية",
+    "sizeGuide": "دليل المقاسات",
+    "sizeGuideTitle": "دليل المقاسات",
+    "sizeGuideChest": "دور الصدر"
   },
   "cart": {
     "title": "الكارتة متاعي",

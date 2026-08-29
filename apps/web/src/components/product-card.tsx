@@ -5,11 +5,24 @@ import { ImageOff } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { localize } from '@/lib/localized';
+import { colorNameToHex } from '@/lib/colors';
+import { productColors } from '@/lib/product-variants';
 import type { Product } from '@/types';
 
-export function ProductCard({ product }: { product: Product }) {
+const MAX_SWATCHES = 4;
+
+export function ProductCard({
+  product,
+}: {
+  product: Product & { isLowStock?: boolean; isOutOfStock?: boolean };
+}) {
   const locale = useLocale();
   const t = useTranslations('common');
+  const tProduct = useTranslations('product');
+
+  const colors = productColors(product);
+  const shownColors = colors.slice(0, MAX_SWATCHES);
+  const extraColors = colors.length - shownColors.length;
 
   return (
     <Link
@@ -30,12 +43,36 @@ export function ProductCard({ product }: { product: Product }) {
             <ImageOff className="h-8 w-8" />
           </div>
         )}
+
+        {product.isOutOfStock && (
+          <span className="absolute start-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-xs text-white">
+            {tProduct('outOfStock')}
+          </span>
+        )}
+        {!product.isOutOfStock && product.isLowStock && (
+          <span className="absolute start-2 top-2 rounded-full bg-brand-terracotta px-2 py-0.5 text-xs text-white">
+            {tProduct('lowStock')}
+          </span>
+        )}
       </div>
       <div className="p-3">
         <p className="truncate text-sm font-medium">{localize(product.name, locale)}</p>
         <p className="mt-1 text-sm text-muted">
           {product.price} {t('currency')}
         </p>
+        {shownColors.length > 0 && (
+          <div className="mt-2 flex items-center gap-1">
+            {shownColors.map((color) => (
+              <span
+                key={color}
+                title={color}
+                className="h-3 w-3 rounded-full border border-border"
+                style={{ backgroundColor: colorNameToHex(color) }}
+              />
+            ))}
+            {extraColors > 0 && <span className="text-xs text-muted">+{extraColors}</span>}
+          </div>
+        )}
       </div>
     </Link>
   );

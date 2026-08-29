@@ -60,7 +60,17 @@
     "apply": "تطبيق",
     "reset": "إعادة تعيين",
     "noResults": "لا توجد منتجات مطابقة لبحثك.",
-    "resultsCount": "{count} منتج/منتجات"
+    "resultsCount": "{count} منتج/منتجات",
+    "color": "اللون",
+    "availableOnly": "المتوفر فقط",
+    "page": "صفحة {page} من {totalPages}",
+    "previous": "السابق",
+    "next": "التالي",
+    "sort": {
+      "newest": "الأحدث",
+      "price_asc": "السعر: من الأقل للأعلى",
+      "price_desc": "السعر: من الأعلى للأقل"
+    }
   },
   "product": {
     "addToCart": "أضف إلى السلة",
@@ -72,7 +82,11 @@
     "inStock": "متوفر",
     "description": "الوصف",
     "selectSize": "الرجاء اختيار مقاس",
-    "selectColorFirst": "الرجاء اختيار اللون أولاً"
+    "selectColorFirst": "الرجاء اختيار اللون أولاً",
+    "lowStock": "كمية قليلة",
+    "sizeGuide": "دليل المقاسات",
+    "sizeGuideTitle": "دليل المقاسات",
+    "sizeGuideChest": "محيط الصدر"
   },
   "cart": {
     "title": "سلتي",

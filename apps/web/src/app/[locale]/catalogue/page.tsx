@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
 import { ProductCard } from '@/components/product-card';
 import { API_URL } from '@/lib/server-api';
-import type { PaginatedResult, Product, ProductAudience, ProductType } from '@/types';
+import type { PaginatedResult, ProductAudience, ProductSort, ProductType, PublicProduct } from '@/types';
 
 const AUDIENCES: ProductAudience[] = ['men', 'women', 'kids'];
 const TYPES: ProductType[] = [
@@ -18,6 +18,7 @@ const TYPES: ProductType[] = [
   'chaussure',
   'accessoire',
 ];
+const SORTS: ProductSort[] = ['newest', 'price_asc', 'price_desc'];
 
 export default function CataloguePage() {
   const t = useTranslations('catalog');
@@ -27,21 +28,34 @@ export default function CataloguePage() {
   const audience = searchParams.get('audience') ?? '';
   const type = searchParams.get('type') ?? '';
   const search = searchParams.get('search') ?? '';
+  const color = searchParams.get('color') ?? '';
+  const inStockOnly = searchParams.get('inStockOnly') === 'true';
+  const sort = (searchParams.get('sort') as ProductSort | null) ?? 'newest';
+  const page = Number(searchParams.get('page') ?? '1');
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') ?? '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') ?? '');
 
-  const [result, setResult] = useState<PaginatedResult<Product> | null>(null);
+  const [result, setResult] = useState<PaginatedResult<PublicProduct> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  // Colors available across the currently loaded page, used to populate the
+  // color filter — a lightweight approximation that's good enough while the
+  // catalogue is small; a dedicated facets endpoint can replace this later.
+  const [availableColors, setAvailableColors] = useState<string[]>([]);
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
     if (audience) params.set('audience', audience);
     if (type) params.set('type', type);
     if (search) params.set('search', search);
+    if (color) params.set('color', color);
+    if (inStockOnly) params.set('inStockOnly', 'true');
+    if (sort !== 'newest') params.set('sort', sort);
     if (searchParams.get('minPrice')) params.set('minPrice', searchParams.get('minPrice')!);
     if (searchParams.get('maxPrice')) params.set('maxPrice', searchParams.get('maxPrice')!);
+    params.set('page', String(page));
+    params.set('limit', '24');
     return params.toString();
-  }, [audience, type, search, searchParams]);
+  }, [audience, type, search, color, inStockOnly, sort, page, searchParams]);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,13 +73,38 @@ export default function CataloguePage() {
     };
   }, [query]);
 
-  function updateParam(key: string, value: string) {
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_URL}/products?limit=100`)
+      .then((res) => res.json())
+      .then((data: PaginatedResult<PublicProduct>) => {
+        if (cancelled) return;
+        const colors = new Set<string>();
+        for (const product of data.items) {
+          for (const variant of product.variants) colors.add(variant.color);
+        }
+        setAvailableColors([...colors]);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function updateParam(key: string, value: string, resetPage = true) {
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
       params.set(key, value);
     } else {
       params.delete(key);
     }
+    if (resetPage) params.delete('page');
+    router.push(`/catalogue?${params.toString()}`);
+  }
+
+  function goToPage(nextPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(nextPage));
     router.push(`/catalogue?${params.toString()}`);
   }
 
@@ -75,6 +114,7 @@ export default function CataloguePage() {
     else params.delete('minPrice');
     if (maxPrice) params.set('maxPrice', maxPrice);
     else params.delete('maxPrice');
+    params.delete('page');
     router.push(`/catalogue?${params.toString()}`);
   }
 
@@ -126,6 +166,29 @@ export default function CataloguePage() {
             </div>
           </div>
 
+          {availableColors.length > 0 && (
+            <div>
+              <p className="mb-2 text-sm font-medium">{t('color')}</p>
+              <div className="flex flex-wrap gap-2 md:flex-col">
+                <button
+                  onClick={() => updateParam('color', '')}
+                  className={`rounded-full border px-3 py-1 text-sm md:text-start ${color === '' ? 'border-brand-terracotta text-brand-terracotta' : 'border-border'}`}
+                >
+                  {t('all')}
+                </button>
+                {availableColors.map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => updateParam('color', value)}
+                    className={`rounded-full border px-3 py-1 text-sm md:text-start ${color === value ? 'border-brand-terracotta text-brand-terracotta' : 'border-border'}`}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div>
             <p className="mb-2 text-sm font-medium">{t('priceRange')}</p>
             <div className="flex items-center gap-2">
@@ -166,14 +229,34 @@ export default function CataloguePage() {
               </button>
             </div>
           </div>
+
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={inStockOnly}
+              onChange={(event) => updateParam('inStockOnly', event.target.checked ? 'true' : '')}
+            />
+            {t('availableOnly')}
+          </label>
         </aside>
 
         <div>
-          {!isLoading && (
-            <p className="mb-4 text-sm text-muted">
-              {t('resultsCount', { count: result?.total ?? 0 })}
-            </p>
-          )}
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            {!isLoading && (
+              <p className="text-sm text-muted">{t('resultsCount', { count: result?.total ?? 0 })}</p>
+            )}
+            <select
+              value={sort}
+              onChange={(event) => updateParam('sort', event.target.value)}
+              className="rounded-md border border-border bg-surface px-3 py-2 text-sm"
+            >
+              {SORTS.map((value) => (
+                <option key={value} value={value}>
+                  {t(`sort.${value}`)}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {!isLoading && result?.items.length === 0 && (
             <p className="text-sm text-muted">{t('noResults')}</p>
@@ -182,6 +265,28 @@ export default function CataloguePage() {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {result?.items.map((product) => <ProductCard key={product._id} product={product} />)}
           </div>
+
+          {result && result.totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-center gap-4 text-sm">
+              <button
+                onClick={() => goToPage(page - 1)}
+                disabled={page <= 1}
+                className="rounded-md border border-border px-3 py-1 disabled:opacity-40"
+              >
+                {t('previous')}
+              </button>
+              <span className="text-muted">
+                {t('page', { page, totalPages: result.totalPages })}
+              </span>
+              <button
+                onClick={() => goToPage(page + 1)}
+                disabled={page >= result.totalPages}
+                className="rounded-md border border-border px-3 py-1 disabled:opacity-40"
+              >
+                {t('next')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

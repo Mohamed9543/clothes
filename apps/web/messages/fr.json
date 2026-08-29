@@ -60,7 +60,17 @@
     "apply": "Appliquer",
     "reset": "Réinitialiser",
     "noResults": "Aucun produit ne correspond à votre recherche.",
-    "resultsCount": "{count} produit(s) trouvé(s)"
+    "resultsCount": "{count} produit(s) trouvé(s)",
+    "color": "Couleur",
+    "availableOnly": "Disponible uniquement",
+    "page": "Page {page} sur {totalPages}",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "sort": {
+      "newest": "Nouveautés",
+      "price_asc": "Prix croissant",
+      "price_desc": "Prix décroissant"
+    }
   },
   "product": {
     "addToCart": "Ajouter au panier",
@@ -72,7 +82,11 @@
     "inStock": "En stock",
     "description": "Description",
     "selectSize": "Veuillez choisir une taille",
-    "selectColorFirst": "Choisissez d'abord une couleur"
+    "selectColorFirst": "Choisissez d'abord une couleur",
+    "lowStock": "Stock faible",
+    "sizeGuide": "Guide des tailles",
+    "sizeGuideTitle": "Guide des tailles",
+    "sizeGuideChest": "Tour de poitrine"
   },
   "cart": {
     "title": "Mon panier",

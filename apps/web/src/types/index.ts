@@ -48,6 +48,15 @@ export interface AdminProduct extends Product {
   isOutOfStock: boolean;
 }
 
+// Shape returned by the public GET /products and GET /products/:slug
+// endpoints — includes availability flags but never the exact stock count.
+export interface PublicProduct extends Product {
+  isLowStock: boolean;
+  isOutOfStock: boolean;
+}
+
+export type ProductSort = 'newest' | 'price_asc' | 'price_desc';
+
 export interface ImportSummary {
   created: number;
   updated: number;

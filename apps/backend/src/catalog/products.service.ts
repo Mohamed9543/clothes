@@ -4,7 +4,7 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
-import { Model, QueryFilter } from 'mongoose';
+import { Model, QueryFilter, Types } from 'mongoose';
 import { CSV_COLUMNS, productToRow, rowToProductDto } from './csv/product-csv.mapper';
 import { AdjustStockDto, ManualStockReason } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -37,6 +37,15 @@ export interface AdminProduct {
   isOutOfStock: boolean;
 }
 
+// Public-facing stock summary: deliberately omits `totalStock` so exact
+// quantities aren't exposed to anonymous catalogue browsers, only the
+// derived availability signal the UI needs (badges, disabled states).
+export interface PublicStockSummary {
+  _id: Types.ObjectId;
+  isLowStock: boolean;
+  isOutOfStock: boolean;
+}
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -45,8 +54,12 @@ export class ProductsService {
     private readonly stockMovementModel: Model<StockMovementDocument>,
   ) {}
 
-  async findAll(query: QueryProductsDto): Promise<PaginatedResult<ProductDocument>> {
-    return this.findAllInternal(query, { isActive: true });
+  async findAll(query: QueryProductsDto): Promise<PaginatedResult<Product & PublicStockSummary>> {
+    const result = await this.findAllInternal(query, { isActive: true });
+    return {
+      ...result,
+      items: result.items.map((item) => this.withPublicStockSummary(item)),
+    };
   }
 
   async findAllAdmin(
@@ -59,12 +72,20 @@ export class ProductsService {
     };
   }
 
-  private withStockSummary(product: ProductDocument): Product & AdminProduct {
-    const totalStock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
+  private stockFlags(product: ProductDocument): { isLowStock: boolean; isOutOfStock: boolean } {
     const isOutOfStock = product.variants.every((variant) => variant.stock === 0);
     const isLowStock =
       !isOutOfStock && product.variants.some((variant) => variant.stock <= LOW_STOCK_THRESHOLD);
-    return { ...product.toObject(), totalStock, isLowStock, isOutOfStock };
+    return { isLowStock, isOutOfStock };
+  }
+
+  private withPublicStockSummary(product: ProductDocument): Product & PublicStockSummary {
+    return { ...product.toObject(), ...this.stockFlags(product) };
+  }
+
+  private withStockSummary(product: ProductDocument): Product & AdminProduct {
+    const totalStock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
+    return { ...product.toObject(), totalStock, ...this.stockFlags(product) };
   }
 
   private async findAllInternal(
@@ -92,13 +113,29 @@ export class ProductsService {
         { 'name.tn': regex },
       ];
     }
+    // color and inStockOnly must be combined into a single $elemMatch when
+    // both are present, otherwise a product could match just because SOME
+    // variant is in stock and a DIFFERENT variant has the requested color.
+    if (query.color || query.inStockOnly) {
+      const elemMatch: Record<string, unknown> = {};
+      if (query.color) elemMatch.color = query.color;
+      if (query.inStockOnly) elemMatch.stock = { $gt: 0 };
+      filter.variants = { $elemMatch: elemMatch };
+    }
+
+    const sortMap: Record<string, Record<string, 1 | -1>> = {
+      newest: { createdAt: -1 },
+      price_asc: { price: 1 },
+      price_desc: { price: -1 },
+    };
+    const sort = sortMap[query.sort ?? 'newest'];
 
     const [items, total] = await Promise.all([
       this.productModel
         .find(filter)
         .skip((page - 1) * limit)
         .limit(limit)
-        .sort({ createdAt: -1 })
+        .sort(sort)
         .exec(),
       this.productModel.countDocuments(filter).exec(),
     ]);
@@ -112,6 +149,11 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
     return product;
+  }
+
+  async findBySlugPublic(slug: string): Promise<Product & PublicStockSummary> {
+    const product = await this.findBySlug(slug);
+    return this.withPublicStockSummary(product);
   }
 
   async findById(id: string): Promise<ProductDocument | null> {

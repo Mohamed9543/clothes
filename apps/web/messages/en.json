@@ -60,7 +60,17 @@
     "apply": "Apply",
     "reset": "Reset",
     "noResults": "No products match your search.",
-    "resultsCount": "{count} product(s) found"
+    "resultsCount": "{count} product(s) found",
+    "color": "Color",
+    "availableOnly": "In stock only",
+    "page": "Page {page} of {totalPages}",
+    "previous": "Previous",
+    "next": "Next",
+    "sort": {
+      "newest": "Newest",
+      "price_asc": "Price: low to high",
+      "price_desc": "Price: high to low"
+    }
   },
   "product": {
     "addToCart": "Add to cart",
@@ -72,7 +82,11 @@
     "inStock": "In stock",
     "description": "Description",
     "selectSize": "Please choose a size",
-    "selectColorFirst": "Please choose a color first"
+    "selectColorFirst": "Please choose a color first",
+    "lowStock": "Low stock",
+    "sizeGuide": "Size guide",
+    "sizeGuideTitle": "Size guide",
+    "sizeGuideChest": "Chest"
   },
   "cart": {
     "title": "My cart",

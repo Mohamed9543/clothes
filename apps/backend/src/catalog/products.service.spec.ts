@@ -85,3 +85,72 @@ describe('ProductsService — decrementStock (size×color variants)', () => {
     );
   });
 });
+
+describe('ProductsService — findAll (color/availability filter + sort)', () => {
+  let service: ProductsService;
+  let findMock: jest.Mock;
+  let capturedFilter: unknown;
+  let capturedSort: unknown;
+
+  function fakeProductDoc(overrides: Partial<{ variants: { color: string; stock: number }[] }> = {}) {
+    return {
+      toObject: () => ({ _id: 'p1', variants: overrides.variants ?? [{ color: 'Rouge', stock: 3 }] }),
+      variants: overrides.variants ?? [{ color: 'Rouge', stock: 3 }],
+    };
+  }
+
+  beforeEach(async () => {
+    findMock = jest.fn().mockReturnValue({
+      skip: () => ({
+        limit: () => ({
+          sort: (sortArg: unknown) => {
+            capturedSort = sortArg;
+            return { exec: () => Promise.resolve([fakeProductDoc()]) };
+          },
+        }),
+      }),
+    });
+
+    const module = await Test.createTestingModule({
+      providers: [
+        ProductsService,
+        {
+          provide: getModelToken(Product.name),
+          useValue: {
+            find: (filter: unknown) => {
+              capturedFilter = filter;
+              return findMock(filter);
+            },
+            countDocuments: () => ({ exec: () => Promise.resolve(1) }),
+          },
+        },
+        { provide: getModelToken(StockMovement.name), useValue: {} },
+      ],
+    }).compile();
+
+    service = module.get(ProductsService);
+  });
+
+  it('combines color and inStockOnly into a single $elemMatch (no cross-variant false match)', async () => {
+    await service.findAll({ color: 'Rouge', inStockOnly: true } as never);
+
+    expect(capturedFilter).toMatchObject({
+      variants: { $elemMatch: { color: 'Rouge', stock: { $gt: 0 } } },
+    });
+  });
+
+  it('sorts by price ascending when sort=price_asc', async () => {
+    await service.findAll({ sort: 'price_asc' } as never);
+    expect(capturedSort).toEqual({ price: 1 });
+  });
+
+  it('sorts by price descending when sort=price_desc', async () => {
+    await service.findAll({ sort: 'price_desc' } as never);
+    expect(capturedSort).toEqual({ price: -1 });
+  });
+
+  it('defaults to newest-first when no sort is given', async () => {
+    await service.findAll({} as never);
+    expect(capturedSort).toEqual({ createdAt: -1 });
+  });
+});
