@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { ApiError } from '@/lib/api';
+import { findVariant, productColors, sizesForColor } from '@/lib/product-variants';
 import type { Product } from '@/types';
 
 export function AddToCartForm({ product }: { product: Product }) {
@@ -14,21 +15,31 @@ export function AddToCartForm({ product }: { product: Product }) {
   const { user } = useAuth();
   const { addItem } = useCart();
 
+  const colors = useMemo(() => productColors(product), [product]);
+
+  const [color, setColor] = useState('');
   const [size, setSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectedVariant = product.variants.find((variant) => variant.size === size);
+  const availableSizes = color ? sizesForColor(product, color) : [];
+  const selectedVariant = color && size ? findVariant(product, size, color) : undefined;
   const allOutOfStock = product.variants.every((variant) => variant.stock <= 0);
+
+  function handleColorSelect(nextColor: string) {
+    setColor(nextColor);
+    setSize('');
+    setQuantity(1);
+  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
     setSuccess(false);
 
-    if (!size) {
+    if (!color || !size) {
       setError(t('selectSize'));
       return;
     }
@@ -40,7 +51,7 @@ export function AddToCartForm({ product }: { product: Product }) {
 
     setIsSubmitting(true);
     try {
-      await addItem(product._id, quantity, size);
+      await addItem(product._id, quantity, size, color);
       setSuccess(true);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('selectSize'));
@@ -52,32 +63,52 @@ export function AddToCartForm({ product }: { product: Product }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
+        <p className="mb-2 text-sm font-medium">{t('color')}</p>
+        <div className="flex flex-wrap gap-2">
+          {colors.map((c) => (
+            <button
+              type="button"
+              key={c}
+              onClick={() => handleColorSelect(c)}
+              className={`rounded-md border px-3 py-1 text-sm ${
+                color === c ? 'border-brand-terracotta text-brand-terracotta' : 'border-border'
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
         <p className="mb-2 text-sm font-medium">{t('size')}</p>
         <div className="flex flex-wrap gap-2">
-          {product.variants.map((variant) => {
-            const isOut = variant.stock <= 0;
+          {availableSizes.map((s) => {
+            const variant = findVariant(product, s, color);
+            const isOut = (variant?.stock ?? 0) <= 0;
             return (
               <button
                 type="button"
-                key={variant.size}
+                key={s}
                 disabled={isOut}
                 onClick={() => {
-                  setSize(variant.size);
+                  setSize(s);
                   setQuantity(1);
                 }}
                 title={isOut ? t('outOfStock') : undefined}
                 className={`rounded-md border px-3 py-1 text-sm ${
                   isOut
                     ? 'cursor-not-allowed border-border text-muted line-through'
-                    : size === variant.size
+                    : size === s
                       ? 'border-brand-terracotta text-brand-terracotta'
                       : 'border-border'
                 }`}
               >
-                {variant.size}
+                {s}
               </button>
             );
           })}
+          {!color && <p className="text-sm text-muted">{t('selectColorFirst')}</p>}
         </div>
       </div>
 

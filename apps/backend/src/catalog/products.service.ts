@@ -118,11 +118,25 @@ export class ProductsService {
     return this.productModel.findById(id).exec();
   }
 
+  private assertUniqueSkus(variants: { sku: string }[]): void {
+    const seen = new Set<string>();
+    for (const variant of variants) {
+      if (seen.has(variant.sku)) {
+        throw new BadRequestException(`Duplicate SKU "${variant.sku}" within product variants`);
+      }
+      seen.add(variant.sku);
+    }
+  }
+
   create(dto: CreateProductDto): Promise<ProductDocument> {
+    this.assertUniqueSkus(dto.variants);
     return this.productModel.create({ ...dto, slug: dto.slug.toLowerCase() });
   }
 
   async update(id: string, dto: UpdateProductDto): Promise<ProductDocument> {
+    if (dto.variants) {
+      this.assertUniqueSkus(dto.variants);
+    }
     const product = await this.productModel
       .findByIdAndUpdate(id, dto, { new: true })
       .exec();
@@ -139,30 +153,33 @@ export class ProductsService {
     }
   }
 
-  getVariantStock(product: ProductDocument, size: string): number {
-    return product.variants.find((variant) => variant.size === size)?.stock ?? 0;
+  getVariantStock(product: ProductDocument, size: string, color: string): number {
+    return product.variants.find((variant) => variant.size === size && variant.color === color)
+      ?.stock ?? 0;
   }
 
   async decrementStock(
     productId: string,
     size: string,
+    color: string,
     quantity: number,
     orderId: string,
   ): Promise<void> {
     const result = await this.productModel
       .updateOne(
-        { _id: productId, variants: { $elemMatch: { size, stock: { $gte: quantity } } } },
+        { _id: productId, variants: { $elemMatch: { size, color, stock: { $gte: quantity } } } },
         { $inc: { 'variants.$.stock': -quantity } },
       )
       .exec();
 
     if (result.matchedCount === 0) {
-      throw new BadRequestException(`Not enough stock for size "${size}"`);
+      throw new BadRequestException(`Not enough stock for size "${size}" / color "${color}"`);
     }
 
     await this.stockMovementModel.create({
       productId,
       size,
+      color,
       quantityChange: -quantity,
       reason: StockMovementReason.ORDER,
       orderId,
@@ -178,9 +195,9 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
-    const variant = product.variants.find((v) => v.size === dto.size);
+    const variant = product.variants.find((v) => v.size === dto.size && v.color === dto.color);
     if (!variant) {
-      throw new BadRequestException(`No variant found for size "${dto.size}"`);
+      throw new BadRequestException(`No variant found for size "${dto.size}" / color "${dto.color}"`);
     }
 
     const nextStock = variant.stock + dto.quantityChange;
@@ -193,6 +210,7 @@ export class ProductsService {
     await this.stockMovementModel.create({
       productId,
       size: dto.size,
+      color: dto.color,
       quantityChange: dto.quantityChange,
       reason: dto.reason as ManualStockReason,
       note: dto.note ?? '',

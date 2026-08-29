@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,7 +14,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
 import { memoryStorage } from 'multer';
+
+const MAX_CSV_FILE_SIZE = 2 * 1024 * 1024; // 2MB — generous for a product CSV
+const CSV_MIME_TYPES = ['text/csv', 'application/vnd.ms-excel', 'text/plain'];
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -57,7 +62,21 @@ export class ProductsController {
   @Post('admin/import')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: MAX_CSV_FILE_SIZE },
+      fileFilter: (_req, file, callback) => {
+        const okMime = CSV_MIME_TYPES.includes(file.mimetype);
+        const okExt = extname(file.originalname).toLowerCase() === '.csv';
+        if (!okMime && !okExt) {
+          callback(new BadRequestException('Only CSV files are allowed'), false);
+          return;
+        }
+        callback(null, true);
+      },
+    }),
+  )
   importCsv(@UploadedFile() file: Express.Multer.File) {
     return this.productsService.importFromCsv(file.buffer);
   }

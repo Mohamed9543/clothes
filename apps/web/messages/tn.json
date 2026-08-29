@@ -71,7 +71,8 @@
     "outOfStock": "ماباقاش موجود",
     "inStock": "موجود",
     "description": "التفاصيل",
-    "selectSize": "اختار مقاس"
+    "selectSize": "اختار مقاس",
+    "selectColorFirst": "اختار اللون قبل"
   },
   "cart": {
     "title": "الكارتة متاعي",
@@ -79,6 +80,7 @@
     "browseCatalog": "شوف الكتالوق",
     "product": "الحاجة",
     "size": "المقاس",
+    "color": "اللون",
     "quantity": "العدد",
     "price": "السعر",
     "subtotal": "المجموع الفرعي",
@@ -92,18 +94,47 @@
     "fullName": "الاسم الكامل",
     "phone": "التليفون",
     "address": "العنوان",
-    "city": "المدينة",
     "country": "البلاد",
     "paymentMethod": "طريقة الخلاص",
     "cod": "خلاص عند التوصيل",
     "card": "كارط بنكية",
-    "cardNumber": "نمرة الكارط",
-    "cardExpiry": "تاريخ الصلوحية (شهر/عام)",
-    "cardCvv": "رمز CVV",
     "placeOrder": "أكد الطلبية",
     "orderSuccessTitle": "الطلبية تأكدت!",
     "orderSuccessText": "شكرا على طلبيتك. تنجم تتبع حالتها من الكونط متاعك.",
-    "viewOrder": "شوف طلبيتي"
+    "viewOrder": "شوف طلبيتي",
+    "selectGovernorate": "اختار ولاية",
+    "governorateLabel": "الولاية",
+    "delegationLabel": "المعتمدية",
+    "shippingFee": "مصاريف التوصيل",
+    "subtotal": "المجموع الفرعي",
+    "total": "المجموع",
+    "paymentComingSoon": "الخلاص بالكارت (Konnect / Flouci) يجي قريب — استعمل الخلاص عند التسليم توا.",
+    "governorate": {
+      "ariana": "أريانة",
+      "beja": "باجة",
+      "ben_arous": "بن عروس",
+      "bizerte": "بنزرت",
+      "gabes": "قابس",
+      "gafsa": "قفصة",
+      "jendouba": "جندوبة",
+      "kairouan": "القيروان",
+      "kasserine": "القصرين",
+      "kebili": "قبلي",
+      "kef": "الكاف",
+      "mahdia": "المهدية",
+      "manouba": "منوبة",
+      "medenine": "مدنين",
+      "monastir": "المنستير",
+      "nabeul": "نابل",
+      "sfax": "صفاقس",
+      "sidi_bouzid": "سيدي بوزيد",
+      "siliana": "سليانة",
+      "sousse": "سوسة",
+      "tataouine": "تطاوين",
+      "tozeur": "توزر",
+      "tunis": "تونس",
+      "zaghouan": "زغوان"
+    }
   },
   "account": {
     "title": "الكونط متاعي",
@@ -246,7 +277,9 @@
     "fieldAudience": "الفئة",
     "fieldType": "النوع",
     "fieldSizes": "المقاسات (فاصلهم فاصلة)",
-    "fieldColors": "الألوان (فاصلهم فاصلة)",
+    "skuPlaceholder": "رمز المنتج (SKU)",
+    "colorPlaceholder": "اللون (مثلا: أحمر)",
+    "priceOverridePlaceholder": "سعر خاص (مش إجباري)",
     "fieldImages": "الصور",
     "uploadImages": "زيد صور",
     "uploading": "قاعد يترفع...",
@@ -396,5 +429,15 @@
   },
   "outfit": {
     "includedProducts": "الحوايج المتضمنة في هالبسة"
+  },
+  "payments": {
+    "mockConfirmTitle": "تجربة الخلاص",
+    "mockConfirmSubtitle": "هذه صفحة تجريبية برشا — ما فماش خلاص حقيقي.",
+    "simulateSuccess": "جرب خلاص ناجح",
+    "simulateFailure": "جرب خلاص فاشل",
+    "simulatedPaidTitle": "التجربة نجحت",
+    "simulatedFailedTitle": "التجربة فشلت",
+    "viewOrders": "شوف الطلبيات متاعي",
+    "simulateError": "صار مشكل خلال التجربة."
   }
 }

@@ -6,7 +6,8 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { apiFetch, ApiError } from '@/lib/api';
-import type { Order } from '@/types';
+import { ALL_GOVERNORATES } from '@/types';
+import type { CreateOrderResult, Governorate, Order, OrderQuote } from '@/types';
 
 export default function CheckoutPage() {
   const t = useTranslations('checkout');
@@ -18,12 +19,11 @@ export default function CheckoutPage() {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
+  const [governorate, setGovernorate] = useState<Governorate | ''>('');
+  const [delegation, setDelegation] = useState('');
   const [country, setCountry] = useState('Tunisie');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card'>('cod');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
+  const [quote, setQuote] = useState<OrderQuote | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<Order | null>(null);
@@ -34,6 +34,30 @@ export default function CheckoutPage() {
     }
   }, [authLoading, user, router]);
 
+  // Shipping fee is always computed server-side — never trust a client-side
+  // guess for pricing shown before the order is created.
+  useEffect(() => {
+    if (!governorate) {
+      setQuote(null);
+      return;
+    }
+    let cancelled = false;
+    apiFetch<OrderQuote>('/orders/quote', {
+      method: 'POST',
+      auth: true,
+      body: JSON.stringify({ governorate }),
+    })
+      .then((data) => {
+        if (!cancelled) setQuote(data);
+      })
+      .catch(() => {
+        if (!cancelled) setQuote(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [governorate]);
+
   if (!authLoading && !user) {
     return null;
   }
@@ -41,18 +65,28 @@ export default function CheckoutPage() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
+
+    if (!governorate) {
+      setError(t('selectGovernorate'));
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const created = await apiFetch<Order>('/orders', {
+      const result = await apiFetch<CreateOrderResult>('/orders', {
         method: 'POST',
         auth: true,
         body: JSON.stringify({
-          shippingAddress: { fullName, phone, address, city, country },
+          shippingAddress: { fullName, phone, address, governorate, delegation, country },
           paymentMethod,
         }),
       });
-      setOrder(created);
       await refresh();
+      if (result.paymentRedirectUrl) {
+        router.push(result.paymentRedirectUrl.replace(/^https?:\/\/[^/]+/, ''));
+        return;
+      }
+      setOrder(result.order);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : tCommon('error'));
     } finally {
@@ -103,11 +137,26 @@ export default function CheckoutPage() {
           onChange={(event) => setAddress(event.target.value)}
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
+        <select
+          required
+          value={governorate}
+          onChange={(event) => setGovernorate(event.target.value as Governorate)}
+          className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+        >
+          <option value="" disabled>
+            {t('governorateLabel')}
+          </option>
+          {ALL_GOVERNORATES.map((g) => (
+            <option key={g} value={g}>
+              {t(`governorate.${g}`)}
+            </option>
+          ))}
+        </select>
         <input
           required
-          placeholder={t('city')}
-          value={city}
-          onChange={(event) => setCity(event.target.value)}
+          placeholder={t('delegationLabel')}
+          value={delegation}
+          onChange={(event) => setDelegation(event.target.value)}
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
         <input
@@ -144,45 +193,31 @@ export default function CheckoutPage() {
               {t('card')}
             </button>
           </div>
-
           {paymentMethod === 'card' && (
-            <div className="mt-3 space-y-3">
-              <input
-                required
-                placeholder={t('cardNumber')}
-                value={cardNumber}
-                onChange={(event) => setCardNumber(event.target.value)}
-                maxLength={19}
-                className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
-              />
-              <div className="grid grid-cols-2 gap-3">
-                <input
-                  required
-                  placeholder={t('cardExpiry')}
-                  value={cardExpiry}
-                  onChange={(event) => setCardExpiry(event.target.value)}
-                  maxLength={5}
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
-                />
-                <input
-                  required
-                  placeholder={t('cardCvv')}
-                  value={cardCvv}
-                  onChange={(event) => setCardCvv(event.target.value)}
-                  maxLength={4}
-                  className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
-                />
-              </div>
-            </div>
+            <p className="mt-2 text-xs text-muted">{t('paymentComingSoon')}</p>
           )}
         </div>
 
         {cart && (
-          <div className="flex items-center justify-between border-t border-border pt-4 text-sm font-medium">
-            <span>{t('title')}</span>
-            <span>
-              {cart.total} {tCommon('currency')}
-            </span>
+          <div className="space-y-1 border-t border-border pt-4 text-sm">
+            <div className="flex items-center justify-between text-muted">
+              <span>{t('subtotal')}</span>
+              <span>
+                {cart.total} {tCommon('currency')}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-muted">
+              <span>{t('shippingFee')}</span>
+              <span>
+                {quote ? `${quote.shippingFee} ${tCommon('currency')}` : governorate ? '…' : '—'}
+              </span>
+            </div>
+            <div className="flex items-center justify-between font-medium">
+              <span>{t('total')}</span>
+              <span>
+                {(quote?.total ?? cart.total)} {tCommon('currency')}
+              </span>
+            </div>
           </div>
         )}
 

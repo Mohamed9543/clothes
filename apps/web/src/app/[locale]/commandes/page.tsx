@@ -78,7 +78,7 @@ export default function OrdersPage() {
             <ul className="mt-3 space-y-1 text-sm">
               {order.items.map((item) => (
                 <li key={`${order._id}-${item.productId}`}>
-                  {item.quantity} × {localize(item.name, locale)} ({item.size})
+                  {item.quantity} × {localize(item.name, locale)} ({item.size} / {item.color})
                 </li>
               ))}
             </ul>

@@ -4,12 +4,17 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { EnvConfig } from './config/env.validation';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // crossOriginResourcePolicy: 'cross-origin' so the web app's origin can still
+  // load /uploads/* images — helmet's default policy would otherwise block them.
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
   const configService = app.get(ConfigService<EnvConfig, true>);
   app.enableCors({ origin: configService.get('WEB_APP_URL', { infer: true }) });

@@ -41,10 +41,19 @@ export const LOW_STOCK_THRESHOLD = 5;
 @Schema({ _id: false })
 export class ProductVariant {
   @Prop({ required: true, trim: true })
+  sku: string;
+
+  @Prop({ required: true, trim: true })
   size: string;
+
+  @Prop({ required: true, trim: true })
+  color: string;
 
   @Prop({ required: true, min: 0, default: 0 })
   stock: number;
+
+  @Prop({ type: Number, default: null })
+  priceOverride: number | null;
 }
 
 export const ProductVariantSchema = SchemaFactory.createForClass(ProductVariant);
@@ -73,9 +82,6 @@ export class Product {
   variants: ProductVariant[];
 
   @Prop({ type: [String], default: [] })
-  colors: string[];
-
-  @Prop({ type: [String], default: [] })
   images: string[];
 
   @Prop({ default: true })
@@ -91,3 +97,14 @@ export class Product {
 export const ProductSchema = SchemaFactory.createForClass(Product);
 ProductSchema.index({ price: 1 });
 ProductSchema.index({ 'name.fr': 'text', 'name.en': 'text', 'name.ar': 'text', 'name.tn': 'text' });
+ProductSchema.index({ 'variants.sku': 1 });
+
+/**
+ * Derives the flat list of distinct colors from a product's variants, for
+ * any API response that still wants a color-swatch list (the `colors`
+ * top-level field was removed — size/color/stock now live together on each
+ * variant so stock is never mis-attributed to a color it doesn't belong to).
+ */
+export function deriveProductColors(product: Pick<Product, 'variants'>): string[] {
+  return [...new Set(product.variants.map((variant) => variant.color))];
+}

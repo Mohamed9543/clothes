@@ -1,3 +1,7 @@
+import type { Governorate } from '@libas/shared';
+
+export { Governorate, ALL_GOVERNORATES } from '@libas/shared';
+
 export interface LocalizedText {
   ar: string;
   tn: string;
@@ -16,8 +20,11 @@ export type ProductType =
   | 'accessoire';
 
 export interface ProductVariant {
+  sku: string;
   size: string;
+  color: string;
   stock: number;
+  priceOverride: number | null;
 }
 
 export interface Product {
@@ -29,7 +36,6 @@ export interface Product {
   audience: ProductAudience;
   type: ProductType;
   variants: ProductVariant[];
-  colors: string[];
   images: string[];
   isActive: boolean;
   tryOnEnabled: boolean;
@@ -54,6 +60,7 @@ export interface StockMovement {
   _id: string;
   productId: string;
   size: string;
+  color: string;
   quantityChange: number;
   reason: StockMovementReason;
   orderId: string | null;
@@ -208,6 +215,7 @@ export interface CartItem {
   unitPrice: number;
   quantity: number;
   size: string;
+  color: string;
   subtotal: number;
 }
 
@@ -233,25 +241,43 @@ export interface OrderItem {
   unitPrice: number;
   quantity: number;
   size: string;
+  color: string;
 }
 
 export interface ShippingAddress {
   fullName: string;
   phone: string;
   address: string;
-  city: string;
+  // Optional because pre-Phase-1 orders only have the legacy `city` field.
+  governorate?: Governorate;
+  delegation?: string;
   country: string;
 }
+
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'cancelled';
 
 export interface Order {
   _id: string;
   userId: string;
   items: OrderItem[];
   totalAmount: number;
+  shippingFee: number;
   status: OrderStatus;
-  paymentMethod: 'cod';
+  paymentMethod: 'cod' | 'card';
+  paymentStatus: PaymentStatus;
   shippingAddress: ShippingAddress;
   createdAt: string;
+}
+
+export interface OrderQuote {
+  itemsSubtotal: number;
+  shippingFee: number;
+  total: number;
+}
+
+export interface CreateOrderResult {
+  order: Order;
+  paymentRedirectUrl?: string;
 }
 
 export interface ChatToolProduct {

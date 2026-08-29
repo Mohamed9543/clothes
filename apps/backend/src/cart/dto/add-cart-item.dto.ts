@@ -10,4 +10,7 @@ export class AddCartItemDto {
 
   @IsString()
   size: string;
+
+  @IsString()
+  color: string;
 }

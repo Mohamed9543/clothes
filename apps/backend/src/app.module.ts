@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { AvatarAssetsModule } from './avatar-assets/avatar-assets.module';
 import { CartModule } from './cart/cart.module';
@@ -10,6 +12,7 @@ import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
 import { OrdersModule } from './orders/orders.module';
 import { OutfitsModule } from './outfits/outfits.module';
+import { PaymentsModule } from './payments/payments.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { StatsModule } from './stats/stats.module';
 import { UploadsModule } from './uploads/uploads.module';
@@ -21,12 +24,14 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
       validate: validateEnv,
     }),
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     DatabaseModule,
     UsersModule,
     AuthModule,
     HealthModule,
     CatalogModule,
     CartModule,
+    PaymentsModule,
     OrdersModule,
     ChatModule,
     ReviewsModule,
@@ -35,5 +40,6 @@ import { UsersModule } from './users/users.module';
     UploadsModule,
     AvatarAssetsModule,
   ],
+  providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}

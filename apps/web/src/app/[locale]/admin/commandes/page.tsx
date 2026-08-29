@@ -14,6 +14,7 @@ export default function AdminOrdersPage() {
   const t = useTranslations('admin');
   const tOrderStatus = useTranslations('orderStatus');
   const tCommon = useTranslations('common');
+  const tCheckout = useTranslations('checkout');
   const locale = useLocale();
 
   const [orders, setOrders] = useState<Order[] | null>(null);
@@ -80,6 +81,13 @@ export default function AdminOrdersPage() {
                 {order.shippingAddress.fullName} — {order.shippingAddress.phone}
               </p>
               <p className="text-sm text-muted">
+                {order.shippingAddress.address}
+                {order.shippingAddress.governorate
+                  ? `, ${tCheckout(`governorate.${order.shippingAddress.governorate}`)}`
+                  : ''}
+                {order.shippingAddress.delegation ? ` (${order.shippingAddress.delegation})` : ''}
+              </p>
+              <p className="text-sm text-muted">
                 {new Date(order.createdAt).toLocaleDateString(locale)}
               </p>
             </div>
@@ -113,7 +121,7 @@ export default function AdminOrdersPage() {
                   <div className="h-10 w-10 shrink-0 rounded-md border border-border bg-background" />
                 )}
                 <span>
-                  {item.quantity} × {localize(item.name, locale)} ({item.size})
+                  {item.quantity} × {localize(item.name, locale)} ({item.size} / {item.color})
                 </span>
               </li>
             ))}

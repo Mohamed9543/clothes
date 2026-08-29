@@ -3,12 +3,26 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
+import { PaymentsService } from '../payments/payments.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { QuoteOrderDto } from './dto/quote-order.dto';
+import { ShippingFeeService } from './shipping-fee.service';
 import {
   OrderStatusHistory,
   OrderStatusHistoryDocument,
 } from './schemas/order-status-history.schema';
 import { Order, OrderDocument, OrderItem, OrderStatus, PaymentMethod } from './schemas/order.schema';
+
+export interface OrderQuote {
+  itemsSubtotal: number;
+  shippingFee: number;
+  total: number;
+}
+
+export interface CreateOrderResult {
+  order: OrderDocument;
+  paymentRedirectUrl?: string;
+}
 
 export interface OrderRequester {
   sub: string;
@@ -24,17 +38,32 @@ export class OrdersService {
     @InjectConnection() private readonly connection: Connection,
     private readonly cartService: CartService,
     private readonly productsService: ProductsService,
+    private readonly shippingFeeService: ShippingFeeService,
+    private readonly paymentsService: PaymentsService,
   ) {}
 
-  async create(userId: string, dto: CreateOrderDto): Promise<OrderDocument> {
+  async quote(userId: string, dto: QuoteOrderDto): Promise<OrderQuote> {
+    const cart = await this.cartService.getEnrichedCart(userId);
+    const shippingFee = this.shippingFeeService.computeShippingFee(dto.governorate);
+    return {
+      itemsSubtotal: cart.total,
+      shippingFee,
+      total: cart.total + shippingFee,
+    };
+  }
+
+  async create(userId: string, dto: CreateOrderDto): Promise<CreateOrderResult> {
     const cart = await this.cartService.getRawCart(userId);
     if (cart.items.length === 0) {
       throw new BadRequestException('Cart is empty');
     }
 
     const paymentMethod = dto.paymentMethod ?? PaymentMethod.COD;
-    const initialStatus =
-      paymentMethod === PaymentMethod.CARD ? OrderStatus.PAID : OrderStatus.PENDING;
+    // Every order starts pending — payment is never marked synchronously at
+    // creation time. COD orders are marked paid by an admin on delivery (the
+    // existing honest zero-gateway path); any other payment method only
+    // becomes "paid" once the payment provider confirms it (see below).
+    const initialStatus = OrderStatus.PENDING;
 
     const session = await this.connection.startSession();
     try {
@@ -49,21 +78,32 @@ export class OrdersService {
           if (!product) {
             throw new NotFoundException('A product in your cart no longer exists');
           }
-          if (this.productsService.getVariantStock(product, item.size) < item.quantity) {
+          if (this.productsService.getVariantStock(product, item.size, item.color) < item.quantity) {
             throw new BadRequestException(
-              `Not enough stock for "${product.name.fr}" (size ${item.size})`,
+              `Not enough stock for "${product.name.fr}" (size ${item.size}, color ${item.color})`,
             );
           }
+
+          const variant = product.variants.find(
+            (v) => v.size === item.size && v.color === item.color,
+          );
+          const unitPrice = variant?.priceOverride ?? product.price;
 
           orderItems.push({
             productId: product._id,
             name: product.name as unknown as Record<string, string>,
-            unitPrice: product.price,
+            unitPrice,
             quantity: item.quantity,
             size: item.size,
+            color: item.color,
           });
-          totalAmount += product.price * item.quantity;
+          totalAmount += unitPrice * item.quantity;
         }
+
+        const shippingFee = this.shippingFeeService.computeShippingFee(
+          dto.shippingAddress.governorate,
+        );
+        totalAmount += shippingFee;
 
         const created = await this.orderModel.create(
           [
@@ -71,6 +111,7 @@ export class OrdersService {
               userId,
               items: orderItems,
               totalAmount,
+              shippingFee,
               shippingAddress: dto.shippingAddress,
               paymentMethod,
               status: initialStatus,
@@ -84,6 +125,7 @@ export class OrdersService {
           await this.productsService.decrementStock(
             item.productId.toString(),
             item.size,
+            item.color,
             item.quantity,
             order._id.toString(),
           );
@@ -98,7 +140,14 @@ export class OrdersService {
       });
 
       await this.cartService.clear(userId);
-      return order as OrderDocument;
+
+      const finalOrder = order as OrderDocument;
+      if (paymentMethod === PaymentMethod.COD) {
+        return { order: finalOrder };
+      }
+
+      const initiation = await this.paymentsService.initiateForOrder(finalOrder);
+      return { order: finalOrder, paymentRedirectUrl: initiation.redirectUrl };
     } finally {
       await session.endSession();
     }

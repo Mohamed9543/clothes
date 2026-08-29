@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { AvatarViewer } from '@/components/avatar/avatar-viewer';
 import { colorNameToHex } from '@/lib/colors';
+import { productColors } from '@/lib/product-variants';
 import type { Product } from '@/types';
 
 export function TryOnButton({ product }: { product: Product }) {
@@ -57,7 +58,7 @@ export function TryOnButton({ product }: { product: Product }) {
               avatarUrl={user.avatarUrl}
               overlay={{
                 type: product.type,
-                colorHex: colorNameToHex(product.colors[0]),
+                colorHex: colorNameToHex(productColors(product)[0]),
                 modelUrl: product.modelUrl,
               }}
               heightCm={user.heightCm}

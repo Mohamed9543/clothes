@@ -1,8 +1,9 @@
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import { Governorate } from '@libas/shared';
 import { PaymentMethod } from '../schemas/order.schema';
 
-class ShippingAddressDto {
+export class ShippingAddressDto {
   @IsString()
   @MinLength(1)
   fullName: string;
@@ -15,9 +16,12 @@ class ShippingAddressDto {
   @MinLength(1)
   address: string;
 
+  @IsEnum(Governorate)
+  governorate: Governorate;
+
   @IsString()
   @MinLength(1)
-  city: string;
+  delegation: string;
 
   @IsString()
   @MinLength(1)

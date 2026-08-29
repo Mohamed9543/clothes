@@ -18,7 +18,7 @@ export function StockAdjustModal({ product, onClose, onAdjusted }: StockAdjustMo
   const t = useTranslations('admin');
   const locale = useLocale();
 
-  const [size, setSize] = useState(product.variants[0]?.size ?? '');
+  const [selectedSku, setSelectedSku] = useState(product.variants[0]?.sku ?? '');
   const [quantityChange, setQuantityChange] = useState('');
   const [reason, setReason] = useState<StockMovementReason>('restock');
   const [note, setNote] = useState('');
@@ -35,13 +35,19 @@ export function StockAdjustModal({ product, onClose, onAdjusted }: StockAdjustMo
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
+    const variant = product.variants.find((v) => v.sku === selectedSku);
+    if (!variant) {
+      setError(t('saveError'));
+      return;
+    }
     setIsSaving(true);
     try {
       await apiFetch(`/products/${product._id}/stock-adjust`, {
         method: 'PATCH',
         auth: true,
         body: JSON.stringify({
-          size,
+          size: variant.size,
+          color: variant.color,
           quantityChange: Number(quantityChange),
           reason,
           note: note || undefined,
@@ -75,13 +81,13 @@ export function StockAdjustModal({ product, onClose, onAdjusted }: StockAdjustMo
           <div>
             <label className="mb-1 block text-xs text-muted">{t('selectSize')}</label>
             <select
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
+              value={selectedSku}
+              onChange={(e) => setSelectedSku(e.target.value)}
               className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
             >
               {product.variants.map((variant) => (
-                <option key={variant.size} value={variant.size}>
-                  {variant.size} ({variant.stock})
+                <option key={variant.sku} value={variant.sku}>
+                  {variant.size} / {variant.color} ({variant.stock})
                 </option>
               ))}
             </select>
@@ -136,7 +142,8 @@ export function StockAdjustModal({ product, onClose, onAdjusted }: StockAdjustMo
             <li key={movement._id} className="rounded-md border border-border p-2">
               <div className="flex justify-between">
                 <span>
-                  {movement.size} ·{' '}
+                  {movement.size}
+                  {movement.color ? ` / ${movement.color}` : ''} ·{' '}
                   {t(
                     `reason${movement.reason.charAt(0).toUpperCase()}${movement.reason.slice(1)}` as 'reasonRestock',
                   )}

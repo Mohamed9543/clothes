@@ -34,9 +34,10 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   const [audience, setAudience] = useState<ProductAudience>(product?.audience ?? 'men');
   const [type, setType] = useState<ProductType>(product?.type ?? 'pull');
   const [variants, setVariants] = useState<ProductVariant[]>(
-    product?.variants && product.variants.length > 0 ? product.variants : [{ size: '', stock: 0 }],
+    product?.variants && product.variants.length > 0
+      ? product.variants
+      : [{ sku: '', size: '', color: '', stock: 0, priceOverride: null }],
   );
-  const [colors, setColors] = useState(product?.colors.join(', ') ?? '');
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [modelUrl, setModelUrl] = useState<string | null>(product?.modelUrl ?? null);
   const [isActive, setIsActive] = useState(product?.isActive ?? true);
@@ -56,7 +57,10 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   }
 
   function addVariantRow() {
-    setVariants((current) => [...current, { size: '', stock: 0 }]);
+    setVariants((current) => [
+      ...current,
+      { sku: '', size: '', color: '', stock: 0, priceOverride: null },
+    ]);
   }
 
   function removeVariantRow(index: number) {
@@ -145,9 +149,17 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       audience,
       type,
       variants: variants
-        .filter((variant) => variant.size.trim() !== '')
-        .map((variant) => ({ size: variant.size.trim(), stock: Number(variant.stock) })),
-      colors: colors.split(',').map((c) => c.trim()).filter(Boolean),
+        .filter((variant) => variant.size.trim() !== '' && variant.color.trim() !== '')
+        .map((variant) => ({
+          sku: variant.sku.trim(),
+          size: variant.size.trim(),
+          color: variant.color.trim(),
+          stock: Number(variant.stock),
+          priceOverride:
+            variant.priceOverride === null || Number.isNaN(Number(variant.priceOverride))
+              ? null
+              : Number(variant.priceOverride),
+        })),
       images,
       modelUrl,
       isActive,
@@ -239,11 +251,23 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
         <label className="mb-1 block text-xs text-muted">{t('fieldVariants')}</label>
         <div className="space-y-2">
           {variants.map((variant, index) => (
-            <div key={index} className="flex items-center gap-2">
+            <div key={index} className="flex flex-wrap items-center gap-2">
+              <input
+                placeholder={t('skuPlaceholder')}
+                value={variant.sku}
+                onChange={(e) => updateVariant(index, { sku: e.target.value })}
+                className="w-32 rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
               <input
                 placeholder={t('sizePlaceholder')}
                 value={variant.size}
                 onChange={(e) => updateVariant(index, { size: e.target.value })}
+                className="w-24 rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+              <input
+                placeholder={t('colorPlaceholder')}
+                value={variant.color}
+                onChange={(e) => updateVariant(index, { color: e.target.value })}
                 className="w-28 rounded-md border border-border bg-background px-3 py-2 text-sm"
               />
               <input
@@ -252,6 +276,19 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
                 placeholder={t('stockPlaceholder')}
                 value={variant.stock}
                 onChange={(e) => updateVariant(index, { stock: Number(e.target.value) })}
+                className="w-24 rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+              <input
+                type="number"
+                min={0}
+                step="0.01"
+                placeholder={t('priceOverridePlaceholder')}
+                value={variant.priceOverride ?? ''}
+                onChange={(e) =>
+                  updateVariant(index, {
+                    priceOverride: e.target.value === '' ? null : Number(e.target.value),
+                  })
+                }
                 className="w-28 rounded-md border border-border bg-background px-3 py-2 text-sm"
               />
               <button
@@ -272,8 +309,6 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
           {t('addSize')}
         </button>
       </div>
-
-      <input placeholder={t('fieldColors')} value={colors} onChange={(e) => setColors(e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
 
       <div>
         <label className="mb-1 block text-xs text-muted">{t('fieldImages')}</label>

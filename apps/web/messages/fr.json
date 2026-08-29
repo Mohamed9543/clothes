@@ -71,7 +71,8 @@
     "outOfStock": "Rupture de stock",
     "inStock": "En stock",
     "description": "Description",
-    "selectSize": "Veuillez choisir une taille"
+    "selectSize": "Veuillez choisir une taille",
+    "selectColorFirst": "Choisissez d'abord une couleur"
   },
   "cart": {
     "title": "Mon panier",
@@ -79,6 +80,7 @@
     "browseCatalog": "Parcourir le catalogue",
     "product": "Produit",
     "size": "Taille",
+    "color": "Couleur",
     "quantity": "Quantité",
     "price": "Prix",
     "subtotal": "Sous-total",
@@ -92,18 +94,47 @@
     "fullName": "Nom complet",
     "phone": "Téléphone",
     "address": "Adresse",
-    "city": "Ville",
     "country": "Pays",
     "paymentMethod": "Mode de paiement",
     "cod": "Paiement à la livraison",
     "card": "Carte bancaire",
-    "cardNumber": "Numéro de carte",
-    "cardExpiry": "Expiration (MM/AA)",
-    "cardCvv": "CVV",
     "placeOrder": "Confirmer la commande",
     "orderSuccessTitle": "Commande confirmée !",
     "orderSuccessText": "Merci pour votre commande. Vous pouvez suivre son statut dans votre compte.",
-    "viewOrder": "Voir ma commande"
+    "viewOrder": "Voir ma commande",
+    "selectGovernorate": "Veuillez choisir un gouvernorat",
+    "governorateLabel": "Gouvernorat",
+    "delegationLabel": "Délégation",
+    "shippingFee": "Frais de livraison",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "paymentComingSoon": "Le paiement par carte (Konnect / Flouci) arrive bientôt — utilisez le paiement à la livraison pour l’instant.",
+    "governorate": {
+      "ariana": "Ariana",
+      "beja": "Béja",
+      "ben_arous": "Ben Arous",
+      "bizerte": "Bizerte",
+      "gabes": "Gabès",
+      "gafsa": "Gafsa",
+      "jendouba": "Jendouba",
+      "kairouan": "Kairouan",
+      "kasserine": "Kasserine",
+      "kebili": "Kébili",
+      "kef": "Le Kef",
+      "mahdia": "Mahdia",
+      "manouba": "Manouba",
+      "medenine": "Médenine",
+      "monastir": "Monastir",
+      "nabeul": "Nabeul",
+      "sfax": "Sfax",
+      "sidi_bouzid": "Sidi Bouzid",
+      "siliana": "Siliana",
+      "sousse": "Sousse",
+      "tataouine": "Tataouine",
+      "tozeur": "Tozeur",
+      "tunis": "Tunis",
+      "zaghouan": "Zaghouan"
+    }
   },
   "account": {
     "title": "Mon compte",
@@ -246,7 +277,9 @@
     "fieldAudience": "Public",
     "fieldType": "Type",
     "fieldSizes": "Tailles (séparées par une virgule)",
-    "fieldColors": "Couleurs (séparées par une virgule)",
+    "skuPlaceholder": "SKU",
+    "colorPlaceholder": "Couleur (ex: Rouge)",
+    "priceOverridePlaceholder": "Prix spécifique (optionnel)",
     "fieldImages": "Images",
     "uploadImages": "Ajouter des images",
     "uploading": "Envoi en cours...",
@@ -396,5 +429,15 @@
   },
   "outfit": {
     "includedProducts": "Produits inclus dans cette tenue"
+  },
+  "payments": {
+    "mockConfirmTitle": "Simulation de paiement",
+    "mockConfirmSubtitle": "Ceci est une page de démonstration — aucun vrai paiement n’est effectué.",
+    "simulateSuccess": "Simuler un paiement réussi",
+    "simulateFailure": "Simuler un échec",
+    "simulatedPaidTitle": "Paiement simulé réussi",
+    "simulatedFailedTitle": "Paiement simulé échoué",
+    "viewOrders": "Voir mes commandes",
+    "simulateError": "Une erreur est survenue pendant la simulation."
   }
 }

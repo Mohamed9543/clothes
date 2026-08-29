@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -18,7 +18,7 @@ export class CartController {
 
   @Post('items')
   addItem(@CurrentUser() user: JwtAccessPayload, @Body() dto: AddCartItemDto) {
-    return this.cartService.addItem(user.sub, dto.productId, dto.quantity, dto.size);
+    return this.cartService.addItem(user.sub, dto.productId, dto.quantity, dto.size, dto.color);
   }
 
   @Patch('items/:productId')
@@ -27,12 +27,17 @@ export class CartController {
     @Param('productId') productId: string,
     @Body() dto: UpdateCartItemDto,
   ) {
-    return this.cartService.updateItemQuantity(user.sub, productId, dto.quantity);
+    return this.cartService.updateItemQuantity(user.sub, productId, dto.size, dto.color, dto.quantity);
   }
 
   @Delete('items/:productId')
-  removeItem(@CurrentUser() user: JwtAccessPayload, @Param('productId') productId: string) {
-    return this.cartService.removeItem(user.sub, productId);
+  removeItem(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('productId') productId: string,
+    @Query('size') size: string,
+    @Query('color') color: string,
+  ) {
+    return this.cartService.removeItem(user.sub, productId, size, color);
   }
 
   @Delete()

@@ -13,6 +13,11 @@ export const envSchema = z.object({
   // for its presence and fails only the chat/translation endpoints if it's missing.
   GEMINI_API_KEY: z.string().default(''),
   GEMINI_MODEL: z.string().default('gemini-2.5-flash'),
+  // Which PaymentProvider implementation to wire up. Only 'mock' is implemented
+  // in Phase 1 (no Konnect/Flouci merchant account yet) — 'konnect'/'flouci'
+  // fail loudly at startup rather than silently falling back to mock.
+  PAYMENT_PROVIDER: z.enum(['mock', 'konnect', 'flouci']).default('mock'),
+  PAYMENT_MOCK_WEBHOOK_SECRET: z.string().default('dev-mock-payment-secret'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

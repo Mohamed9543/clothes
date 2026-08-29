@@ -71,7 +71,8 @@
     "outOfStock": "Out of stock",
     "inStock": "In stock",
     "description": "Description",
-    "selectSize": "Please choose a size"
+    "selectSize": "Please choose a size",
+    "selectColorFirst": "Please choose a color first"
   },
   "cart": {
     "title": "My cart",
@@ -79,6 +80,7 @@
     "browseCatalog": "Browse the catalog",
     "product": "Product",
     "size": "Size",
+    "color": "Color",
     "quantity": "Quantity",
     "price": "Price",
     "subtotal": "Subtotal",
@@ -92,18 +94,47 @@
     "fullName": "Full name",
     "phone": "Phone",
     "address": "Address",
-    "city": "City",
     "country": "Country",
     "paymentMethod": "Payment method",
     "cod": "Cash on delivery",
     "card": "Credit card",
-    "cardNumber": "Card number",
-    "cardExpiry": "Expiry (MM/YY)",
-    "cardCvv": "CVV",
     "placeOrder": "Place order",
     "orderSuccessTitle": "Order confirmed!",
     "orderSuccessText": "Thank you for your order. You can track its status in your account.",
-    "viewOrder": "View my order"
+    "viewOrder": "View my order",
+    "selectGovernorate": "Please choose a governorate",
+    "governorateLabel": "Governorate",
+    "delegationLabel": "Delegation",
+    "shippingFee": "Shipping fee",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "paymentComingSoon": "Card payment (Konnect / Flouci) is coming soon — use cash on delivery for now.",
+    "governorate": {
+      "ariana": "Ariana",
+      "beja": "Beja",
+      "ben_arous": "Ben Arous",
+      "bizerte": "Bizerte",
+      "gabes": "Gabes",
+      "gafsa": "Gafsa",
+      "jendouba": "Jendouba",
+      "kairouan": "Kairouan",
+      "kasserine": "Kasserine",
+      "kebili": "Kebili",
+      "kef": "Kef",
+      "mahdia": "Mahdia",
+      "manouba": "Manouba",
+      "medenine": "Medenine",
+      "monastir": "Monastir",
+      "nabeul": "Nabeul",
+      "sfax": "Sfax",
+      "sidi_bouzid": "Sidi Bouzid",
+      "siliana": "Siliana",
+      "sousse": "Sousse",
+      "tataouine": "Tataouine",
+      "tozeur": "Tozeur",
+      "tunis": "Tunis",
+      "zaghouan": "Zaghouan"
+    }
   },
   "account": {
     "title": "My account",
@@ -246,7 +277,9 @@
     "fieldAudience": "Audience",
     "fieldType": "Type",
     "fieldSizes": "Sizes (comma-separated)",
-    "fieldColors": "Colors (comma-separated)",
+    "skuPlaceholder": "SKU",
+    "colorPlaceholder": "Color (e.g. Red)",
+    "priceOverridePlaceholder": "Price override (optional)",
     "fieldImages": "Images",
     "uploadImages": "Add images",
     "uploading": "Uploading...",
@@ -396,5 +429,15 @@
   },
   "outfit": {
     "includedProducts": "Products included in this outfit"
+  },
+  "payments": {
+    "mockConfirmTitle": "Payment simulation",
+    "mockConfirmSubtitle": "This is a demo page — no real payment is made.",
+    "simulateSuccess": "Simulate a successful payment",
+    "simulateFailure": "Simulate a failure",
+    "simulatedPaidTitle": "Simulated payment succeeded",
+    "simulatedFailedTitle": "Simulated payment failed",
+    "viewOrders": "View my orders",
+    "simulateError": "Something went wrong during the simulation."
   }
 }

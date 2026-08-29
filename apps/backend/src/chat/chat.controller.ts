@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
@@ -31,6 +32,7 @@ export class ChatController {
   }
 
   @Post(':id/messages')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   async sendMessage(
     @CurrentUser() user: JwtAccessPayload,
     @Param('id') id: string,

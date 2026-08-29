@@ -14,6 +14,10 @@ export class AdjustStockDto {
   @MinLength(1)
   size: string;
 
+  @IsString()
+  @MinLength(1)
+  color: string;
+
   @IsInt()
   @NotEquals(0)
   quantityChange: number;

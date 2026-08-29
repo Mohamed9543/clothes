@@ -10,9 +10,9 @@ interface CartContextValue {
   itemCount: number;
   isLoading: boolean;
   refresh: () => Promise<void>;
-  addItem: (productId: string, quantity: number, size: string) => Promise<void>;
-  updateItem: (productId: string, quantity: number) => Promise<void>;
-  removeItem: (productId: string) => Promise<void>;
+  addItem: (productId: string, quantity: number, size: string, color: string) => Promise<void>;
+  updateItem: (productId: string, size: string, color: string, quantity: number) => Promise<void>;
+  removeItem: (productId: string, size: string, color: string) => Promise<void>;
   clear: () => Promise<void>;
 }
 
@@ -42,31 +42,31 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [refresh]);
 
   const addItem = useCallback(
-    async (productId: string, quantity: number, size: string) => {
+    async (productId: string, quantity: number, size: string, color: string) => {
       const data = await apiFetch<Cart>('/cart/items', {
         method: 'POST',
         auth: true,
-        body: JSON.stringify({ productId, quantity, size }),
+        body: JSON.stringify({ productId, quantity, size, color }),
       });
       setCart(data);
     },
     [],
   );
 
-  const updateItem = useCallback(async (productId: string, quantity: number) => {
+  const updateItem = useCallback(async (productId: string, size: string, color: string, quantity: number) => {
     const data = await apiFetch<Cart>(`/cart/items/${productId}`, {
       method: 'PATCH',
       auth: true,
-      body: JSON.stringify({ quantity }),
+      body: JSON.stringify({ quantity, size, color }),
     });
     setCart(data);
   }, []);
 
-  const removeItem = useCallback(async (productId: string) => {
-    const data = await apiFetch<Cart>(`/cart/items/${productId}`, {
-      method: 'DELETE',
-      auth: true,
-    });
+  const removeItem = useCallback(async (productId: string, size: string, color: string) => {
+    const data = await apiFetch<Cart>(
+      `/cart/items/${productId}?size=${encodeURIComponent(size)}&color=${encodeURIComponent(color)}`,
+      { method: 'DELETE', auth: true },
+    );
     setCart(data);
   }, []);
 

@@ -45,11 +45,6 @@ export class CreateProductDto {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  colors?: string[];
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
   images?: string[];
 
   @IsBoolean()

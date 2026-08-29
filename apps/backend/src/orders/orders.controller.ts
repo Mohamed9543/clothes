@@ -6,6 +6,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
 import { UserRole } from '../users/schemas/user.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { QuoteOrderDto } from './dto/quote-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrdersService } from './orders.service';
 
@@ -17,6 +18,13 @@ export class OrdersController {
   @Post()
   create(@CurrentUser() user: JwtAccessPayload, @Body() dto: CreateOrderDto) {
     return this.ordersService.create(user.sub, dto);
+  }
+
+  // Server-computed subtotal + shipping fee for the current cart, so the
+  // checkout UI never has to (and never should) compute pricing itself.
+  @Post('quote')
+  quote(@CurrentUser() user: JwtAccessPayload, @Body() dto: QuoteOrderDto) {
+    return this.ordersService.quote(user.sub, dto);
   }
 
   @Get()

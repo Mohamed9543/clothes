@@ -18,6 +18,9 @@ export class StockMovement {
   @Prop({ required: true, trim: true })
   size: string;
 
+  @Prop({ trim: true, default: '' })
+  color: string;
+
   @Prop({ required: true })
   quantityChange: number;
 

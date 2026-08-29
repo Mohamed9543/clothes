@@ -12,6 +12,7 @@ export interface EnrichedCartItem {
   unitPrice: number;
   quantity: number;
   size: string;
+  color: string;
   subtotal: number;
 }
 
@@ -42,15 +43,18 @@ export class CartService {
     for (const item of cart.items) {
       const product = await this.productsService.findById(item.productId.toString());
       if (!product) continue;
-      const subtotal = product.price * item.quantity;
+      const variant = product.variants.find((v) => v.size === item.size && v.color === item.color);
+      const unitPrice = variant?.priceOverride ?? product.price;
+      const subtotal = unitPrice * item.quantity;
       items.push({
         productId: product._id.toString(),
         slug: product.slug,
         name: product.name as unknown as Record<string, string>,
         image: product.images[0] ?? null,
-        unitPrice: product.price,
+        unitPrice,
         quantity: item.quantity,
         size: item.size,
+        color: item.color,
         subtotal,
       });
     }
@@ -58,7 +62,13 @@ export class CartService {
     return { items, total: items.reduce((sum, item) => sum + item.subtotal, 0) };
   }
 
-  async addItem(userId: string, productId: string, quantity: number, size: string): Promise<EnrichedCart> {
+  async addItem(
+    userId: string,
+    productId: string,
+    quantity: number,
+    size: string,
+    color: string,
+  ): Promise<EnrichedCart> {
     const product = await this.productsService.findById(productId);
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -66,34 +76,42 @@ export class CartService {
 
     const cart = await this.getOrCreate(userId);
     const existing = cart.items.find(
-      (item) => item.productId.toString() === productId && item.size === size,
+      (item) => item.productId.toString() === productId && item.size === size && item.color === color,
     );
     const nextQuantity = (existing?.quantity ?? 0) + quantity;
 
-    if (this.productsService.getVariantStock(product, size) < nextQuantity) {
-      throw new BadRequestException(`Not enough stock for size "${size}"`);
+    if (this.productsService.getVariantStock(product, size, color) < nextQuantity) {
+      throw new BadRequestException(`Not enough stock for size "${size}" / color "${color}"`);
     }
 
     if (existing) {
       existing.quantity = nextQuantity;
     } else {
-      cart.items.push({ productId: new Types.ObjectId(productId), quantity, size });
+      cart.items.push({ productId: new Types.ObjectId(productId), quantity, size, color });
     }
     await cart.save();
 
     return this.getEnrichedCart(userId);
   }
 
-  async updateItemQuantity(userId: string, productId: string, quantity: number): Promise<EnrichedCart> {
+  async updateItemQuantity(
+    userId: string,
+    productId: string,
+    size: string,
+    color: string,
+    quantity: number,
+  ): Promise<EnrichedCart> {
     const cart = await this.getOrCreate(userId);
-    const item = cart.items.find((entry) => entry.productId.toString() === productId);
+    const item = cart.items.find(
+      (entry) => entry.productId.toString() === productId && entry.size === size && entry.color === color,
+    );
     if (!item) {
       throw new NotFoundException('Item not found in cart');
     }
 
     const product = await this.productsService.findById(productId);
-    if (product && this.productsService.getVariantStock(product, item.size) < quantity) {
-      throw new BadRequestException(`Not enough stock for size "${item.size}"`);
+    if (product && this.productsService.getVariantStock(product, size, color) < quantity) {
+      throw new BadRequestException(`Not enough stock for size "${size}" / color "${color}"`);
     }
 
     item.quantity = quantity;
@@ -101,9 +119,11 @@ export class CartService {
     return this.getEnrichedCart(userId);
   }
 
-  async removeItem(userId: string, productId: string): Promise<EnrichedCart> {
+  async removeItem(userId: string, productId: string, size: string, color: string): Promise<EnrichedCart> {
     const cart = await this.getOrCreate(userId);
-    cart.items = cart.items.filter((entry) => entry.productId.toString() !== productId) as typeof cart.items;
+    cart.items = cart.items.filter(
+      (entry) => !(entry.productId.toString() === productId && entry.size === size && entry.color === color),
+    ) as typeof cart.items;
     await cart.save();
     return this.getEnrichedCart(userId);
   }

@@ -71,7 +71,8 @@
     "outOfStock": "غير متوفر",
     "inStock": "متوفر",
     "description": "الوصف",
-    "selectSize": "الرجاء اختيار مقاس"
+    "selectSize": "الرجاء اختيار مقاس",
+    "selectColorFirst": "الرجاء اختيار اللون أولاً"
   },
   "cart": {
     "title": "سلتي",
@@ -79,6 +80,7 @@
     "browseCatalog": "تصفح الكتالوج",
     "product": "المنتج",
     "size": "المقاس",
+    "color": "اللون",
     "quantity": "الكمية",
     "price": "السعر",
     "subtotal": "المجموع الفرعي",
@@ -92,18 +94,47 @@
     "fullName": "الاسم الكامل",
     "phone": "الهاتف",
     "address": "العنوان",
-    "city": "المدينة",
     "country": "البلد",
     "paymentMethod": "طريقة الدفع",
     "cod": "الدفع عند الاستلام",
     "card": "بطاقة بنكية",
-    "cardNumber": "رقم البطاقة",
-    "cardExpiry": "تاريخ الانتهاء (شهر/سنة)",
-    "cardCvv": "رمز التحقق CVV",
     "placeOrder": "تأكيد الطلب",
     "orderSuccessTitle": "تم تأكيد طلبك!",
     "orderSuccessText": "شكرًا لطلبك. يمكنك متابعة حالته من حسابك.",
-    "viewOrder": "عرض طلبي"
+    "viewOrder": "عرض طلبي",
+    "selectGovernorate": "الرجاء اختيار ولاية",
+    "governorateLabel": "الولاية",
+    "delegationLabel": "المعتمدية",
+    "shippingFee": "رسوم التوصيل",
+    "subtotal": "المجموع الفرعي",
+    "total": "المجموع",
+    "paymentComingSoon": "الدفع بالبطاقة (Konnect / Flouci) قريباً — استعمل الدفع عند التسليم حالياً.",
+    "governorate": {
+      "ariana": "أريانة",
+      "beja": "باجة",
+      "ben_arous": "بن عروس",
+      "bizerte": "بنزرت",
+      "gabes": "قابس",
+      "gafsa": "قفصة",
+      "jendouba": "جندوبة",
+      "kairouan": "القيروان",
+      "kasserine": "القصرين",
+      "kebili": "قبلي",
+      "kef": "الكاف",
+      "mahdia": "المهدية",
+      "manouba": "منوبة",
+      "medenine": "مدنين",
+      "monastir": "المنستير",
+      "nabeul": "نابل",
+      "sfax": "صفاقس",
+      "sidi_bouzid": "سيدي بوزيد",
+      "siliana": "سليانة",
+      "sousse": "سوسة",
+      "tataouine": "تطاوين",
+      "tozeur": "توزر",
+      "tunis": "تونس",
+      "zaghouan": "زغوان"
+    }
   },
   "account": {
     "title": "حسابي",
@@ -246,7 +277,9 @@
     "fieldAudience": "الفئة",
     "fieldType": "النوع",
     "fieldSizes": "المقاسات (مفصولة بفاصلة)",
-    "fieldColors": "الألوان (مفصولة بفاصلة)",
+    "skuPlaceholder": "رمز المنتج (SKU)",
+    "colorPlaceholder": "اللون (مثال: أحمر)",
+    "priceOverridePlaceholder": "سعر خاص (اختياري)",
     "fieldImages": "الصور",
     "uploadImages": "إضافة صور",
     "uploading": "جارٍ الرفع...",
@@ -396,5 +429,15 @@
   },
   "outfit": {
     "includedProducts": "المنتجات المتضمنة في هذه الإطلالة"
+  },
+  "payments": {
+    "mockConfirmTitle": "محاكاة الدفع",
+    "mockConfirmSubtitle": "هذه صفحة تجريبية — لا يتم أي دفع حقيقي.",
+    "simulateSuccess": "محاكاة دفع ناجح",
+    "simulateFailure": "محاكاة فشل الدفع",
+    "simulatedPaidTitle": "نجحت محاكاة الدفع",
+    "simulatedFailedTitle": "فشلت محاكاة الدفع",
+    "viewOrders": "مشاهدة طلباتي",
+    "simulateError": "حدث خطأ أثناء المحاكاة."
   }
 }

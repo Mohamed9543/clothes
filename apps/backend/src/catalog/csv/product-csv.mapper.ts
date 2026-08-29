@@ -15,7 +15,6 @@ export const CSV_COLUMNS = [
   'price',
   'audience',
   'type',
-  'colors',
   'images',
   'variants',
   'isActive',
@@ -29,22 +28,39 @@ function parseList(value: string | undefined): string[] {
     .filter((entry) => entry.length > 0);
 }
 
-function parseVariants(value: string | undefined): { size: string; stock: number }[] {
+interface CsvVariant {
+  sku: string;
+  size: string;
+  color: string;
+  stock: number;
+  priceOverride: number | null;
+}
+
+// Encoded as "sku:size:color:stock:priceOverride" per variant, separated by "|".
+// priceOverride may be left empty (e.g. "SKU1:M:Rouge:5:") to mean "no override".
+function parseVariants(value: string | undefined): CsvVariant[] {
   if (!value) return [];
   return value
     .split('|')
     .map((entry) => entry.trim())
     .filter((entry) => entry.length > 0)
     .map((entry) => {
-      const [size, stockRaw] = entry.split(':').map((part) => part.trim());
-      if (!size || stockRaw === undefined || stockRaw === '') {
-        throw new Error(`Invalid variant "${entry}" (expected format "taille:stock")`);
+      const [sku, size, color, stockRaw, priceOverrideRaw] = entry.split(':').map((part) => part.trim());
+      if (!sku || !size || !color || stockRaw === undefined || stockRaw === '') {
+        throw new Error(
+          `Invalid variant "${entry}" (expected format "sku:size:color:stock:priceOverride")`,
+        );
       }
       const stock = Number(stockRaw);
       if (!Number.isFinite(stock) || Number.isNaN(stock)) {
         throw new Error(`Invalid stock value in variant "${entry}"`);
       }
-      return { size, stock };
+      const priceOverride =
+        priceOverrideRaw === undefined || priceOverrideRaw === '' ? null : Number(priceOverrideRaw);
+      if (priceOverride !== null && (!Number.isFinite(priceOverride) || Number.isNaN(priceOverride))) {
+        throw new Error(`Invalid priceOverride value in variant "${entry}"`);
+      }
+      return { sku, size, color, stock, priceOverride };
     });
 }
 
@@ -67,7 +83,6 @@ export function rowToProductDto(row: Record<string, string>): CreateProductDto {
     audience: row.audience as ProductAudience,
     type: row.type as ProductType,
     variants: parseVariants(row.variants),
-    colors: parseList(row.colors),
     images: parseList(row.images),
     isActive:
       row.isActive === undefined || row.isActive === ''
@@ -90,9 +105,13 @@ export function productToRow(product: ProductDocument): Record<string, string> {
     price: String(product.price),
     audience: product.audience,
     type: product.type,
-    colors: product.colors.join(';'),
     images: product.images.join(';'),
-    variants: product.variants.map((variant) => `${variant.size}:${variant.stock}`).join('|'),
+    variants: product.variants
+      .map(
+        (variant) =>
+          `${variant.sku}:${variant.size}:${variant.color}:${variant.stock}:${variant.priceOverride ?? ''}`,
+      )
+      .join('|'),
     isActive: String(product.isActive),
   };
 }

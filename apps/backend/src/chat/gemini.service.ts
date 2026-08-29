@@ -3,7 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { ApiError, Content, Part, createPartFromFunctionResponse, GoogleGenAI, Tool } from '@google/genai';
 import { EnvConfig } from '../config/env.validation';
 import { ProductsService } from '../catalog/products.service';
-import { LocalizedText, ProductAudience, ProductType } from '../catalog/schemas/product.schema';
+import {
+  LocalizedText,
+  ProductAudience,
+  ProductType,
+  deriveProductColors,
+} from '../catalog/schemas/product.schema';
 import { ChatRole } from './schemas/conversation.schema';
 
 const SYSTEM_PROMPT = `Tu es l'assistant virtuel de StyleForm, une boutique de mode en ligne tunisienne (vêtements homme, femme, enfant).
@@ -160,7 +165,9 @@ export class GeminiService {
         .filter((item) => item._id.toString() !== base._id.toString())
         .map((item) => ({
           item,
-          score: item.colors.some((color) => base.colors.includes(color)) ? 1 : 0,
+          score: deriveProductColors(item).some((color) => deriveProductColors(base).includes(color))
+            ? 1
+            : 0,
         }))
         .sort((a, b) => b.score - a.score)
         .slice(0, Math.min((input.limit as number) || 3, 6))

@@ -43,7 +43,7 @@ export default function CartPage() {
         <div className="space-y-4">
           {cart.items.map((item) => (
             <div
-              key={`${item.productId}-${item.size}`}
+              key={`${item.productId}-${item.size}-${item.color}`}
               className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4"
             >
               {item.image && (
@@ -54,7 +54,7 @@ export default function CartPage() {
               <div className="flex-1">
                 <p className="font-medium">{localize(item.name, locale)}</p>
                 <p className="text-sm text-muted">
-                  {t('size')}: {item.size}
+                  {t('size')}: {item.size} · {t('color')}: {item.color}
                 </p>
                 <p className="text-sm text-muted">
                   {item.unitPrice} {tCommon('currency')}
@@ -64,14 +64,16 @@ export default function CartPage() {
                 type="number"
                 min={1}
                 value={item.quantity}
-                onChange={(event) => updateItem(item.productId, Number(event.target.value))}
+                onChange={(event) =>
+                  updateItem(item.productId, item.size, item.color, Number(event.target.value))
+                }
                 className="w-16 rounded-md border border-border bg-background px-2 py-1 text-sm"
               />
               <p className="w-20 text-end font-medium">
                 {item.subtotal} {tCommon('currency')}
               </p>
               <button
-                onClick={() => removeItem(item.productId)}
+                onClick={() => removeItem(item.productId, item.size, item.color)}
                 className="text-sm text-brand-terracotta underline"
               >
                 {t('remove')}
