@@ -7,7 +7,9 @@ import { useAuth } from '@/context/auth-context';
 import { apiFetch } from '@/lib/api';
 import { AvatarCreator } from '@/components/avatar/avatar-creator';
 import { AvatarViewer } from '@/components/avatar/avatar-viewer';
-import type { Gender } from '@/types';
+import type { FitPreference, Gender } from '@/types';
+
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'] as const;
 
 export default function AvatarPage() {
   const t = useTranslations('avatar');
@@ -17,6 +19,12 @@ export default function AvatarPage() {
   const [heightCm, setHeightCm] = useState('');
   const [weightKg, setWeightKg] = useState('');
   const [gender, setGender] = useState<Gender | ''>('');
+  const [chestCm, setChestCm] = useState('');
+  const [waistCm, setWaistCm] = useState('');
+  const [hipsCm, setHipsCm] = useState('');
+  const [legLengthCm, setLegLengthCm] = useState('');
+  const [usualSize, setUsualSize] = useState('');
+  const [fitPreference, setFitPreference] = useState<FitPreference | ''>('');
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [showCreator, setShowCreator] = useState(false);
@@ -32,6 +40,12 @@ export default function AvatarPage() {
       setHeightCm(user.heightCm ? String(user.heightCm) : '');
       setWeightKg(user.weightKg ? String(user.weightKg) : '');
       setGender(user.gender ?? '');
+      setChestCm(user.chestCm ? String(user.chestCm) : '');
+      setWaistCm(user.waistCm ? String(user.waistCm) : '');
+      setHipsCm(user.hipsCm ? String(user.hipsCm) : '');
+      setLegLengthCm(user.legLengthCm ? String(user.legLengthCm) : '');
+      setUsualSize(user.usualSize ?? '');
+      setFitPreference(user.fitPreference ?? '');
     }
   }, [user]);
 
@@ -51,6 +65,12 @@ export default function AvatarPage() {
           heightCm: heightCm ? Number(heightCm) : undefined,
           weightKg: weightKg ? Number(weightKg) : undefined,
           gender: gender || undefined,
+          chestCm: chestCm ? Number(chestCm) : undefined,
+          waistCm: waistCm ? Number(waistCm) : undefined,
+          hipsCm: hipsCm ? Number(hipsCm) : undefined,
+          legLengthCm: legLengthCm ? Number(legLengthCm) : undefined,
+          usualSize: usualSize || undefined,
+          fitPreference: fitPreference || undefined,
         }),
       });
       await refreshUser();
@@ -58,6 +78,18 @@ export default function AvatarPage() {
     } finally {
       setIsSaving(false);
     }
+  }
+
+  async function handleClearBodyProfile() {
+    if (!window.confirm(t('confirmDeleteBodyProfile'))) return;
+    await apiFetch('/users/me/body-profile', { method: 'DELETE', auth: true });
+    setChestCm('');
+    setWaistCm('');
+    setHipsCm('');
+    setLegLengthCm('');
+    setUsualSize('');
+    setFitPreference('');
+    await refreshUser();
   }
 
   async function handleDeleteAvatar() {
@@ -128,6 +160,80 @@ export default function AvatarPage() {
               <option value="other">{t('genderOther')}</option>
             </select>
           </div>
+
+          <div>
+            <label className="mb-1 block text-sm">{t('chest')}</label>
+            <input
+              type="number"
+              min={40}
+              max={200}
+              value={chestCm}
+              onChange={(event) => setChestCm(event.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm">{t('waist')}</label>
+            <input
+              type="number"
+              min={40}
+              max={200}
+              value={waistCm}
+              onChange={(event) => setWaistCm(event.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm">{t('hips')}</label>
+            <input
+              type="number"
+              min={40}
+              max={200}
+              value={hipsCm}
+              onChange={(event) => setHipsCm(event.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm">{t('legLength')}</label>
+            <input
+              type="number"
+              min={40}
+              max={140}
+              value={legLengthCm}
+              onChange={(event) => setLegLengthCm(event.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm">{t('usualSize')}</label>
+            <select
+              value={usualSize}
+              onChange={(event) => setUsualSize(event.target.value)}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            >
+              <option value="">-</option>
+              {SIZES.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm">{t('fitPreference')}</label>
+            <select
+              value={fitPreference}
+              onChange={(event) => setFitPreference(event.target.value as FitPreference)}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            >
+              <option value="">-</option>
+              <option value="slim">{t('fitSlim')}</option>
+              <option value="regular">{t('fitRegular')}</option>
+              <option value="oversized">{t('fitOversized')}</option>
+            </select>
+          </div>
+
           <div className="sm:col-span-3">
             <button
               type="submit"
@@ -135,6 +241,13 @@ export default function AvatarPage() {
               className="rounded-full bg-brand-terracotta px-6 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
             >
               {t('save')}
+            </button>
+            <button
+              type="button"
+              onClick={handleClearBodyProfile}
+              className="ms-3 rounded-full border border-border px-6 py-2 text-sm text-brand-terracotta hover:border-brand-terracotta"
+            >
+              {t('deleteBodyProfile')}
             </button>
             {saved && <span className="ms-3 text-sm text-green-700">{t('saved')}</span>}
           </div>

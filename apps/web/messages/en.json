@@ -252,7 +252,18 @@
     "confirmDeleteAvatar": "Delete your avatar permanently?",
     "closeTryOn": "Close",
     "loadError": "Couldn't load the 3D model. Please try again later.",
-    "avatarDisabledMessage": "Your avatar was disabled by a moderator, please create a new one."
+    "avatarDisabledMessage": "Your avatar was disabled by a moderator, please create a new one.",
+    "chest": "Chest (cm)",
+    "waist": "Waist (cm)",
+    "hips": "Hips (cm)",
+    "legLength": "Leg length (cm)",
+    "usualSize": "Usual size",
+    "fitPreference": "Fit preference",
+    "fitSlim": "Slim",
+    "fitRegular": "Regular",
+    "fitOversized": "Oversized",
+    "deleteBodyProfile": "Delete my measurements",
+    "confirmDeleteBodyProfile": "Permanently delete your detailed body measurements?"
   },
   "chat": {
     "title": "StyleForm Assistant",
@@ -501,5 +512,12 @@
     "remove": "Remove",
     "newListPlaceholder": "New list name",
     "createList": "Create"
+  },
+  "sizeAssistant": {
+    "title": "Recommended size:",
+    "confidenceHigh": "high confidence",
+    "confidenceMedium": "medium confidence",
+    "loading": "Computing recommendation...",
+    "fillProfile": "Complete my profile"
   }
 }

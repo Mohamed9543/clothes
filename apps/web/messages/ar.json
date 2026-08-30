@@ -252,7 +252,18 @@
     "confirmDeleteAvatar": "هل تريد حذف أفتارك نهائيًا؟",
     "closeTryOn": "إغلاق",
     "loadError": "تعذّر تحميل النموذج ثلاثي الأبعاد. حاول مرة أخرى لاحقًا.",
-    "avatarDisabledMessage": "تم تعطيل صورتك الرمزية من قبل مشرف، الرجاء إنشاء واحدة جديدة."
+    "avatarDisabledMessage": "تم تعطيل صورتك الرمزية من قبل مشرف، الرجاء إنشاء واحدة جديدة.",
+    "chest": "محيط الصدر (سم)",
+    "waist": "محيط الخصر (سم)",
+    "hips": "محيط الورك (سم)",
+    "legLength": "طول الساق (سم)",
+    "usualSize": "المقاس المعتاد",
+    "fitPreference": "تفضيل القصة",
+    "fitSlim": "ضيقة",
+    "fitRegular": "عادية",
+    "fitOversized": "واسعة",
+    "deleteBodyProfile": "حذف قياساتي",
+    "confirmDeleteBodyProfile": "حذف قياسات جسمك التفصيلية نهائيًا؟"
   },
   "chat": {
     "title": "مساعد ستايل فورم",
@@ -501,5 +512,12 @@
     "remove": "إزالة",
     "newListPlaceholder": "اسم القائمة الجديدة",
     "createList": "إنشاء"
+  },
+  "sizeAssistant": {
+    "title": "المقاس الموصى به:",
+    "confidenceHigh": "ثقة عالية",
+    "confidenceMedium": "ثقة متوسطة",
+    "loading": "جارٍ حساب التوصية...",
+    "fillProfile": "أكمل ملفي الشخصي"
   }
 }

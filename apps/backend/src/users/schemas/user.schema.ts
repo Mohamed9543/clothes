@@ -21,6 +21,12 @@ export enum Gender {
   OTHER = 'other',
 }
 
+export enum FitPreference {
+  SLIM = 'slim',
+  REGULAR = 'regular',
+  OVERSIZED = 'oversized',
+}
+
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
@@ -55,6 +61,24 @@ export class User {
 
   @Prop({ type: String, enum: Gender, default: null })
   gender: Gender | null;
+
+  @Prop({ type: Number, default: null })
+  chestCm: number | null;
+
+  @Prop({ type: Number, default: null })
+  waistCm: number | null;
+
+  @Prop({ type: Number, default: null })
+  hipsCm: number | null;
+
+  @Prop({ type: Number, default: null })
+  legLengthCm: number | null;
+
+  @Prop({ type: String, default: null })
+  usualSize: string | null;
+
+  @Prop({ type: String, enum: FitPreference, default: null })
+  fitPreference: FitPreference | null;
 
   @Prop({ default: false })
   isBlocked: boolean;

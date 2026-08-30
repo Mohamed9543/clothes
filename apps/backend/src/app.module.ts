@@ -15,6 +15,7 @@ import { OutfitsModule } from './outfits/outfits.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PromotionsModule } from './promotions/promotions.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { SizeAssistantModule } from './size-assistant/size-assistant.module';
 import { StatsModule } from './stats/stats.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { UsersModule } from './users/users.module';
@@ -43,6 +44,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     AvatarAssetsModule,
     WishlistModule,
     PromotionsModule,
+    SizeAssistantModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

@@ -53,6 +53,27 @@ export class UsersService {
     return user;
   }
 
+  async clearBodyProfile(userId: string): Promise<UserDocument> {
+    const user = await this.userModel
+      .findByIdAndUpdate(
+        userId,
+        {
+          chestCm: null,
+          waistCm: null,
+          hipsCm: null,
+          legLengthCm: null,
+          usualSize: null,
+          fitPreference: null,
+        },
+        { new: true },
+      )
+      .exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
   findAllAdmin(): Promise<UserDocument[]> {
     return this.userModel
       .find()

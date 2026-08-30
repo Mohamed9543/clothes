@@ -1,5 +1,5 @@
-import { IsEnum, IsInt, IsOptional, IsUrl, Max, Min } from 'class-validator';
-import { Gender } from '../schemas/user.schema';
+import { IsEnum, IsInt, IsOptional, IsString, IsUrl, Max, MaxLength, Min } from 'class-validator';
+import { FitPreference, Gender } from '../schemas/user.schema';
 
 export class UpdateProfileDto {
   @IsOptional()
@@ -21,4 +21,37 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsEnum(Gender)
   gender?: Gender;
+
+  @IsOptional()
+  @IsInt()
+  @Min(40)
+  @Max(200)
+  chestCm?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(40)
+  @Max(200)
+  waistCm?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(40)
+  @Max(200)
+  hipsCm?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(40)
+  @Max(140)
+  legLengthCm?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  usualSize?: string;
+
+  @IsOptional()
+  @IsEnum(FitPreference)
+  fitPreference?: FitPreference;
 }

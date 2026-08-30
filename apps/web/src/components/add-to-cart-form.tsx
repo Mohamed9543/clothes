@@ -7,6 +7,7 @@ import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { ApiError } from '@/lib/api';
 import { findVariant, productColors, sizesForColor } from '@/lib/product-variants';
+import { SizeAssistant } from '@/components/size-assistant';
 import type { Product } from '@/types';
 
 export function AddToCartForm({ product }: { product: Product }) {
@@ -79,6 +80,8 @@ export function AddToCartForm({ product }: { product: Product }) {
           ))}
         </div>
       </div>
+
+      <SizeAssistant productId={product._id} />
 
       <div>
         <p className="mb-2 text-sm font-medium">{t('size')}</p>

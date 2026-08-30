@@ -12,6 +12,28 @@ import { UpdateUserAdminDto } from './dto/update-user-admin.dto';
 import { UserDocument, UserRole } from './schemas/user.schema';
 import { UsersService } from './users.service';
 
+function toSelfUserView(user: UserDocument) {
+  return {
+    id: user._id.toString(),
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    role: user.role,
+    preferredLanguage: user.preferredLanguage,
+    avatarUrl: user.avatarUrl,
+    avatarDisabled: user.avatarDisabled,
+    heightCm: user.heightCm,
+    weightKg: user.weightKg,
+    gender: user.gender,
+    chestCm: user.chestCm,
+    waistCm: user.waistCm,
+    hipsCm: user.hipsCm,
+    legLengthCm: user.legLengthCm,
+    usualSize: user.usualSize,
+    fitPreference: user.fitPreference,
+  };
+}
+
 function toAdminUserView(user: UserDocument) {
   return {
     id: user._id.toString(),
@@ -40,19 +62,13 @@ export class UsersController {
   @Patch('me')
   async updateProfile(@CurrentUser() user: JwtAccessPayload, @Body() dto: UpdateProfileDto) {
     const updated = await this.usersService.updateProfile(user.sub, dto);
-    return {
-      id: updated._id.toString(),
-      email: updated.email,
-      firstName: updated.firstName,
-      lastName: updated.lastName,
-      role: updated.role,
-      preferredLanguage: updated.preferredLanguage,
-      avatarUrl: updated.avatarUrl,
-      avatarDisabled: updated.avatarDisabled,
-      heightCm: updated.heightCm,
-      weightKg: updated.weightKg,
-      gender: updated.gender,
-    };
+    return toSelfUserView(updated);
+  }
+
+  @Delete('me/body-profile')
+  async clearBodyProfile(@CurrentUser() user: JwtAccessPayload) {
+    const updated = await this.usersService.clearBodyProfile(user.sub);
+    return toSelfUserView(updated);
   }
 
   @Get('admin/all')

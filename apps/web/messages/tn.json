@@ -252,7 +252,18 @@
     "confirmDeleteAvatar": "تحب تمسح الأفتار متاعك نهائيًا؟",
     "closeTryOn": "سكّر",
     "loadError": "ما نجمناش نحمّلو النموذج ثلاثي الأبعاد. عاود جرب من بعد.",
-    "avatarDisabledMessage": "الأفتار متاعك تعطّل من طرف مشرف، لازمك تعمل واحد جديد."
+    "avatarDisabledMessage": "الأفتار متاعك تعطّل من طرف مشرف، لازمك تعمل واحد جديد.",
+    "chest": "دور الصدر (سم)",
+    "waist": "دور الخصر (سم)",
+    "hips": "دور الورك (سم)",
+    "legLength": "طول الرجل (سم)",
+    "usualSize": "المقاس العادي",
+    "fitPreference": "تفضيل القصة",
+    "fitSlim": "ضيقة",
+    "fitRegular": "عادية",
+    "fitOversized": "واسعة",
+    "deleteBodyProfile": "نحّي قياساتي",
+    "confirmDeleteBodyProfile": "تنحّي قياسات جسمك نهائيًا؟"
   },
   "chat": {
     "title": "المساعد متاع ستايل فورم",
@@ -501,5 +512,12 @@
     "remove": "نحّي",
     "newListPlaceholder": "اسم الليستة الجديدة",
     "createList": "إنشاء"
+  },
+  "sizeAssistant": {
+    "title": "المقاس الموصى بيه:",
+    "confidenceHigh": "ثقة عالية",
+    "confidenceMedium": "ثقة متوسطة",
+    "loading": "قاعد يحسب التوصية...",
+    "fillProfile": "كمّل بروفايلي"
   }
 }

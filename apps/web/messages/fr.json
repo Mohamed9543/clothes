@@ -252,7 +252,18 @@
     "confirmDeleteAvatar": "Supprimer ton avatar définitivement ?",
     "closeTryOn": "Fermer",
     "loadError": "Impossible de charger le modèle 3D. Réessaie plus tard.",
-    "avatarDisabledMessage": "Votre avatar a été désactivé par un modérateur, veuillez en créer un nouveau."
+    "avatarDisabledMessage": "Votre avatar a été désactivé par un modérateur, veuillez en créer un nouveau.",
+    "chest": "Tour de poitrine (cm)",
+    "waist": "Tour de taille (cm)",
+    "hips": "Tour de hanches (cm)",
+    "legLength": "Longueur de jambe (cm)",
+    "usualSize": "Taille habituelle",
+    "fitPreference": "Préférence de coupe",
+    "fitSlim": "Ajustée",
+    "fitRegular": "Normale",
+    "fitOversized": "Ample",
+    "deleteBodyProfile": "Supprimer mes mensurations",
+    "confirmDeleteBodyProfile": "Supprimer définitivement vos mensurations détaillées ?"
   },
   "chat": {
     "title": "Assistant StyleForm",
@@ -501,5 +512,12 @@
     "remove": "Retirer",
     "newListPlaceholder": "Nom de la nouvelle liste",
     "createList": "Créer"
+  },
+  "sizeAssistant": {
+    "title": "Taille recommandée :",
+    "confidenceHigh": "confiance élevée",
+    "confidenceMedium": "confiance moyenne",
+    "loading": "Calcul de la recommandation...",
+    "fillProfile": "Compléter mon profil"
   }
 }

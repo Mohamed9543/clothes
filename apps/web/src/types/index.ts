@@ -190,6 +190,7 @@ export interface DashboardStats {
 }
 
 export type Gender = 'male' | 'female' | 'other';
+export type FitPreference = 'slim' | 'regular' | 'oversized';
 
 export interface User {
   id: string;
@@ -203,6 +204,20 @@ export interface User {
   heightCm: number | null;
   weightKg: number | null;
   gender: Gender | null;
+  chestCm: number | null;
+  waistCm: number | null;
+  hipsCm: number | null;
+  legLengthCm: number | null;
+  usualSize: string | null;
+  fitPreference: FitPreference | null;
+}
+
+export type SizeConfidence = 'high' | 'medium' | 'low' | 'none';
+
+export interface SizeRecommendation {
+  recommendedSize: string | null;
+  confidence: SizeConfidence;
+  message: string;
 }
 
 export type AvatarAssetType = 'body' | 'hair';
