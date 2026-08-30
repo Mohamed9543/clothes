@@ -3,8 +3,11 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
+  IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { LocalizedTextDto } from '../../catalog/dto/localized-text.dto';
@@ -36,4 +39,10 @@ export class CreateOutfitDto {
   @IsBoolean()
   @IsOptional()
   isFeatured?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  bundleDiscountPercent?: number | null;
 }

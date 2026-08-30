@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Governorate } from '@libas/shared';
 
 export class QuoteOrderDto {
@@ -8,4 +8,9 @@ export class QuoteOrderDto {
   @IsOptional()
   @IsString()
   couponCode?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  usePoints?: number;
 }

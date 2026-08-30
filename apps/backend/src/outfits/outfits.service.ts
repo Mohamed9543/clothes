@@ -15,9 +15,17 @@ export interface OutfitWithProducts {
   productIds: string[];
   isActive: boolean;
   isFeatured: boolean;
+  bundleDiscountPercent: number | null;
   createdAt: Date;
   products: Product[];
   totalPrice: number;
+  bundlePrice: number | null;
+}
+
+export interface ApplicableBundle {
+  outfitSlug: string;
+  productIds: string[];
+  percent: number;
 }
 
 @Injectable()
@@ -53,8 +61,39 @@ export class OutfitsService {
       .map((id) => productMap.get(id))
       .filter((product): product is Product => Boolean(product));
     const totalPrice = orderedProducts.reduce((sum, product) => sum + product.price, 0);
+    const bundlePrice = outfit.bundleDiscountPercent
+      ? totalPrice * (1 - outfit.bundleDiscountPercent / 100)
+      : null;
 
-    return { ...outfit.toObject(), products: orderedProducts, totalPrice };
+    return { ...outfit.toObject(), products: orderedProducts, totalPrice, bundlePrice };
+  }
+
+  /**
+   * Finds the best bundle discount whose full product list is a subset of
+   * the given cart product ids — i.e. the customer genuinely has every piece
+   * of that bundle in their cart right now. Returns null rather than ever
+   * suggesting a discount that isn't backed by the cart's real contents.
+   */
+  async findApplicableBundle(cartProductIds: string[]): Promise<ApplicableBundle | null> {
+    const bundles = await this.outfitModel
+      .find({ isActive: true, bundleDiscountPercent: { $gt: 0 } })
+      .exec();
+
+    const cartSet = new Set(cartProductIds);
+    const matches = bundles.filter((bundle) => bundle.productIds.every((id) => cartSet.has(id)));
+    if (matches.length === 0) {
+      return null;
+    }
+
+    const best = matches.reduce((top, current) =>
+      (current.bundleDiscountPercent ?? 0) > (top.bundleDiscountPercent ?? 0) ? current : top,
+    );
+
+    return {
+      outfitSlug: best.slug,
+      productIds: best.productIds,
+      percent: best.bundleDiscountPercent as number,
+    };
   }
 
   async findById(id: string): Promise<OutfitDocument> {

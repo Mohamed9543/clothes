@@ -10,7 +10,7 @@ import { AdjustStockDto, ManualStockReason } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductsDto } from './dto/query-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { LOW_STOCK_THRESHOLD, Product, ProductDocument } from './schemas/product.schema';
+import { LOW_STOCK_THRESHOLD, Product, ProductDocument, isProductOnSale } from './schemas/product.schema';
 import {
   StockMovement,
   StockMovementDocument,
@@ -35,6 +35,7 @@ export interface AdminProduct {
   totalStock: number;
   isLowStock: boolean;
   isOutOfStock: boolean;
+  isOnSale: boolean;
 }
 
 // Public-facing stock summary: deliberately omits `totalStock` so exact
@@ -44,6 +45,7 @@ export interface PublicStockSummary {
   _id: Types.ObjectId;
   isLowStock: boolean;
   isOutOfStock: boolean;
+  isOnSale: boolean;
 }
 
 @Injectable()
@@ -72,11 +74,13 @@ export class ProductsService {
     };
   }
 
-  private stockFlags(product: ProductDocument): { isLowStock: boolean; isOutOfStock: boolean } {
+  private stockFlags(
+    product: ProductDocument,
+  ): { isLowStock: boolean; isOutOfStock: boolean; isOnSale: boolean } {
     const isOutOfStock = product.variants.every((variant) => variant.stock === 0);
     const isLowStock =
       !isOutOfStock && product.variants.some((variant) => variant.stock <= LOW_STOCK_THRESHOLD);
-    return { isLowStock, isOutOfStock };
+    return { isLowStock, isOutOfStock, isOnSale: isProductOnSale(product) };
   }
 
   private withPublicStockSummary(product: ProductDocument): Product & PublicStockSummary {

@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { LogOut, Package, User as UserIcon } from 'lucide-react';
+import { Gift, LogOut, Package, User as UserIcon } from 'lucide-react';
+import { LOYALTY_TND_PER_POINT_REDEEMED } from '@libas/shared';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 
@@ -66,6 +67,22 @@ export default function AccountPage() {
             <LogOut className="h-4 w-4" />
             {tNav('logout')}
           </button>
+        </div>
+      )}
+
+      {user && !isAdmin && (
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-border bg-surface p-4">
+          <Gift className="h-5 w-5 text-brand-terracotta" />
+          <div>
+            <p className="text-sm font-medium">
+              {t('loyaltyPoints', { points: user.loyaltyPoints })}
+            </p>
+            <p className="text-xs text-muted">
+              {t('loyaltyPointsValue', {
+                value: Math.round(user.loyaltyPoints * LOYALTY_TND_PER_POINT_REDEEMED * 100) / 100,
+              })}
+            </p>
+          </div>
         </div>
       )}
 

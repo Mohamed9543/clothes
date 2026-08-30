@@ -27,6 +27,12 @@ export class Outfit {
   @Prop({ default: false })
   isFeatured: boolean;
 
+  // Percentage off the summed product prices when bought as a whole bundle.
+  // Only applied at checkout while every product below is genuinely still
+  // in the customer's cart — see OutfitsService.findApplicableBundle.
+  @Prop({ type: Number, default: null, min: 0, max: 100 })
+  bundleDiscountPercent: number | null;
+
   createdAt: Date;
 }
 

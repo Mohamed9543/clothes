@@ -3,6 +3,7 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
+  IsDateString,
   IsEnum,
   IsNumber,
   IsOptional,
@@ -58,4 +59,13 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   modelUrl?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  compareAtPrice?: number | null;
+
+  @IsOptional()
+  @IsDateString()
+  saleEndsAt?: string | null;
 }

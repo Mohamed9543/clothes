@@ -91,3 +91,12 @@ export enum PaymentStatus {
   FAILED = 'failed',
   CANCELLED = 'cancelled',
 }
+
+/**
+ * "Libas Rewards" loyalty conversion rates — shared by the backend's discount
+ * calculation and the frontend's points-value display so they never disagree.
+ */
+export const LOYALTY_POINTS_PER_TND_SPENT = 1;
+export const LOYALTY_TND_PER_POINT_REDEEMED = 0.05; // 20 points = 1 TND
+
+export type DiscountSource = 'coupon' | 'points' | 'bundle';

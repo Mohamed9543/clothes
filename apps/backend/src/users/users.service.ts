@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -72,6 +72,21 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  async awardPoints(userId: string, points: number): Promise<void> {
+    if (points <= 0) return;
+    await this.userModel.updateOne({ _id: userId }, { $inc: { loyaltyPoints: points } }).exec();
+  }
+
+  async redeemPoints(userId: string, points: number): Promise<void> {
+    if (points <= 0) return;
+    const result = await this.userModel
+      .updateOne({ _id: userId, loyaltyPoints: { $gte: points } }, { $inc: { loyaltyPoints: -points } })
+      .exec();
+    if (result.matchedCount === 0) {
+      throw new BadRequestException('Not enough loyalty points');
+    }
   }
 
   findAllAdmin(): Promise<UserDocument[]> {

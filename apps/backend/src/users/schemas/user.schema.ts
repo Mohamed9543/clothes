@@ -80,6 +80,11 @@ export class User {
   @Prop({ type: String, enum: FitPreference, default: null })
   fitPreference: FitPreference | null;
 
+  // "Libas Rewards" — earned on delivery, redeemable at checkout for a
+  // discount (see LOYALTY_* constants in @libas/shared).
+  @Prop({ default: 0, min: 0 })
+  loyaltyPoints: number;
+
   @Prop({ default: false })
   isBlocked: boolean;
 

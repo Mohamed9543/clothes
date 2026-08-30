@@ -14,5 +14,6 @@ import { Outfit, OutfitSchema } from './schemas/outfit.schema';
   ],
   controllers: [OutfitsController],
   providers: [OutfitsService],
+  exports: [OutfitsService],
 })
 export class OutfitsModule {}

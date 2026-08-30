@@ -39,8 +39,22 @@ export default async function OutfitPage({
       <p className="mt-2 text-muted">{localize(outfit.description, locale)}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-4">
-        <p className="text-xl font-semibold text-brand-terracotta">
-          {t('totalPrice')}: {outfit.totalPrice} {tCommon('currency')}
+        <p className="text-xl font-semibold">
+          {outfit.bundlePrice != null ? (
+            <>
+              <span className="me-2 text-base text-muted line-through">
+                {outfit.totalPrice} {tCommon('currency')}
+              </span>
+              <span className="text-brand-terracotta">
+                {t('bundlePrice')}: {Math.round(outfit.bundlePrice * 100) / 100} {tCommon('currency')} (
+                {t('bundleSavings', { percent: outfit.bundleDiscountPercent ?? 0 })})
+              </span>
+            </>
+          ) : (
+            <span className="text-brand-terracotta">
+              {t('totalPrice')}: {outfit.totalPrice} {tCommon('currency')}
+            </span>
+          )}
         </p>
         <AddOutfitToCartButton productIds={outfit.productIds} />
       </div>

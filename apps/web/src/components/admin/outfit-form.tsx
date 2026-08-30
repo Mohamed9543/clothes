@@ -30,6 +30,9 @@ export function OutfitForm({ outfit, onSaved, onCancel }: OutfitFormProps) {
   const [isActive, setIsActive] = useState(outfit?.isActive ?? true);
   const [isFeatured, setIsFeatured] = useState(outfit?.isFeatured ?? false);
   const [productIds, setProductIds] = useState<string[]>(outfit?.productIds ?? []);
+  const [bundleDiscountPercent, setBundleDiscountPercent] = useState(
+    outfit?.bundleDiscountPercent != null ? String(outfit.bundleDiscountPercent) : '',
+  );
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [pickedProductId, setPickedProductId] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -66,6 +69,7 @@ export function OutfitForm({ outfit, onSaved, onCancel }: OutfitFormProps) {
       productIds,
       isActive,
       isFeatured,
+      bundleDiscountPercent: bundleDiscountPercent ? Number(bundleDiscountPercent) : null,
     };
 
     try {
@@ -169,6 +173,18 @@ export function OutfitForm({ outfit, onSaved, onCancel }: OutfitFormProps) {
             {t('addProduct')}
           </button>
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1 block text-xs text-muted">{t('fieldBundleDiscount')}</label>
+        <input
+          type="number"
+          min={0}
+          max={100}
+          value={bundleDiscountPercent}
+          onChange={(e) => setBundleDiscountPercent(e.target.value)}
+          className="w-32 rounded-md border border-border bg-background px-3 py-2 text-sm"
+        />
       </div>
 
       <label className="flex items-center gap-2 text-sm">

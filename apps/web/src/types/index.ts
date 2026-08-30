@@ -33,6 +33,8 @@ export interface Product {
   name: LocalizedText;
   description: LocalizedText;
   price: number;
+  compareAtPrice: number | null;
+  saleEndsAt: string | null;
   audience: ProductAudience;
   type: ProductType;
   variants: ProductVariant[];
@@ -46,6 +48,7 @@ export interface AdminProduct extends Product {
   totalStock: number;
   isLowStock: boolean;
   isOutOfStock: boolean;
+  isOnSale: boolean;
 }
 
 // Shape returned by the public GET /products and GET /products/:slug
@@ -53,6 +56,7 @@ export interface AdminProduct extends Product {
 export interface PublicProduct extends Product {
   isLowStock: boolean;
   isOutOfStock: boolean;
+  isOnSale: boolean;
 }
 
 export type ProductSort = 'newest' | 'price_asc' | 'price_desc';
@@ -118,6 +122,7 @@ export interface AdminUser {
   role: 'customer' | 'admin';
   preferredLanguage: string;
   isBlocked: boolean;
+  loyaltyPoints: number;
   createdAt: string;
 }
 
@@ -165,12 +170,14 @@ export interface Outfit {
   productIds: string[];
   isActive: boolean;
   isFeatured: boolean;
+  bundleDiscountPercent: number | null;
   createdAt: string;
 }
 
 export interface OutfitWithProducts extends Outfit {
   products: Product[];
   totalPrice: number;
+  bundlePrice: number | null;
 }
 
 export interface BulkAddResult {
@@ -210,6 +217,7 @@ export interface User {
   legLengthCm: number | null;
   usualSize: string | null;
   fitPreference: FitPreference | null;
+  loyaltyPoints: number;
 }
 
 export type SizeConfidence = 'high' | 'medium' | 'low' | 'none';
@@ -329,10 +337,13 @@ export interface Order {
   createdAt: string;
 }
 
+export type DiscountSource = 'coupon' | 'points' | 'bundle';
+
 export interface OrderQuote {
   itemsSubtotal: number;
   shippingFee: number;
   discountAmount: number;
+  discountSource: DiscountSource | null;
   total: number;
 }
 

@@ -16,7 +16,7 @@ const MAX_SWATCHES = 4;
 export function ProductCard({
   product,
 }: {
-  product: Product & { isLowStock?: boolean; isOutOfStock?: boolean };
+  product: Product & { isLowStock?: boolean; isOutOfStock?: boolean; isOnSale?: boolean };
 }) {
   const locale = useLocale();
   const t = useTranslations('common');
@@ -71,11 +71,23 @@ export function ProductCard({
             {tProduct('lowStock')}
           </span>
         )}
+        {product.isOnSale && (
+          <span className="absolute start-2 bottom-2 rounded-full bg-brand-terracotta px-2 py-0.5 text-xs text-white">
+            {tProduct('onSale')}
+          </span>
+        )}
       </div>
       <div className="p-3">
         <p className="truncate text-sm font-medium">{localize(product.name, locale)}</p>
-        <p className="mt-1 text-sm text-muted">
-          {product.price} {t('currency')}
+        <p className="mt-1 text-sm">
+          {product.isOnSale && (
+            <span className="me-2 text-muted line-through">
+              {product.compareAtPrice} {t('currency')}
+            </span>
+          )}
+          <span className={product.isOnSale ? 'font-medium text-brand-terracotta' : 'text-muted'}>
+            {product.price} {t('currency')}
+          </span>
         </p>
         {shownColors.length > 0 && (
           <div className="mt-2 flex items-center gap-1">

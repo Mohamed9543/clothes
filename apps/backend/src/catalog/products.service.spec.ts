@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
-import { Product } from './schemas/product.schema';
+import { Product, isProductOnSale } from './schemas/product.schema';
 import { StockMovement } from './schemas/stock-movement.schema';
 import { ProductsService } from './products.service';
 
@@ -152,5 +152,29 @@ describe('ProductsService — findAll (color/availability filter + sort)', () =>
   it('defaults to newest-first when no sort is given', async () => {
     await service.findAll({} as never);
     expect(capturedSort).toEqual({ createdAt: -1 });
+  });
+});
+
+describe('isProductOnSale', () => {
+  it('is false when compareAtPrice is not set', () => {
+    expect(isProductOnSale({ price: 50, compareAtPrice: null, saleEndsAt: null })).toBe(false);
+  });
+
+  it('is false when compareAtPrice is not actually higher than price', () => {
+    expect(isProductOnSale({ price: 50, compareAtPrice: 50, saleEndsAt: null })).toBe(false);
+  });
+
+  it('is true when compareAtPrice is higher than price and there is no end date', () => {
+    expect(isProductOnSale({ price: 50, compareAtPrice: 70, saleEndsAt: null })).toBe(true);
+  });
+
+  it('is true while saleEndsAt is still in the future', () => {
+    const future = new Date(Date.now() + 60_000);
+    expect(isProductOnSale({ price: 50, compareAtPrice: 70, saleEndsAt: future })).toBe(true);
+  });
+
+  it('is false once saleEndsAt has passed', () => {
+    const past = new Date(Date.now() - 60_000);
+    expect(isProductOnSale({ price: 50, compareAtPrice: 70, saleEndsAt: past })).toBe(false);
   });
 });

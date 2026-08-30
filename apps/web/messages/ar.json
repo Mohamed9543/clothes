@@ -90,7 +90,9 @@
     "sizeGuideChest": "محيط الصدر",
     "wishlistToggle": "أضف إلى قائمة الأمنيات",
     "wishlistAdd": "أضف إلى قائمتي",
-    "wishlistRemove": "إزالة من قائمتي"
+    "wishlistRemove": "إزالة من قائمتي",
+    "onSale": "تخفيض",
+    "saleEndsAt": "ينتهي العرض في {date}"
   },
   "cart": {
     "title": "سلتي",
@@ -159,7 +161,11 @@
     "promoCode": "رمز الخصم",
     "applyCode": "تطبيق",
     "discount": "الخصم",
-    "invalidCode": "رمز الخصم غير صالح"
+    "invalidCode": "رمز الخصم غير صالح",
+    "usePoints": "استخدم نقاطي",
+    "pointsAvailable": "{points} نقطة متاحة",
+    "pointsDiscount": "نقاط الولاء",
+    "bundleDiscountLabel": "حزمة"
   },
   "account": {
     "title": "حسابي",
@@ -171,7 +177,9 @@
     "orderStatus": "الحالة",
     "noOrders": "لم تقم بأي طلب بعد.",
     "trackOrder": "تتبّع طلبي",
-    "hideTracking": "إخفاء التتبع"
+    "hideTracking": "إخفاء التتبع",
+    "loyaltyPoints": "{points} نقطة من Libas Rewards",
+    "loyaltyPointsValue": "القيمة التقريبية: {value} د.ت"
   },
   "auth": {
     "loginTitle": "تسجيل الدخول",
@@ -446,7 +454,11 @@
     "minOrderAmount": "الحد الأدنى لقيمة الطلب",
     "expiresAt": "تاريخ الانتهاء",
     "confirmDeleteCoupon": "حذف كود الخصم هذا نهائيًا؟",
-    "colReports": "البلاغات"
+    "colReports": "البلاغات",
+    "colLoyaltyPoints": "نقاط الولاء",
+    "fieldCompareAtPrice": "السعر قبل التخفيض",
+    "fieldSaleEndsAt": "تاريخ انتهاء التخفيض (اختياري)",
+    "fieldBundleDiscount": "نسبة خصم الحزمة (%)"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -493,7 +505,9 @@
     "totalPrice": "السعر الإجمالي",
     "addToCart": "أضف كامل الإطلالة إلى السلة",
     "someItemsUnavailable": "بعض القطع لم تكن متوفرة وتم تجاهلها.",
-    "itemsAdded": "تمت إضافة الإطلالة إلى السلة!"
+    "itemsAdded": "تمت إضافة الإطلالة إلى السلة!",
+    "bundlePrice": "سعر الحزمة",
+    "bundleSavings": "وفّر {percent}%"
   },
   "payments": {
     "mockConfirmTitle": "محاكاة الدفع",

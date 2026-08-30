@@ -90,7 +90,9 @@
     "sizeGuideChest": "دور الصدر",
     "wishlistToggle": "زيدها في الليستة",
     "wishlistAdd": "زيدها في الليستة",
-    "wishlistRemove": "نحّيها من الليستة"
+    "wishlistRemove": "نحّيها من الليستة",
+    "onSale": "تخفيض",
+    "saleEndsAt": "العرض يخلص في {date}"
   },
   "cart": {
     "title": "الكارتة متاعي",
@@ -159,7 +161,11 @@
     "promoCode": "كود التخفيض",
     "applyCode": "طبّق",
     "discount": "التخفيض",
-    "invalidCode": "الكود مش صحيح"
+    "invalidCode": "الكود مش صحيح",
+    "usePoints": "استعمل النقاط متاعي",
+    "pointsAvailable": "{points} نقطة موجودة",
+    "pointsDiscount": "نقاط الولاء",
+    "bundleDiscountLabel": "باك"
   },
   "account": {
     "title": "الكونط متاعي",
@@ -171,7 +177,9 @@
     "orderStatus": "الحالة",
     "noOrders": "ماعملتش حتى طلبية لحد الآن.",
     "trackOrder": "تتبّع الطلبية متاعي",
-    "hideTracking": "خبّي التتبع"
+    "hideTracking": "خبّي التتبع",
+    "loyaltyPoints": "{points} نقطة Libas Rewards",
+    "loyaltyPointsValue": "القيمة التقريبية: {value} د.ت"
   },
   "auth": {
     "loginTitle": "دخول",
@@ -446,7 +454,11 @@
     "minOrderAmount": "أقل مبلغ للطلبية",
     "expiresAt": "تاريخ الانتهاء",
     "confirmDeleteCoupon": "تنحّي هالكود نهائيًا؟",
-    "colReports": "البلاغات"
+    "colReports": "البلاغات",
+    "colLoyaltyPoints": "نقاط الولاء",
+    "fieldCompareAtPrice": "السعر قبل التخفيض",
+    "fieldSaleEndsAt": "تاريخ خلاص التخفيض (مش إجباري)",
+    "fieldBundleDiscount": "نسبة خصم الباك (%)"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -493,7 +505,9 @@
     "totalPrice": "السعر الكل",
     "addToCart": "زيد التنوّرة كلها للكارتة",
     "someItemsUnavailable": "شوية حاجات ما كانوش موجودين وتزادو.",
-    "itemsAdded": "التنوّرة تزادت للكارتة!"
+    "itemsAdded": "التنوّرة تزادت للكارتة!",
+    "bundlePrice": "سعر الباك",
+    "bundleSavings": "اربح {percent}%"
   },
   "payments": {
     "mockConfirmTitle": "تجربة الخلاص",

@@ -27,6 +27,7 @@ export default function CheckoutPage() {
   const [couponInput, setCouponInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState('');
   const [couponError, setCouponError] = useState<string | null>(null);
+  const [usePoints, setUsePoints] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<Order | null>(null);
@@ -45,10 +46,15 @@ export default function CheckoutPage() {
       return;
     }
     let cancelled = false;
+    const pointsToUse = !appliedCoupon && usePoints ? Number(usePoints) : undefined;
     apiFetch<OrderQuote>('/orders/quote', {
       method: 'POST',
       auth: true,
-      body: JSON.stringify({ governorate, couponCode: appliedCoupon || undefined }),
+      body: JSON.stringify({
+        governorate,
+        couponCode: appliedCoupon || undefined,
+        usePoints: pointsToUse,
+      }),
     })
       .then((data) => {
         if (!cancelled) setQuote(data);
@@ -64,7 +70,7 @@ export default function CheckoutPage() {
     return () => {
       cancelled = true;
     };
-  }, [governorate, appliedCoupon, t]);
+  }, [governorate, appliedCoupon, usePoints, t]);
 
   function applyCoupon() {
     setCouponError(null);
@@ -93,6 +99,7 @@ export default function CheckoutPage() {
           shippingAddress: { fullName, phone, address, governorate, delegation, country },
           paymentMethod,
           couponCode: appliedCoupon || undefined,
+          usePoints: !appliedCoupon && usePoints ? Number(usePoints) : undefined,
         }),
       });
       await refresh();
@@ -236,6 +243,23 @@ export default function CheckoutPage() {
           )}
         </div>
 
+        {user && user.loyaltyPoints > 0 && !appliedCoupon && (
+          <div>
+            <p className="mb-2 font-medium">
+              {t('usePoints')} ({t('pointsAvailable', { points: user.loyaltyPoints })})
+            </p>
+            <input
+              type="number"
+              min={0}
+              max={user.loyaltyPoints}
+              value={usePoints}
+              onChange={(event) => setUsePoints(event.target.value)}
+              placeholder={t('usePoints')}
+              className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+            />
+          </div>
+        )}
+
         {cart && (
           <div className="space-y-1 border-t border-border pt-4 text-sm">
             <div className="flex items-center justify-between text-muted">
@@ -246,9 +270,13 @@ export default function CheckoutPage() {
             </div>
             {(quote?.discountAmount ?? 0) > 0 && (
               <div className="flex items-center justify-between text-green-700">
-                <span>{t('discount')}</span>
                 <span>
-                  -{quote?.discountAmount} {tCommon('currency')}
+                  {t('discount')}
+                  {quote?.discountSource === 'points' && ` (${t('pointsDiscount')})`}
+                  {quote?.discountSource === 'bundle' && ` (${t('bundleDiscountLabel')})`}
+                </span>
+                <span>
+                  -{Math.round((quote?.discountAmount ?? 0) * 100) / 100} {tCommon('currency')}
                 </span>
               </div>
             )}

@@ -31,6 +31,12 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
   const [name, setName] = useState(product?.name[locale] ?? '');
   const [description, setDescription] = useState(product?.description[locale] ?? '');
   const [price, setPrice] = useState(product ? String(product.price) : '');
+  const [compareAtPrice, setCompareAtPrice] = useState(
+    product?.compareAtPrice ? String(product.compareAtPrice) : '',
+  );
+  const [saleEndsAt, setSaleEndsAt] = useState(
+    product?.saleEndsAt ? product.saleEndsAt.slice(0, 10) : '',
+  );
   const [audience, setAudience] = useState<ProductAudience>(product?.audience ?? 'men');
   const [type, setType] = useState<ProductType>(product?.type ?? 'pull');
   const [variants, setVariants] = useState<ProductVariant[]>(
@@ -164,6 +170,8 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
       modelUrl,
       isActive,
       tryOnEnabled,
+      compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null,
+      saleEndsAt: saleEndsAt ? new Date(saleEndsAt).toISOString() : null,
     };
 
     try {
@@ -244,6 +252,29 @@ export function ProductForm({ product, onSaved, onCancel }: ProductFormProps) {
               </option>
             ))}
           </select>
+        </div>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-xs text-muted">{t('fieldCompareAtPrice')}</label>
+          <input
+            type="number"
+            min={0}
+            step="0.01"
+            value={compareAtPrice}
+            onChange={(e) => setCompareAtPrice(e.target.value)}
+            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-muted">{t('fieldSaleEndsAt')}</label>
+          <input
+            type="date"
+            value={saleEndsAt}
+            onChange={(e) => setSaleEndsAt(e.target.value)}
+            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+          />
         </div>
       </div>
 

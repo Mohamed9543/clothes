@@ -43,9 +43,21 @@ export default async function ProductPage({
 
         <div>
           <h1 className="text-2xl font-semibold">{localize(product.name, locale)}</h1>
-          <p className="mt-2 text-xl text-brand-terracotta">
-            {product.price} {tCommon('currency')}
+          <p className="mt-2 text-xl">
+            {product.isOnSale && (
+              <span className="me-3 text-base text-muted line-through">
+                {product.compareAtPrice} {tCommon('currency')}
+              </span>
+            )}
+            <span className="text-brand-terracotta">
+              {product.price} {tCommon('currency')}
+            </span>
           </p>
+          {product.isOnSale && product.saleEndsAt && (
+            <p className="mt-1 text-xs text-brand-terracotta">
+              {t('saleEndsAt', { date: new Date(product.saleEndsAt).toLocaleDateString(locale) })}
+            </p>
+          )}
 
           <p className={`mt-2 text-sm font-medium ${stockClass}`}>{stockLabel}</p>
 

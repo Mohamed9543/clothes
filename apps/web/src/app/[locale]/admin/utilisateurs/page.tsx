@@ -100,6 +100,7 @@ export default function AdminUsersPage() {
             <th className="p-3 text-start">{t('colRole')}</th>
             <th className="p-3 text-start">{t('colLanguage')}</th>
             <th className="p-3 text-start">{t('colRegistered')}</th>
+            <th className="p-3 text-start">{t('colLoyaltyPoints')}</th>
             <th className="p-3 text-start">{t('colStatus')}</th>
             <th className="p-3 text-start">{t('colActions')}</th>
           </tr>
@@ -115,6 +116,7 @@ export default function AdminUsersPage() {
                 <td className="p-3">{user.role === 'admin' ? t('roleAdmin') : t('roleCustomer')}</td>
                 <td className="p-3">{user.preferredLanguage}</td>
                 <td className="p-3">{new Date(user.createdAt).toLocaleDateString(locale)}</td>
+                <td className="p-3">{user.loyaltyPoints}</td>
                 <td className="p-3">
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs ${

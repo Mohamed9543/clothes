@@ -90,7 +90,9 @@
     "sizeGuideChest": "Chest",
     "wishlistToggle": "Add to wishlist",
     "wishlistAdd": "Add to wishlist",
-    "wishlistRemove": "Remove from wishlist"
+    "wishlistRemove": "Remove from wishlist",
+    "onSale": "Sale",
+    "saleEndsAt": "Offer ends on {date}"
   },
   "cart": {
     "title": "My cart",
@@ -159,7 +161,11 @@
     "promoCode": "Promo code",
     "applyCode": "Apply",
     "discount": "Discount",
-    "invalidCode": "Invalid promo code"
+    "invalidCode": "Invalid promo code",
+    "usePoints": "Use my points",
+    "pointsAvailable": "{points} points available",
+    "pointsDiscount": "loyalty points",
+    "bundleDiscountLabel": "bundle"
   },
   "account": {
     "title": "My account",
@@ -171,7 +177,9 @@
     "orderStatus": "Status",
     "noOrders": "You haven't placed any orders yet.",
     "trackOrder": "Track my order",
-    "hideTracking": "Hide tracking"
+    "hideTracking": "Hide tracking",
+    "loyaltyPoints": "{points} Libas Rewards points",
+    "loyaltyPointsValue": "Approximate value: {value} TND"
   },
   "auth": {
     "loginTitle": "Login",
@@ -446,7 +454,11 @@
     "minOrderAmount": "Minimum order amount",
     "expiresAt": "Expiry date",
     "confirmDeleteCoupon": "Permanently delete this coupon?",
-    "colReports": "Reports"
+    "colReports": "Reports",
+    "colLoyaltyPoints": "Loyalty points",
+    "fieldCompareAtPrice": "Compare-at price (sale)",
+    "fieldSaleEndsAt": "Sale end date (optional)",
+    "fieldBundleDiscount": "Bundle discount (%)"
   },
   "stats": {
     "title": "Statistics",
@@ -493,7 +505,9 @@
     "totalPrice": "Total price",
     "addToCart": "Add the whole outfit to cart",
     "someItemsUnavailable": "Some items were unavailable and were skipped.",
-    "itemsAdded": "Outfit added to cart!"
+    "itemsAdded": "Outfit added to cart!",
+    "bundlePrice": "Bundle price",
+    "bundleSavings": "save {percent}%"
   },
   "payments": {
     "mockConfirmTitle": "Payment simulation",

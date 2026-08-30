@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { Governorate, PaymentStatus } from '@libas/shared';
+import { DiscountSource, Governorate, PaymentStatus } from '@libas/shared';
 
 export type OrderDocument = HydratedDocument<Order>;
 export { PaymentStatus };
@@ -89,6 +89,17 @@ export class Order {
 
   @Prop({ required: true, min: 0, default: 0 })
   discountAmount: number;
+
+  @Prop({ type: String, default: null })
+  discountSource: DiscountSource | null;
+
+  @Prop({ required: true, min: 0, default: 0 })
+  loyaltyPointsRedeemed: number;
+
+  // Set once "Libas Rewards" points have been credited for this order (on
+  // delivery) — prevents double-crediting if the status flips back and forth.
+  @Prop({ default: false })
+  loyaltyPointsAwarded: boolean;
 
   @Prop({ type: String, enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;

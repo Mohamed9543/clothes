@@ -33,6 +33,7 @@ export interface SafeUser {
   heightCm: number | null;
   weightKg: number | null;
   gender: string | null;
+  loyaltyPoints: number;
 }
 
 function toSafeUser(user: UserDocument): SafeUser {
@@ -48,6 +49,7 @@ function toSafeUser(user: UserDocument): SafeUser {
     heightCm: user.heightCm,
     weightKg: user.weightKg,
     gender: user.gender,
+    loyaltyPoints: user.loyaltyPoints,
   };
 }
 

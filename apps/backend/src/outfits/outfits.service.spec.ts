@@ -50,3 +50,57 @@ describe('OutfitsService — findBySlug totalPrice', () => {
     expect(result.totalPrice).toBe(125);
   });
 });
+
+describe('OutfitsService — findApplicableBundle', () => {
+  let service: OutfitsService;
+  let outfitFindMock: jest.Mock;
+
+  beforeEach(async () => {
+    outfitFindMock = jest.fn();
+
+    const module = await Test.createTestingModule({
+      providers: [
+        OutfitsService,
+        {
+          provide: getModelToken(Outfit.name),
+          useValue: { find: (...args: unknown[]) => ({ exec: () => outfitFindMock(...args) }) },
+        },
+        { provide: getModelToken(Product.name), useValue: {} },
+      ],
+    }).compile();
+
+    service = module.get(OutfitsService);
+  });
+
+  it('returns the bundle when every one of its products is in the cart', async () => {
+    outfitFindMock.mockResolvedValue([
+      { slug: 'look-1', productIds: ['a', 'b'], bundleDiscountPercent: 15 },
+    ]);
+
+    const result = await service.findApplicableBundle(['a', 'b', 'c']);
+
+    expect(result).toEqual({ outfitSlug: 'look-1', productIds: ['a', 'b'], percent: 15 });
+  });
+
+  it('returns null when even one bundle product is missing from the cart', async () => {
+    outfitFindMock.mockResolvedValue([
+      { slug: 'look-1', productIds: ['a', 'b'], bundleDiscountPercent: 15 },
+    ]);
+
+    const result = await service.findApplicableBundle(['a']);
+
+    expect(result).toBeNull();
+  });
+
+  it('picks the highest discount when multiple bundles are fully in the cart', async () => {
+    outfitFindMock.mockResolvedValue([
+      { slug: 'look-low', productIds: ['a'], bundleDiscountPercent: 10 },
+      { slug: 'look-high', productIds: ['b'], bundleDiscountPercent: 25 },
+    ]);
+
+    const result = await service.findApplicableBundle(['a', 'b']);
+
+    expect(result?.outfitSlug).toBe('look-high');
+    expect(result?.percent).toBe(25);
+  });
+});

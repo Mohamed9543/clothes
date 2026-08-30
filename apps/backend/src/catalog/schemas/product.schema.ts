@@ -92,6 +92,16 @@ export class Product {
 
   @Prop({ type: String, default: null })
   modelUrl: string | null;
+
+  // A sale is active when compareAtPrice > price. Never stored as a boolean —
+  // always derived, so it can never drift out of sync with price changes.
+  @Prop({ type: Number, default: null })
+  compareAtPrice: number | null;
+
+  // Optional flash-sale end date; once passed, the sale is no longer
+  // considered active even if compareAtPrice is still set.
+  @Prop({ type: Date, default: null })
+  saleEndsAt: Date | null;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
@@ -107,4 +117,16 @@ ProductSchema.index({ 'variants.sku': 1 });
  */
 export function deriveProductColors(product: Pick<Product, 'variants'>): string[] {
   return [...new Set(product.variants.map((variant) => variant.color))];
+}
+
+export function isProductOnSale(
+  product: Pick<Product, 'price' | 'compareAtPrice' | 'saleEndsAt'>,
+): boolean {
+  if (product.compareAtPrice == null || product.compareAtPrice <= product.price) {
+    return false;
+  }
+  if (product.saleEndsAt && product.saleEndsAt.getTime() < Date.now()) {
+    return false;
+  }
+  return true;
 }

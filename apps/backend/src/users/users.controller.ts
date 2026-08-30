@@ -31,6 +31,7 @@ function toSelfUserView(user: UserDocument) {
     legLengthCm: user.legLengthCm,
     usualSize: user.usualSize,
     fitPreference: user.fitPreference,
+    loyaltyPoints: user.loyaltyPoints,
   };
 }
 
@@ -47,6 +48,7 @@ function toAdminUserView(user: UserDocument) {
     heightCm: user.heightCm,
     weightKg: user.weightKg,
     gender: user.gender,
+    loyaltyPoints: user.loyaltyPoints,
     createdAt: user.createdAt,
   };
 }

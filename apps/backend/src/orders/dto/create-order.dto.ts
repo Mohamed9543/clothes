@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min, MinLength, ValidateNested } from 'class-validator';
 import { Governorate } from '@libas/shared';
 import { PaymentMethod } from '../schemas/order.schema';
 
@@ -40,4 +40,9 @@ export class CreateOrderDto {
   @IsOptional()
   @IsString()
   couponCode?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  usePoints?: number;
 }

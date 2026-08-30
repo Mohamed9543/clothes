@@ -1,10 +1,14 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
+import { LOYALTY_POINTS_PER_TND_SPENT, LOYALTY_TND_PER_POINT_REDEEMED } from '@libas/shared';
+import type { DiscountSource } from '@libas/shared';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
+import { OutfitsService } from '../outfits/outfits.service';
 import { PaymentsService } from '../payments/payments.service';
 import { PromotionsService } from '../promotions/promotions.service';
+import { User, UserDocument } from '../users/schemas/user.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { QuoteOrderDto } from './dto/quote-order.dto';
 import { ShippingFeeService } from './shipping-fee.service';
@@ -18,7 +22,13 @@ export interface OrderQuote {
   itemsSubtotal: number;
   shippingFee: number;
   discountAmount: number;
+  discountSource: DiscountSource | null;
   total: number;
+}
+
+interface DiscountResult {
+  discountAmount: number;
+  discountSource: DiscountSource | null;
 }
 
 export interface CreateOrderResult {
@@ -37,24 +47,70 @@ export class OrdersService {
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     @InjectModel(OrderStatusHistory.name)
     private readonly statusHistoryModel: Model<OrderStatusHistoryDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectConnection() private readonly connection: Connection,
     private readonly cartService: CartService,
     private readonly productsService: ProductsService,
+    private readonly outfitsService: OutfitsService,
     private readonly shippingFeeService: ShippingFeeService,
     private readonly paymentsService: PaymentsService,
     private readonly promotionsService: PromotionsService,
   ) {}
 
+  /**
+   * Single source of discount per order, priority coupon > points > bundle —
+   * never stacked, so the math stays simple to audit and test. Each branch
+   * only ever discounts against real, currently-held data (a valid coupon, a
+   * points balance the user actually has, or a bundle whose products are
+   * genuinely all in the cart) — never an invented promotion.
+   */
+  private async computeDiscount(
+    userId: string,
+    items: { productId: string; subtotal: number }[],
+    subtotal: number,
+    couponCode?: string,
+    usePoints?: number,
+  ): Promise<DiscountResult> {
+    if (couponCode) {
+      const result = await this.promotionsService.validateCoupon(couponCode, subtotal);
+      return { discountAmount: result.discountAmount, discountSource: 'coupon' };
+    }
+
+    if (usePoints) {
+      const user = await this.userModel.findById(userId).exec();
+      if (!user || user.loyaltyPoints < usePoints) {
+        throw new BadRequestException('Not enough loyalty points');
+      }
+      const discountAmount = Math.min(usePoints * LOYALTY_TND_PER_POINT_REDEEMED, subtotal);
+      return { discountAmount, discountSource: 'points' };
+    }
+
+    const bundle = await this.outfitsService.findApplicableBundle(items.map((i) => i.productId));
+    if (bundle) {
+      const bundleSubtotal = items
+        .filter((item) => bundle.productIds.includes(item.productId))
+        .reduce((sum, item) => sum + item.subtotal, 0);
+      return { discountAmount: bundleSubtotal * (bundle.percent / 100), discountSource: 'bundle' };
+    }
+
+    return { discountAmount: 0, discountSource: null };
+  }
+
   async quote(userId: string, dto: QuoteOrderDto): Promise<OrderQuote> {
     const cart = await this.cartService.getEnrichedCart(userId);
     const shippingFee = this.shippingFeeService.computeShippingFee(dto.governorate);
-    const discountAmount = dto.couponCode
-      ? (await this.promotionsService.validateCoupon(dto.couponCode, cart.total)).discountAmount
-      : 0;
+    const { discountAmount, discountSource } = await this.computeDiscount(
+      userId,
+      cart.items.map((item) => ({ productId: item.productId, subtotal: item.subtotal })),
+      cart.total,
+      dto.couponCode,
+      dto.usePoints,
+    );
     return {
       itemsSubtotal: cart.total,
       shippingFee,
       discountAmount,
+      discountSource,
       total: cart.total - discountAmount + shippingFee,
     };
   }
@@ -111,11 +167,16 @@ export class OrdersService {
           dto.shippingAddress.governorate,
         );
 
-        let discountAmount = 0;
-        if (dto.couponCode) {
-          const result = await this.promotionsService.validateCoupon(dto.couponCode, totalAmount);
-          discountAmount = result.discountAmount;
-        }
+        const { discountAmount, discountSource } = await this.computeDiscount(
+          userId,
+          orderItems.map((item) => ({
+            productId: item.productId.toString(),
+            subtotal: item.unitPrice * item.quantity,
+          })),
+          totalAmount,
+          dto.couponCode,
+          dto.usePoints,
+        );
 
         totalAmount = totalAmount - discountAmount + shippingFee;
 
@@ -128,6 +189,8 @@ export class OrdersService {
               shippingFee,
               couponCode: dto.couponCode ? dto.couponCode.trim().toUpperCase() : null,
               discountAmount,
+              discountSource,
+              loyaltyPointsRedeemed: discountSource === 'points' ? (dto.usePoints ?? 0) : 0,
               shippingAddress: dto.shippingAddress,
               paymentMethod,
               status: initialStatus,
@@ -158,6 +221,15 @@ export class OrdersService {
       await this.cartService.clear(userId);
 
       const finalOrder = order as OrderDocument;
+      if (finalOrder.discountSource === 'points' && finalOrder.loyaltyPointsRedeemed > 0) {
+        await this.userModel
+          .updateOne(
+            { _id: userId, loyaltyPoints: { $gte: finalOrder.loyaltyPointsRedeemed } },
+            { $inc: { loyaltyPoints: -finalOrder.loyaltyPointsRedeemed } },
+          )
+          .exec();
+      }
+
       if (paymentMethod === PaymentMethod.COD) {
         return { order: finalOrder };
       }
@@ -209,6 +281,18 @@ export class OrdersService {
       toStatus: status,
       changedBy: adminUserId,
     });
+
+    // Points are earned on genuine delivery, not on payment — an order can
+    // still be cancelled/returned before that point. Guarded so re-saving
+    // (or a status flip back and forth) never double-credits.
+    if (status === OrderStatus.DELIVERED && !order.loyaltyPointsAwarded) {
+      const points = Math.floor(order.totalAmount * LOYALTY_POINTS_PER_TND_SPENT);
+      if (points > 0) {
+        await this.userModel.updateOne({ _id: order.userId }, { $inc: { loyaltyPoints: points } }).exec();
+      }
+      order.loyaltyPointsAwarded = true;
+      await order.save();
+    }
 
     return order;
   }

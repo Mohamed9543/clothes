@@ -90,7 +90,9 @@
     "sizeGuideChest": "Tour de poitrine",
     "wishlistToggle": "Ajouter à la liste de souhaits",
     "wishlistAdd": "Ajouter à ma liste",
-    "wishlistRemove": "Retirer de ma liste"
+    "wishlistRemove": "Retirer de ma liste",
+    "onSale": "Solde",
+    "saleEndsAt": "Fin de l'offre le {date}"
   },
   "cart": {
     "title": "Mon panier",
@@ -159,7 +161,11 @@
     "promoCode": "Code promo",
     "applyCode": "Appliquer",
     "discount": "Réduction",
-    "invalidCode": "Code promo invalide"
+    "invalidCode": "Code promo invalide",
+    "usePoints": "Utiliser mes points",
+    "pointsAvailable": "{points} points disponibles",
+    "pointsDiscount": "points de fidélité",
+    "bundleDiscountLabel": "pack"
   },
   "account": {
     "title": "Mon compte",
@@ -171,7 +177,9 @@
     "orderStatus": "Statut",
     "noOrders": "Vous n'avez pas encore passé de commande.",
     "trackOrder": "Suivre ma commande",
-    "hideTracking": "Masquer le suivi"
+    "hideTracking": "Masquer le suivi",
+    "loyaltyPoints": "{points} points Libas Rewards",
+    "loyaltyPointsValue": "Valeur approximative : {value} TND"
   },
   "auth": {
     "loginTitle": "Connexion",
@@ -446,7 +454,11 @@
     "minOrderAmount": "Montant minimum de commande",
     "expiresAt": "Date d'expiration",
     "confirmDeleteCoupon": "Supprimer ce code promo définitivement ?",
-    "colReports": "Signalements"
+    "colReports": "Signalements",
+    "colLoyaltyPoints": "Points fidélité",
+    "fieldCompareAtPrice": "Prix barré (solde)",
+    "fieldSaleEndsAt": "Fin du solde (optionnel)",
+    "fieldBundleDiscount": "Remise pack (%)"
   },
   "stats": {
     "title": "Statistiques",
@@ -493,7 +505,9 @@
     "totalPrice": "Prix total",
     "addToCart": "Ajouter toute la tenue au panier",
     "someItemsUnavailable": "Certains articles étaient indisponibles et ont été ignorés.",
-    "itemsAdded": "Tenue ajoutée au panier !"
+    "itemsAdded": "Tenue ajoutée au panier !",
+    "bundlePrice": "Prix pack",
+    "bundleSavings": "économisez {percent}%"
   },
   "payments": {
     "mockConfirmTitle": "Simulation de paiement",
