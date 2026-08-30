@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import { AddOutfitToCartButton } from '@/components/add-outfit-to-cart-button';
 import { ProductCard } from '@/components/product-card';
 import { serverApiFetch } from '@/lib/server-api';
 import { localize } from '@/lib/localized';
@@ -19,6 +20,7 @@ export default async function OutfitPage({
   }
 
   const t = await getTranslations('outfit');
+  const tCommon = await getTranslations('common');
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -35,6 +37,13 @@ export default async function OutfitPage({
 
       <h1 className="mt-6 text-2xl font-semibold">{localize(outfit.title, locale)}</h1>
       <p className="mt-2 text-muted">{localize(outfit.description, locale)}</p>
+
+      <div className="mt-4 flex flex-wrap items-center gap-4">
+        <p className="text-xl font-semibold text-brand-terracotta">
+          {t('totalPrice')}: {outfit.totalPrice} {tCommon('currency')}
+        </p>
+        <AddOutfitToCartButton productIds={outfit.productIds} />
+      </div>
 
       <div className="mt-8">
         <h2 className="mb-4 text-lg font-semibold">{t('includedProducts')}</h2>

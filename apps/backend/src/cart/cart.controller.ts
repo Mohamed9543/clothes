@@ -4,6 +4,7 @@ import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { CartService } from './cart.service';
 import { AddCartItemDto } from './dto/add-cart-item.dto';
+import { BulkAddCartItemsDto } from './dto/bulk-add-cart-items.dto';
 import { MoveCartItemDto } from './dto/move-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
@@ -20,6 +21,11 @@ export class CartController {
   @Post('items')
   addItem(@CurrentUser() user: JwtAccessPayload, @Body() dto: AddCartItemDto) {
     return this.cartService.addItem(user.sub, dto.productId, dto.quantity, dto.size, dto.color);
+  }
+
+  @Post('bulk-add')
+  bulkAdd(@CurrentUser() user: JwtAccessPayload, @Body() dto: BulkAddCartItemsDto) {
+    return this.cartService.addManyFirstAvailable(user.sub, dto.productIds);
   }
 
   @Patch('items/:productId')

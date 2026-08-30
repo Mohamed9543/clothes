@@ -170,6 +170,12 @@ export interface Outfit {
 
 export interface OutfitWithProducts extends Outfit {
   products: Product[];
+  totalPrice: number;
+}
+
+export interface BulkAddResult {
+  cart: Cart;
+  skippedProductIds: string[];
 }
 
 export interface DashboardStats {
@@ -332,6 +338,12 @@ export interface ChatToolProduct {
 
 export type ChatMessageRole = 'user' | 'assistant';
 
+export interface ChatComposedOutfit {
+  items: ChatToolProduct[];
+  totalPrice: number;
+  allInStock: boolean;
+}
+
 export interface ChatMessage {
   role: ChatMessageRole;
   content: string;
@@ -356,4 +368,5 @@ export interface ConversationSummary {
 export interface ChatReply {
   message: string;
   products: ChatToolProduct[];
+  outfit?: ChatComposedOutfit;
 }

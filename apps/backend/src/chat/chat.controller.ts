@@ -51,14 +51,19 @@ export class ChatController {
 
     const reply = await this.geminiService.chat(history);
 
+    const recommendedOutfit = reply.outfit
+      ? { productIds: reply.outfit.items.map((item) => item.id), totalPrice: reply.outfit.totalPrice }
+      : null;
+
     await this.conversationsService.appendMessages(id, [
       {
         role: ChatRole.ASSISTANT,
         content: reply.content,
         recommendedProductIds: reply.products.map((product) => product.id),
+        recommendedOutfit,
       },
     ]);
 
-    return { message: reply.content, products: reply.products };
+    return { message: reply.content, products: reply.products, outfit: reply.outfit };
   }
 }

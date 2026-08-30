@@ -8,6 +8,14 @@ export enum ChatRole {
   ASSISTANT = 'assistant',
 }
 
+export class RecommendedOutfit {
+  @Prop({ type: [String], required: true })
+  productIds: string[];
+
+  @Prop({ required: true, min: 0 })
+  totalPrice: number;
+}
+
 @Schema({ _id: false })
 export class ChatMessage {
   @Prop({ type: String, enum: ChatRole, required: true })
@@ -21,6 +29,9 @@ export class ChatMessage {
 
   @Prop({ type: [String], default: [] })
   recommendedProductIds: string[];
+
+  @Prop({ type: RecommendedOutfit, default: null })
+  recommendedOutfit: RecommendedOutfit | null;
 }
 
 export const ChatMessageSchema = SchemaFactory.createForClass(ChatMessage);

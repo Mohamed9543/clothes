@@ -21,7 +21,13 @@ Règles de langue (très important) :
 Rôle :
 - Tu aides les clients à trouver des vêtements dans le catalogue StyleForm, à composer des tenues complètes (outfits) selon une occasion (mariage, soutenance, entretien, sport, quotidien...) et un budget, et à trouver la pièce qui se marie le mieux avec un vêtement donné.
 - Utilise TOUJOURS les outils fournis pour chercher dans le vrai catalogue plutôt que d'inventer des produits. N'invente jamais de prix, de nom de produit ou de disponibilité.
-- Pour composer une tenue complète, appelle l'outil de recherche plusieurs fois (une fois par type de vêtement pertinent : pull/chemise, pantalon, chaussure, veste...) en répartissant le budget indiqué entre les pièces.
+
+Flux "Style Me" (composer une tenue complète) :
+- Quand l'utilisateur demande une tenue/un look pour une occasion, un budget et/ou un style (ex : "Nheb haja behya lel mariage" = je veux quelque chose de beau pour un mariage, "3andi 200 dinar w nheb tenue élégante" = j'ai 200 dinars et je veux une tenue élégante, "Je veux une tenue streetwear noire"), appelle l'outil search_products une fois par type de vêtement pertinent (pull/chemise, pantalon, chaussure, veste, accessoire...) en répartissant le budget indiqué entre les pièces.
+- Une fois les pièces choisies, appelle OBLIGATOIREMENT l'outil compose_outfit avec leurs identifiants (id) pour obtenir le prix total exact et la disponibilité réelle — ne calcule jamais le total toi-même.
+- Si compose_outfit indique que allInStock est faux, signale-le clairement à l'utilisateur plutôt que de recommander silencieusement une pièce indisponible.
+- Termine par une phrase expliquant le choix (occasion, style, pourquoi ces pièces vont ensemble) — sois concis.
+- Si l'utilisateur demande une taille/couleur précise pour un produit, utilise l'outil check_stock avant de confirmer la disponibilité — ne suppose jamais qu'une taille/couleur est en stock.
 - Sois concis, professionnel et chaleureux. Mentionne le prix en TND (dinars tunisiens).
 - Si aucun produit ne correspond, dis-le clairement plutôt que d'inventer.`;
 
@@ -72,6 +78,36 @@ const TOOLS: Tool[] = [
           required: ['productId', 'type'],
         },
       },
+      {
+        name: 'check_stock',
+        description:
+          "Vérifie la disponibilité réelle d'une taille et couleur précises pour un produit avant de la recommander ou de confirmer sa disponibilité à l'utilisateur.",
+        parametersJsonSchema: {
+          type: 'object',
+          properties: {
+            productId: { type: 'string', description: "L'identifiant (_id) du produit" },
+            size: { type: 'string', description: 'La taille demandée' },
+            color: { type: 'string', description: 'La couleur demandée' },
+          },
+          required: ['productId', 'size', 'color'],
+        },
+      },
+      {
+        name: 'compose_outfit',
+        description:
+          "Assemble une tenue complète à partir d'une liste de produits déjà trouvés via search_products, et calcule son prix total réel ainsi que sa disponibilité. À appeler OBLIGATOIREMENT après avoir choisi les pièces d'une tenue — ne calcule jamais le total toi-même.",
+        parametersJsonSchema: {
+          type: 'object',
+          properties: {
+            productIds: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Les identifiants (_id) des produits qui composent la tenue',
+            },
+          },
+          required: ['productIds'],
+        },
+      },
     ],
   },
 ];
@@ -86,9 +122,16 @@ export interface ChatToolProduct {
   image: string | null;
 }
 
+export interface ChatComposedOutfit {
+  items: ChatToolProduct[];
+  totalPrice: number;
+  allInStock: boolean;
+}
+
 export interface ChatReply {
   content: string;
   products: ChatToolProduct[];
+  outfit?: ChatComposedOutfit;
 }
 
 @Injectable()
@@ -129,6 +172,7 @@ export class GeminiService {
   private async runTool(name: string, input: Record<string, unknown>): Promise<{
     result: unknown;
     products: ChatToolProduct[];
+    outfit?: ChatComposedOutfit;
   }> {
     if (name === 'search_products') {
       const { items } = await this.productsService.findAll({
@@ -176,6 +220,33 @@ export class GeminiService {
       return { result: products, products };
     }
 
+    if (name === 'check_stock') {
+      const product = await this.productsService.findById(input.productId as string);
+      if (!product) {
+        return { result: { error: 'Product not found' }, products: [] };
+      }
+      const stock = this.productsService.getVariantStock(
+        product,
+        input.size as string,
+        input.color as string,
+      );
+      return { result: { inStock: stock > 0, stock }, products: [] };
+    }
+
+    if (name === 'compose_outfit') {
+      const ids = (input.productIds as string[] | undefined) ?? [];
+      const found = (
+        await Promise.all(ids.map((id) => this.productsService.findById(id)))
+      ).filter((product): product is NonNullable<typeof product> => Boolean(product) && product!.isActive);
+
+      const items = found.map((product) => this.toToolProduct(product));
+      const totalPrice = found.reduce((sum, product) => sum + product.price, 0);
+      const allInStock = found.every((product) => product.variants.some((v) => v.stock > 0));
+      const outfit: ChatComposedOutfit = { items, totalPrice, allInStock };
+
+      return { result: outfit, products: items, outfit };
+    }
+
     return { result: { error: `Unknown tool: ${name}` }, products: [] };
   }
 
@@ -193,6 +264,7 @@ export class GeminiService {
 
     const collectedProducts: ChatToolProduct[] = [];
     const seenProductIds = new Set<string>();
+    let composedOutfit: ChatComposedOutfit | undefined;
 
     for (let iteration = 0; iteration < 4; iteration += 1) {
       let response;
@@ -214,7 +286,7 @@ export class GeminiService {
       const functionCalls = response.functionCalls;
 
       if (!functionCalls || functionCalls.length === 0) {
-        return { content: (response.text ?? '').trim(), products: collectedProducts };
+        return { content: (response.text ?? '').trim(), products: collectedProducts, outfit: composedOutfit };
       }
 
       const modelContent = response.candidates?.[0]?.content;
@@ -226,12 +298,15 @@ export class GeminiService {
       for (const call of functionCalls) {
         const toolName = call.name ?? '';
         try {
-          const { result, products } = await this.runTool(toolName, call.args ?? {});
+          const { result, products, outfit } = await this.runTool(toolName, call.args ?? {});
           for (const product of products) {
             if (!seenProductIds.has(product.id)) {
               seenProductIds.add(product.id);
               collectedProducts.push(product);
             }
+          }
+          if (outfit) {
+            composedOutfit = outfit;
           }
           responseParts.push(
             createPartFromFunctionResponse(call.id ?? toolName, toolName, {
@@ -254,6 +329,7 @@ export class GeminiService {
     return {
       content: "Désolé, je n'ai pas pu terminer cette recherche. Peux-tu reformuler ta demande ?",
       products: collectedProducts,
+      outfit: composedOutfit,
     };
   }
 }

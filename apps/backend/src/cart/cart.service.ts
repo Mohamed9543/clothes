@@ -176,6 +176,31 @@ export class CartService {
     return this.getEnrichedCart(userId);
   }
 
+  async addManyFirstAvailable(
+    userId: string,
+    productIds: string[],
+  ): Promise<{ cart: EnrichedCart; skippedProductIds: string[] }> {
+    const skippedProductIds: string[] = [];
+
+    for (const productId of productIds) {
+      const product = await this.productsService.findById(productId);
+      const variant = product?.variants.find((v) => v.stock > 0);
+      if (!product || !product.isActive || !variant) {
+        skippedProductIds.push(productId);
+        continue;
+      }
+      try {
+        await this.addItem(userId, productId, 1, variant.size, variant.color);
+      } catch {
+        // Stock moved between the check above and addItem (rare race) —
+        // skip this item rather than failing the whole bulk add.
+        skippedProductIds.push(productId);
+      }
+    }
+
+    return { cart: await this.getEnrichedCart(userId), skippedProductIds };
+  }
+
   async clear(userId: string): Promise<void> {
     const cart = await this.getOrCreate(userId);
     cart.items = [] as typeof cart.items;

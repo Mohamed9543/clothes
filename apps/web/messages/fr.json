@@ -263,7 +263,10 @@
     "loginRequired": "Connectez-vous pour discuter avec l'assistant.",
     "login": "Se connecter",
     "greeting": "Bonjour ! Je peux vous aider à trouver une tenue, comparer des produits ou répondre à vos questions sur le catalogue.",
-    "error": "Une erreur est survenue, réessayez."
+    "error": "Une erreur est survenue, réessayez.",
+    "outfitTitle": "Tenue proposée",
+    "outfitTotal": "Prix total : {total} TND",
+    "outfitSomeUnavailable": "Certaines pièces peuvent être indisponibles."
   },
   "admin": {
     "title": "Administration",
@@ -475,7 +478,11 @@
     "uploading": "Envoi en cours..."
   },
   "outfit": {
-    "includedProducts": "Produits inclus dans cette tenue"
+    "includedProducts": "Produits inclus dans cette tenue",
+    "totalPrice": "Prix total",
+    "addToCart": "Ajouter toute la tenue au panier",
+    "someItemsUnavailable": "Certains articles étaient indisponibles et ont été ignorés.",
+    "itemsAdded": "Tenue ajoutée au panier !"
   },
   "payments": {
     "mockConfirmTitle": "Simulation de paiement",

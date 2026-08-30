@@ -34,13 +34,19 @@ export class ConversationsService {
 
   async appendMessages(
     conversationId: string,
-    messages: Array<{ role: ChatRole; content: string; recommendedProductIds?: string[] }>,
+    messages: Array<{
+      role: ChatRole;
+      content: string;
+      recommendedProductIds?: string[];
+      recommendedOutfit?: { productIds: string[]; totalPrice: number } | null;
+    }>,
   ): Promise<void> {
     const entries: ChatMessage[] = messages.map((m) => ({
       role: m.role,
       content: m.content,
       createdAt: new Date(),
       recommendedProductIds: m.recommendedProductIds ?? [],
+      recommendedOutfit: m.recommendedOutfit ?? null,
     }));
 
     const conversation = await this.conversationModel.findById(conversationId).exec();

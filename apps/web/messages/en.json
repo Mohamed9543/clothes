@@ -263,7 +263,10 @@
     "loginRequired": "Log in to chat with the assistant.",
     "login": "Log in",
     "greeting": "Hi! I can help you find an outfit, compare products, or answer questions about the catalog.",
-    "error": "Something went wrong, please try again."
+    "error": "Something went wrong, please try again.",
+    "outfitTitle": "Suggested outfit",
+    "outfitTotal": "Total price: {total} TND",
+    "outfitSomeUnavailable": "Some pieces may be unavailable."
   },
   "admin": {
     "title": "Administration",
@@ -475,7 +478,11 @@
     "uploading": "Uploading..."
   },
   "outfit": {
-    "includedProducts": "Products included in this outfit"
+    "includedProducts": "Products included in this outfit",
+    "totalPrice": "Total price",
+    "addToCart": "Add the whole outfit to cart",
+    "someItemsUnavailable": "Some items were unavailable and were skipped.",
+    "itemsAdded": "Outfit added to cart!"
   },
   "payments": {
     "mockConfirmTitle": "Payment simulation",

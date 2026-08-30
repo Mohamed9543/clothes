@@ -104,3 +104,70 @@ describe('CartService — saveForLater / moveToCart', () => {
     expect(cart.save).not.toHaveBeenCalled();
   });
 });
+
+describe('CartService — addManyFirstAvailable', () => {
+  let service: CartService;
+  let findOneMock: jest.Mock;
+  let getVariantStockMock: jest.Mock;
+  let findByIdMock: jest.Mock;
+
+  const inStockId = new Types.ObjectId().toString();
+  const outOfStockId = new Types.ObjectId().toString();
+  const missingId = new Types.ObjectId().toString();
+
+  function makeCart() {
+    return { userId: 'user1', items: [], savedForLater: [], save: jest.fn().mockResolvedValue(undefined) };
+  }
+
+  beforeEach(async () => {
+    findOneMock = jest.fn();
+    getVariantStockMock = jest.fn(
+      (product: { variants: { size: string; color: string; stock: number }[] }, size: string, color: string) => {
+        const variant = product.variants.find((v) => v.size === size && v.color === color);
+        return variant?.stock ?? 0;
+      },
+    );
+    findByIdMock = jest.fn((id: string) => {
+      if (id === inStockId) {
+        return Promise.resolve({
+          _id: inStockId,
+          slug: 'p',
+          name: { fr: 'x', en: 'x', ar: 'x', tn: 'x' },
+          images: [],
+          price: 10,
+          isActive: true,
+          variants: [{ size: 'M', color: 'Rouge', stock: 5, priceOverride: null }],
+        });
+      }
+      if (id === outOfStockId) {
+        return Promise.resolve({
+          _id: outOfStockId,
+          isActive: true,
+          variants: [{ size: 'M', color: 'Rouge', stock: 0, priceOverride: null }],
+        });
+      }
+      return Promise.resolve(null);
+    });
+
+    const module = await Test.createTestingModule({
+      providers: [
+        CartService,
+        {
+          provide: getModelToken(Cart.name),
+          useValue: { findOne: (...args: unknown[]) => ({ exec: () => findOneMock(...args) }) },
+        },
+        { provide: ProductsService, useValue: { findById: findByIdMock, getVariantStock: getVariantStockMock } },
+      ],
+    }).compile();
+
+    service = module.get(CartService);
+    findOneMock.mockResolvedValue(makeCart());
+  });
+
+  it('adds available products and skips out-of-stock or missing ones without failing', async () => {
+    const result = await service.addManyFirstAvailable('user1', [inStockId, outOfStockId, missingId]);
+
+    expect(result.skippedProductIds).toEqual(expect.arrayContaining([outOfStockId, missingId]));
+    expect(result.skippedProductIds).not.toContain(inStockId);
+  });
+});

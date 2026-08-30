@@ -17,6 +17,7 @@ export interface OutfitWithProducts {
   isFeatured: boolean;
   createdAt: Date;
   products: Product[];
+  totalPrice: number;
 }
 
 @Injectable()
@@ -51,8 +52,9 @@ export class OutfitsService {
     const orderedProducts = outfit.productIds
       .map((id) => productMap.get(id))
       .filter((product): product is Product => Boolean(product));
+    const totalPrice = orderedProducts.reduce((sum, product) => sum + product.price, 0);
 
-    return { ...outfit.toObject(), products: orderedProducts };
+    return { ...outfit.toObject(), products: orderedProducts, totalPrice };
   }
 
   async findById(id: string): Promise<OutfitDocument> {

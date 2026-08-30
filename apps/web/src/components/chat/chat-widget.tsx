@@ -5,9 +5,10 @@ import { MessageCircle, Send, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
+import { AddOutfitToCartButton } from '@/components/add-outfit-to-cart-button';
 import { apiFetch } from '@/lib/api';
 import { ChatProductCard } from './chat-product-card';
-import type { ChatReply, ChatToolProduct, Conversation } from '@/types';
+import type { ChatComposedOutfit, ChatReply, ChatToolProduct, Conversation } from '@/types';
 
 const CONVERSATION_ID_KEY = 'libas_conversation_id';
 
@@ -15,6 +16,7 @@ interface DisplayMessage {
   role: 'user' | 'assistant';
   content: string;
   products?: ChatToolProduct[];
+  outfit?: ChatComposedOutfit;
 }
 
 export function ChatWidget() {
@@ -89,7 +91,7 @@ export function ChatWidget() {
       });
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: reply.message, products: reply.products },
+        { role: 'assistant', content: reply.message, products: reply.products, outfit: reply.outfit },
       ]);
     } catch {
       setError(t('error'));
@@ -134,11 +136,33 @@ export function ChatWidget() {
                 >
                   {message.content}
                 </p>
-                {message.products && message.products.length > 0 && (
+                {!message.outfit && message.products && message.products.length > 0 && (
                   <div className="mt-2 flex gap-2 overflow-x-auto">
                     {message.products.map((product) => (
                       <ChatProductCard key={product.id} product={product} />
                     ))}
+                  </div>
+                )}
+
+                {message.outfit && (
+                  <div className="mt-2 rounded-lg border border-brand-gold/40 bg-background p-3 text-start">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-brand-terracotta">
+                      {t('outfitTitle')}
+                    </p>
+                    <div className="mt-2 flex gap-2 overflow-x-auto">
+                      {message.outfit.items.map((product) => (
+                        <ChatProductCard key={product.id} product={product} />
+                      ))}
+                    </div>
+                    <p className="mt-2 text-sm font-medium">
+                      {t('outfitTotal', { total: message.outfit.totalPrice })}
+                    </p>
+                    {!message.outfit.allInStock && (
+                      <p className="mt-1 text-xs text-brand-terracotta">{t('outfitSomeUnavailable')}</p>
+                    )}
+                    <div className="mt-2">
+                      <AddOutfitToCartButton productIds={message.outfit.items.map((item) => item.id)} />
+                    </div>
                   </div>
                 )}
               </div>
