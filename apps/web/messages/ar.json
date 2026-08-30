@@ -519,5 +519,11 @@
     "confidenceMedium": "ثقة متوسطة",
     "loading": "جارٍ حساب التوصية...",
     "fillProfile": "أكمل ملفي الشخصي"
+  },
+  "fittingRoom": {
+    "title": "غرفة القياس",
+    "empty": "لم تختر أي قطعة بعد.",
+    "remove": "إزالة",
+    "close": "إغلاق"
   }
 }

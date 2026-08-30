@@ -10,7 +10,9 @@ import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/context/auth-context';
 import { CartProvider } from '@/context/cart-context';
 import { WishlistProvider } from '@/context/wishlist-context';
+import { FittingRoomProvider } from '@/context/fitting-room-context';
 import { ChatWidget } from '@/components/chat/chat-widget';
+import { FittingRoomModal } from '@/components/avatar/fitting-room-modal';
 import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
@@ -89,10 +91,13 @@ export default async function LocaleLayout({
           <AuthProvider>
             <CartProvider>
               <WishlistProvider>
-                <Navbar />
-                <main className="flex-1">{children}</main>
-                <Footer />
-                <ChatWidget />
+                <FittingRoomProvider>
+                  <Navbar />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                  <ChatWidget />
+                  <FittingRoomModal />
+                </FittingRoomProvider>
               </WishlistProvider>
             </CartProvider>
           </AuthProvider>

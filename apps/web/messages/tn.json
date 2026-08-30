@@ -519,5 +519,11 @@
     "confidenceMedium": "ثقة متوسطة",
     "loading": "قاعد يحسب التوصية...",
     "fillProfile": "كمّل بروفايلي"
+  },
+  "fittingRoom": {
+    "title": "كابينة القياس",
+    "empty": "ما اخترتش حتى حاجة توا.",
+    "remove": "نحّي",
+    "close": "سكّر"
   }
 }

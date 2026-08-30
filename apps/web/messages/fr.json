@@ -519,5 +519,11 @@
     "confidenceMedium": "confiance moyenne",
     "loading": "Calcul de la recommandation...",
     "fillProfile": "Compléter mon profil"
+  },
+  "fittingRoom": {
+    "title": "Cabine d'essayage",
+    "empty": "Aucune pièce sélectionnée pour le moment.",
+    "remove": "Retirer",
+    "close": "Fermer"
   }
 }

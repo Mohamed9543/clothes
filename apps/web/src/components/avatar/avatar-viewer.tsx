@@ -15,9 +15,16 @@ function AvatarModel({ url }: { url: string }) {
   return <primitive object={scene} />;
 }
 
+export interface AvatarOverlay {
+  id: string;
+  type: ProductType;
+  colorHex: string;
+  modelUrl?: string | null;
+}
+
 interface AvatarViewerProps {
   avatarUrl: string;
-  overlay?: { type: ProductType; colorHex: string; modelUrl?: string | null };
+  overlays?: AvatarOverlay[];
   heightCm?: number | null;
   weightKg?: number | null;
   className?: string;
@@ -25,7 +32,7 @@ interface AvatarViewerProps {
 
 export function AvatarViewer({
   avatarUrl,
-  overlay,
+  overlays,
   heightCm,
   weightKg,
   className,
@@ -48,12 +55,13 @@ export function AvatarViewer({
           <Suspense fallback={null}>
             <group scale={computeAvatarScale(heightCm, weightKg)}>
               <AvatarModel url={avatarUrl} />
-              {overlay &&
-                (overlay.modelUrl ? (
-                  <GarmentModel url={overlay.modelUrl} />
+              {overlays?.map((overlay) =>
+                overlay.modelUrl ? (
+                  <GarmentModel key={overlay.id} url={overlay.modelUrl} />
                 ) : (
-                  <ClothingOverlay type={overlay.type} colorHex={overlay.colorHex} />
-                ))}
+                  <ClothingOverlay key={overlay.id} type={overlay.type} colorHex={overlay.colorHex} />
+                ),
+              )}
             </group>
             <Environment preset="city" />
           </Suspense>

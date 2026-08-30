@@ -519,5 +519,11 @@
     "confidenceMedium": "medium confidence",
     "loading": "Computing recommendation...",
     "fillProfile": "Complete my profile"
+  },
+  "fittingRoom": {
+    "title": "Fitting room",
+    "empty": "No item selected yet.",
+    "remove": "Remove",
+    "close": "Close"
   }
 }
