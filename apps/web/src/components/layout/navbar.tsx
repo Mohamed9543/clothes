@@ -8,6 +8,7 @@ import { useWishlist } from '@/context/wishlist-context';
 import { Link } from '@/i18n/navigation';
 import { AccountMenu } from './account-menu';
 import { LocaleSwitcher } from './locale-switcher';
+import { NotificationBell } from './notification-bell';
 import { SearchBar } from './search-bar';
 import { ThemeToggle } from './theme-toggle';
 
@@ -83,6 +84,7 @@ export function Navbar() {
             </Link>
           )}
 
+          <NotificationBell />
           <AccountMenu />
         </div>
       </div>

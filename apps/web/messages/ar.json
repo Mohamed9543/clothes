@@ -458,7 +458,9 @@
     "colLoyaltyPoints": "نقاط الولاء",
     "fieldCompareAtPrice": "السعر قبل التخفيض",
     "fieldSaleEndsAt": "تاريخ انتهاء التخفيض (اختياري)",
-    "fieldBundleDiscount": "نسبة خصم الحزمة (%)"
+    "fieldBundleDiscount": "نسبة خصم الحزمة (%)",
+    "tabReturns": "الإرجاعات",
+    "colOrder": "الطلب"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -539,5 +541,31 @@
     "empty": "لم تختر أي قطعة بعد.",
     "remove": "إزالة",
     "close": "إغلاق"
+  },
+  "returns": {
+    "title": "طلبات الإرجاع والاستبدال",
+    "empty": "لا يوجد أي طلب إرجاع أو استبدال حتى الآن.",
+    "requestReturn": "إرجاع",
+    "requestExchange": "استبدال",
+    "exchangeSize": "المقاس الجديد",
+    "exchangeColor": "اللون الجديد",
+    "reason": "السبب",
+    "submit": "إرسال الطلب",
+    "cancel": "إلغاء",
+    "genericError": "حدث خطأ ما.",
+    "refundAmount": "المبلغ المسترجع",
+    "status": {
+      "requested": "تم الإرسال",
+      "accepted": "مقبول",
+      "return_shipped": "تم شحن الإرجاع",
+      "received": "تم الاستلام",
+      "completed": "مكتمل",
+      "rejected": "مرفوض"
+    }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "وضع الكل كمقروء",
+    "empty": "لا توجد إشعارات."
   }
 }

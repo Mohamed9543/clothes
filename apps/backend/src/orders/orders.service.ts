@@ -5,6 +5,7 @@ import { LOYALTY_POINTS_PER_TND_SPENT, LOYALTY_TND_PER_POINT_REDEEMED } from '@l
 import type { DiscountSource } from '@libas/shared';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { OutfitsService } from '../outfits/outfits.service';
 import { PaymentsService } from '../payments/payments.service';
 import { PromotionsService } from '../promotions/promotions.service';
@@ -55,6 +56,7 @@ export class OrdersService {
     private readonly shippingFeeService: ShippingFeeService,
     private readonly paymentsService: PaymentsService,
     private readonly promotionsService: PromotionsService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -293,6 +295,13 @@ export class OrdersService {
       order.loyaltyPointsAwarded = true;
       await order.save();
     }
+
+    await this.notificationsService.create({
+      userId: order.userId.toString(),
+      type: 'order_status',
+      message: `Your order #${orderId.slice(-6)} is now "${status}"`,
+      link: '/commandes',
+    });
 
     return order;
   }

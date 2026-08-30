@@ -396,3 +396,52 @@ export interface ChatReply {
   products: ChatToolProduct[];
   outfit?: ChatComposedOutfit;
 }
+
+export type ReturnType = 'return' | 'exchange';
+export type ReturnStatus =
+  | 'requested'
+  | 'accepted'
+  | 'return_shipped'
+  | 'received'
+  | 'completed'
+  | 'rejected';
+
+export interface ReturnItem {
+  productId: string;
+  size: string;
+  color: string;
+  quantity: number;
+  exchangeSize: string | null;
+  exchangeColor: string | null;
+}
+
+export interface ReturnStatusEntry {
+  status: ReturnStatus;
+  changedAt: string;
+  changedBy: string | null;
+}
+
+export interface ReturnRequest {
+  _id: string;
+  orderId: string;
+  userId: string;
+  type: ReturnType;
+  items: ReturnItem[];
+  reason: string;
+  status: ReturnStatus;
+  refundAmount: number | null;
+  statusHistory: ReturnStatusEntry[];
+  createdAt: string;
+}
+
+export type NotificationType = 'order_status' | 'return_status' | 'return_requested';
+
+export interface AppNotification {
+  _id: string;
+  userId: string | null;
+  type: NotificationType;
+  message: string;
+  link: string | null;
+  isRead: boolean;
+  createdAt: string;
+}

@@ -458,7 +458,9 @@
     "colLoyaltyPoints": "Loyalty points",
     "fieldCompareAtPrice": "Compare-at price (sale)",
     "fieldSaleEndsAt": "Sale end date (optional)",
-    "fieldBundleDiscount": "Bundle discount (%)"
+    "fieldBundleDiscount": "Bundle discount (%)",
+    "tabReturns": "Returns",
+    "colOrder": "Order"
   },
   "stats": {
     "title": "Statistics",
@@ -539,5 +541,31 @@
     "empty": "No item selected yet.",
     "remove": "Remove",
     "close": "Close"
+  },
+  "returns": {
+    "title": "My returns and exchanges",
+    "empty": "No return or exchange request yet.",
+    "requestReturn": "Return",
+    "requestExchange": "Exchange",
+    "exchangeSize": "New size",
+    "exchangeColor": "New color",
+    "reason": "Reason",
+    "submit": "Submit request",
+    "cancel": "Cancel",
+    "genericError": "Something went wrong.",
+    "refundAmount": "Refunded amount",
+    "status": {
+      "requested": "Requested",
+      "accepted": "Accepted",
+      "return_shipped": "Return shipped",
+      "received": "Received",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications."
   }
 }

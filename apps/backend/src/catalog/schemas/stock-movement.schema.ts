@@ -8,6 +8,7 @@ export enum StockMovementReason {
   RESTOCK = 'restock',
   CORRECTION = 'correction',
   DAMAGE = 'damage',
+  RETURN = 'return',
 }
 
 @Schema({ timestamps: { createdAt: true, updatedAt: false } })

@@ -8,6 +8,7 @@ import { useAuth } from '@/context/auth-context';
 const NAV_ITEMS = [
   { href: '/admin/produits', labelKey: 'tabProducts' },
   { href: '/admin/commandes', labelKey: 'tabOrders' },
+  { href: '/admin/retours', labelKey: 'tabReturns' },
   { href: '/admin/avis', labelKey: 'tabReviews' },
   { href: '/admin/stats', labelKey: 'tabStats' },
   { href: '/admin/tenues', labelKey: 'tabOutfits' },

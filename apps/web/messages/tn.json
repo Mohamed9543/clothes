@@ -458,7 +458,9 @@
     "colLoyaltyPoints": "نقاط الولاء",
     "fieldCompareAtPrice": "السعر قبل التخفيض",
     "fieldSaleEndsAt": "تاريخ خلاص التخفيض (مش إجباري)",
-    "fieldBundleDiscount": "نسبة خصم الباك (%)"
+    "fieldBundleDiscount": "نسبة خصم الباك (%)",
+    "tabReturns": "الإرجاعات",
+    "colOrder": "الطلبية"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -539,5 +541,31 @@
     "empty": "ما اخترتش حتى حاجة توا.",
     "remove": "نحّي",
     "close": "سكّر"
+  },
+  "returns": {
+    "title": "الإرجاع والتبديل متاعي",
+    "empty": "ما فماش طلب إرجاع ولا تبديل توا.",
+    "requestReturn": "إرجاع",
+    "requestExchange": "تبديل",
+    "exchangeSize": "المقاس الجديد",
+    "exchangeColor": "اللون الجديد",
+    "reason": "السبب",
+    "submit": "ابعث الطلب",
+    "cancel": "إلغاء",
+    "genericError": "صار مشكل.",
+    "refundAmount": "المبلغ اللي ترجع",
+    "status": {
+      "requested": "الطلب تبعث",
+      "accepted": "تقبّل",
+      "return_shipped": "الإرجاع تبعث",
+      "received": "وصل",
+      "completed": "كمل",
+      "rejected": "ترفض"
+    }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "حط الكل مقروي",
+    "empty": "ما فماش إشعارات."
   }
 }

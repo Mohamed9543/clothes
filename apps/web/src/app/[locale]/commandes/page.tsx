@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { apiFetch } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { OrderTimeline } from '@/components/order-timeline';
+import { ReturnRequestForm } from '@/components/return-request-form';
 import type { Order, OrderStatusHistoryEntry } from '@/types';
 
 export default function OrdersPage() {
@@ -19,9 +20,11 @@ export default function OrdersPage() {
 
   const isAdmin = user?.role === 'admin';
 
+  const t2 = useTranslations('returns');
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [openHistoryId, setOpenHistoryId] = useState<string | null>(null);
   const [histories, setHistories] = useState<Record<string, OrderStatusHistoryEntry[]>>({});
+  const [returnFormOrderId, setReturnFormOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -86,17 +89,40 @@ export default function OrdersPage() {
               {order.totalAmount} {tCommon('currency')}
             </p>
 
-            <button
-              onClick={() => toggleHistory(order._id)}
-              className="mt-3 text-sm text-brand-terracotta underline"
-            >
-              {openHistoryId === order._id ? t('hideTracking') : t('trackOrder')}
-            </button>
+            <div className="mt-3 flex flex-wrap gap-4">
+              <button
+                onClick={() => toggleHistory(order._id)}
+                className="text-sm text-brand-terracotta underline"
+              >
+                {openHistoryId === order._id ? t('hideTracking') : t('trackOrder')}
+              </button>
+              {order.status === 'delivered' && (
+                <button
+                  onClick={() =>
+                    setReturnFormOrderId(returnFormOrderId === order._id ? null : order._id)
+                  }
+                  className="text-sm text-brand-terracotta underline"
+                >
+                  {t2('requestReturn')} / {t2('requestExchange')}
+                </button>
+              )}
+              <Link href="/retours" className="text-sm text-muted underline">
+                {t2('title')}
+              </Link>
+            </div>
 
             {openHistoryId === order._id && histories[order._id] && (
               <div className="mt-3">
                 <OrderTimeline entries={histories[order._id]} />
               </div>
+            )}
+
+            {returnFormOrderId === order._id && (
+              <ReturnRequestForm
+                order={order}
+                onDone={() => setReturnFormOrderId(null)}
+                onCancel={() => setReturnFormOrderId(null)}
+              />
             )}
           </div>
         ))}

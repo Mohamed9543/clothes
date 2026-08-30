@@ -458,7 +458,9 @@
     "colLoyaltyPoints": "Points fidélité",
     "fieldCompareAtPrice": "Prix barré (solde)",
     "fieldSaleEndsAt": "Fin du solde (optionnel)",
-    "fieldBundleDiscount": "Remise pack (%)"
+    "fieldBundleDiscount": "Remise pack (%)",
+    "tabReturns": "Retours",
+    "colOrder": "Commande"
   },
   "stats": {
     "title": "Statistiques",
@@ -539,5 +541,31 @@
     "empty": "Aucune pièce sélectionnée pour le moment.",
     "remove": "Retirer",
     "close": "Fermer"
+  },
+  "returns": {
+    "title": "Mes retours et échanges",
+    "empty": "Aucune demande de retour ou d’échange pour le moment.",
+    "requestReturn": "Retour",
+    "requestExchange": "Échange",
+    "exchangeSize": "Nouvelle taille",
+    "exchangeColor": "Nouvelle couleur",
+    "reason": "Motif",
+    "submit": "Envoyer la demande",
+    "cancel": "Annuler",
+    "genericError": "Une erreur est survenue.",
+    "refundAmount": "Montant remboursé",
+    "status": {
+      "requested": "Demande envoyée",
+      "accepted": "Acceptée",
+      "return_shipped": "Retour expédié",
+      "received": "Reçu",
+      "completed": "Terminé",
+      "rejected": "Refusée"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "empty": "Aucune notification."
   }
 }

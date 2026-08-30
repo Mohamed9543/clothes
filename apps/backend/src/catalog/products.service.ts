@@ -242,6 +242,36 @@ export class ProductsService {
     });
   }
 
+  // Mirror of decrementStock for returned items coming back into stock —
+  // same atomic $elemMatch targeting, positive instead of negative $inc.
+  async restock(
+    productId: string,
+    size: string,
+    color: string,
+    quantity: number,
+    returnId: string,
+  ): Promise<void> {
+    const result = await this.productModel
+      .updateOne(
+        { _id: productId, variants: { $elemMatch: { size, color } } },
+        { $inc: { 'variants.$.stock': quantity } },
+      )
+      .exec();
+
+    if (result.matchedCount === 0) {
+      throw new BadRequestException(`No variant found for size "${size}" / color "${color}"`);
+    }
+
+    await this.stockMovementModel.create({
+      productId,
+      size,
+      color,
+      quantityChange: quantity,
+      reason: StockMovementReason.RETURN,
+      note: `Return ${returnId}`,
+    });
+  }
+
   async adjustStock(
     productId: string,
     dto: AdjustStockDto,

@@ -10,10 +10,12 @@ import { ChatModule } from './chat/chat.module';
 import { validateEnv } from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { OrdersModule } from './orders/orders.module';
 import { OutfitsModule } from './outfits/outfits.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PromotionsModule } from './promotions/promotions.module';
+import { ReturnsModule } from './returns/returns.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { SizeAssistantModule } from './size-assistant/size-assistant.module';
 import { StatsModule } from './stats/stats.module';
@@ -45,6 +47,8 @@ import { WishlistModule } from './wishlist/wishlist.module';
     WishlistModule,
     PromotionsModule,
     SizeAssistantModule,
+    NotificationsModule,
+    ReturnsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
