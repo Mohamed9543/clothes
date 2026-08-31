@@ -18,6 +18,23 @@ export const envSchema = z.object({
   // fail loudly at startup rather than silently falling back to mock.
   PAYMENT_PROVIDER: z.enum(['mock', 'konnect', 'flouci']).default('mock'),
   PAYMENT_MOCK_WEBHOOK_SECRET: z.string().default('dev-mock-payment-secret'),
+  // Web Push (VAPID) is a W3C standard — keys are self-generated (e.g. via
+  // `npx web-push generate-vapid-keys`), no third-party account needed.
+  // Optional so the app still boots without them; PushService no-ops if unset.
+  VAPID_PUBLIC_KEY: z.string().default(''),
+  VAPID_PRIVATE_KEY: z.string().default(''),
+  VAPID_SUBJECT: z.string().default('mailto:contact@libas.tn'),
+  // Which StorageProvider implementation to wire up for uploads. Only 'local'
+  // is implemented for real use — no cloud bucket exists yet. 's3' works
+  // against any S3-compatible endpoint (AWS S3, Cloudflare R2, DO Spaces) but
+  // fails loudly at startup if selected without the required S3_* vars.
+  STORAGE_DRIVER: z.enum(['local', 's3']).default('local'),
+  S3_BUCKET: z.string().default(''),
+  S3_ENDPOINT: z.string().default(''),
+  S3_REGION: z.string().default('auto'),
+  S3_ACCESS_KEY: z.string().default(''),
+  S3_SECRET_KEY: z.string().default(''),
+  S3_PUBLIC_URL_BASE: z.string().default(''),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

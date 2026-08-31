@@ -17,6 +17,7 @@ import { OrdersModule } from './orders/orders.module';
 import { OutfitsModule } from './outfits/outfits.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PromotionsModule } from './promotions/promotions.module';
+import { PushModule } from './push/push.module';
 import { ReturnsModule } from './returns/returns.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { SizeAssistantModule } from './size-assistant/size-assistant.module';
@@ -53,6 +54,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     ReturnsModule,
     AnalyticsModule,
     AuditLogsModule,
+    PushModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

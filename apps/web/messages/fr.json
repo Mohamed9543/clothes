@@ -592,5 +592,17 @@
     "colDate": "Date",
     "previous": "Précédent",
     "next": "Suivant"
+  },
+  "offline": {
+    "title": "Vous êtes hors ligne",
+    "text": "Cette page n'est pas disponible sans connexion. Vérifiez votre connexion internet et réessayez.",
+    "backHome": "Retour à l'accueil"
+  },
+  "push": {
+    "enabledTitle": "Notifications activées",
+    "disabledTitle": "Recevez des notifications sur vos commandes",
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "error": "Impossible d'activer les notifications. Réessayez."
   }
 }

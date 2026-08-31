@@ -6,6 +6,7 @@ import { Gift, LogOut, Package, User as UserIcon } from 'lucide-react';
 import { LOYALTY_TND_PER_POINT_REDEEMED } from '@libas/shared';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
+import { PushToggle } from '@/components/push-toggle';
 
 export default function AccountPage() {
   const t = useTranslations('account');
@@ -69,6 +70,8 @@ export default function AccountPage() {
           </button>
         </div>
       )}
+
+      {user && <PushToggle />}
 
       {user && !isAdmin && (
         <div className="mb-6 flex items-center gap-3 rounded-xl border border-border bg-surface p-4">

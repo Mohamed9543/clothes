@@ -592,5 +592,17 @@
     "colDate": "Date",
     "previous": "Previous",
     "next": "Next"
+  },
+  "offline": {
+    "title": "You are offline",
+    "text": "This page is not available without a connection. Check your internet connection and try again.",
+    "backHome": "Back to home"
+  },
+  "push": {
+    "enabledTitle": "Notifications enabled",
+    "disabledTitle": "Get notified about your orders",
+    "enable": "Enable",
+    "disable": "Disable",
+    "error": "Could not enable notifications. Try again."
   }
 }

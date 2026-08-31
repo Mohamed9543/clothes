@@ -5,6 +5,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
 import { routing, rtlLocales } from '@/i18n/routing';
+import { APP_URL, buildAlternates } from '@/lib/seo';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { AuthProvider } from '@/context/auth-context';
@@ -34,14 +35,29 @@ export async function generateMetadata({
   const { locale: rawLocale } = await params;
   const locale = hasLocale(routing.locales, rawLocale) ? rawLocale : routing.defaultLocale;
   const t = await getTranslations({ locale, namespace: 'brand' });
+  const alternates = buildAlternates(locale, '/');
   return {
-    title: t('name'),
+    metadataBase: new URL(APP_URL),
+    title: { default: t('name'), template: `%s · ${t('name')}` },
     description: t('tagline'),
     manifest: '/manifest.webmanifest',
     appleWebApp: {
       capable: true,
       statusBarStyle: 'black-translucent',
       title: t('name'),
+    },
+    alternates,
+    openGraph: {
+      siteName: t('name'),
+      title: t('name'),
+      description: t('tagline'),
+      locale,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('name'),
+      description: t('tagline'),
     },
   };
 }
@@ -65,6 +81,14 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
   const dir = rtlLocales.includes(locale) ? 'rtl' : 'ltr';
+  const t = await getTranslations({ locale, namespace: 'brand' });
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: t('name'),
+    url: APP_URL,
+    logo: `${APP_URL}/icon-512.png`,
+  };
 
   return (
     <html
@@ -74,6 +98,10 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <script
           // Runs before paint to avoid a flash of the wrong theme.
           dangerouslySetInnerHTML={{

@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { AddToCartForm } from '@/components/add-to-cart-form';
 import { TryOnButton } from '@/components/avatar/try-on-button';
@@ -8,7 +9,30 @@ import { SizeGuide } from '@/components/size-guide';
 import { WishlistButton } from '@/components/wishlist-button';
 import { serverApiFetch } from '@/lib/server-api';
 import { localize } from '@/lib/localized';
-import type { PublicProduct } from '@/types';
+import { APP_URL, buildAlternates, resolveOgImage } from '@/lib/seo';
+import type { ProductReviewsResult, PublicProduct } from '@/types';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const product = await serverApiFetch<PublicProduct>(`/products/${slug}`);
+  if (!product) {
+    return {};
+  }
+  const title = localize(product.name, locale);
+  const description = localize(product.description, locale);
+  const image = resolveOgImage(product.images);
+  return {
+    title,
+    description,
+    alternates: buildAlternates(locale, `/produit/${slug}`),
+    openGraph: { title, description, images: [{ url: image }], type: 'website' },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
+  };
+}
 
 export default async function ProductPage({
   params,
@@ -24,6 +48,54 @@ export default async function ProductPage({
 
   const t = await getTranslations('product');
   const tCommon = await getTranslations('common');
+  const tNav = await getTranslations('nav');
+  const reviewsResult = await serverApiFetch<ProductReviewsResult>(`/reviews/product/${slug}`);
+
+  const productName = localize(product.name, locale);
+  const productJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: productName,
+    description: localize(product.description, locale),
+    image: resolveOgImage(product.images),
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'TND',
+      price: product.price,
+      availability: product.isOutOfStock
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock',
+      url: `${APP_URL}/${locale}/produit/${product.slug}`,
+    },
+  };
+  // Never fabricate a rating — only attach aggregateRating when real reviews exist.
+  if (reviewsResult && reviewsResult.count > 0) {
+    productJsonLd.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: reviewsResult.avgRating,
+      reviewCount: reviewsResult.count,
+    };
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: tNav('home'), item: `${APP_URL}/${locale}` },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: tNav('catalog'),
+        item: `${APP_URL}/${locale}/catalogue`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: productName,
+        item: `${APP_URL}/${locale}/produit/${product.slug}`,
+      },
+    ],
+  };
 
   const stockLabel = product.isOutOfStock
     ? t('outOfStock')
@@ -38,6 +110,14 @@ export default async function ProductPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <div className="grid gap-10 md:grid-cols-2">
         <ProductGallery images={product.images} alt={localize(product.name, locale)} />
 

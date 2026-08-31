@@ -1,11 +1,27 @@
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { AdminRedirect } from '@/components/admin-redirect';
 import { ProductCard } from '@/components/product-card';
 import { OutfitCard } from '@/components/outfit-card';
 import { serverApiFetch } from '@/lib/server-api';
+import { buildAlternates } from '@/lib/seo';
 import type { Outfit, PaginatedResult, Product } from '@/types';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'home' });
+  return {
+    title: t('heroTitle'),
+    description: t('heroSubtitle'),
+    alternates: buildAlternates(locale, '/'),
+  };
+}
 
 export default async function HomePage() {
   const t = await getTranslations('home');
