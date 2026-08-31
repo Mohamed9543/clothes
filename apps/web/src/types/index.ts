@@ -114,6 +114,27 @@ export interface ProductReviewsResult {
   count: number;
 }
 
+export interface LookProductSummary {
+  _id: string;
+  slug: string;
+  name: LocalizedText;
+  image: string | null;
+}
+
+export interface Look {
+  _id: string;
+  userId: string;
+  authorName: string;
+  images: string[];
+  caption: string | null;
+  productIds: string[];
+  products: LookProductSummary[];
+  likeCount: number;
+  reportCount: number;
+  isHidden: boolean;
+  createdAt: string;
+}
+
 export interface AdminUser {
   _id: string;
   email: string;

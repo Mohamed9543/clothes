@@ -18,7 +18,8 @@
     "logout": "Logout",
     "searchPlaceholder": "Search for clothes...",
     "admin": "Admin",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "lookbook": "Lookbook"
   },
   "footer": {
     "about": "About StyleForm",
@@ -179,7 +180,8 @@
     "trackOrder": "Track my order",
     "hideTracking": "Hide tracking",
     "loyaltyPoints": "{points} Libas Rewards points",
-    "loyaltyPointsValue": "Approximate value: {value} TND"
+    "loyaltyPointsValue": "Approximate value: {value} TND",
+    "myLooks": "My looks"
   },
   "auth": {
     "loginTitle": "Login",
@@ -461,7 +463,13 @@
     "fieldBundleDiscount": "Bundle discount (%)",
     "tabReturns": "Returns",
     "colOrder": "Order",
-    "tabAuditLogs": "Audit log"
+    "tabAuditLogs": "Audit log",
+    "tabLookbook": "Lookbook",
+    "colAuthor": "Author",
+    "colCaption": "Caption",
+    "colLikes": "Likes",
+    "noLooksAdmin": "No looks yet.",
+    "confirmDeleteLook": "Delete this look?"
   },
   "stats": {
     "title": "Statistics",
@@ -604,5 +612,25 @@
     "enable": "Enable",
     "disable": "Disable",
     "error": "Could not enable notifications. Try again."
+  },
+  "lookbook": {
+    "title": "Lookbook",
+    "subtitle": "Looks shared by our community of customers.",
+    "empty": "No looks yet.",
+    "like": "Like",
+    "linkedProducts": "Products in this look",
+    "myLooksTitle": "My looks",
+    "noLooksMine": "You haven't published a look yet.",
+    "likesCount": "{count} likes",
+    "statusVisible": "Visible",
+    "statusHidden": "Pending moderation",
+    "submitTitle": "Share a look",
+    "addPhotos": "Add photos",
+    "uploading": "Uploading...",
+    "captionPlaceholder": "Describe your outfit...",
+    "linkProductPlaceholder": "Link a product (search)...",
+    "submit": "Publish",
+    "errorNoPhoto": "Add at least one photo.",
+    "genericError": "Something went wrong. Try again."
   }
 }

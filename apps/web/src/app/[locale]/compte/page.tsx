@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Gift, LogOut, Package, User as UserIcon } from 'lucide-react';
+import { Gift, Image as ImageIcon, LogOut, Package, User as UserIcon } from 'lucide-react';
 import { LOYALTY_TND_PER_POINT_REDEEMED } from '@libas/shared';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
@@ -98,13 +98,22 @@ export default function AccountPage() {
           {tAdmin('title')}
         </Link>
       ) : (
-        <Link
-          href="/commandes"
-          className="flex items-center gap-2 rounded-xl border border-border bg-surface p-4 text-sm font-medium hover:border-brand-gold"
-        >
-          <Package className="h-4 w-4" />
-          {t('myOrders')}
-        </Link>
+        <div className="space-y-3">
+          <Link
+            href="/commandes"
+            className="flex items-center gap-2 rounded-xl border border-border bg-surface p-4 text-sm font-medium hover:border-brand-gold"
+          >
+            <Package className="h-4 w-4" />
+            {t('myOrders')}
+          </Link>
+          <Link
+            href="/compte/mes-looks"
+            className="flex items-center gap-2 rounded-xl border border-border bg-surface p-4 text-sm font-medium hover:border-brand-gold"
+          >
+            <ImageIcon className="h-4 w-4" />
+            {t('myLooks')}
+          </Link>
+        </div>
       )}
     </div>
   );

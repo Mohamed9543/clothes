@@ -18,7 +18,8 @@
     "logout": "خروج",
     "searchPlaceholder": "قلّب على حاجة...",
     "admin": "الإدارة",
-    "wishlist": "ليستة متاعي"
+    "wishlist": "ليستة متاعي",
+    "lookbook": "ستايلات"
   },
   "footer": {
     "about": "على ستايل فورم",
@@ -179,7 +180,8 @@
     "trackOrder": "تتبّع الطلبية متاعي",
     "hideTracking": "خبّي التتبع",
     "loyaltyPoints": "{points} نقطة Libas Rewards",
-    "loyaltyPointsValue": "القيمة التقريبية: {value} د.ت"
+    "loyaltyPointsValue": "القيمة التقريبية: {value} د.ت",
+    "myLooks": "الستايلات متاعي"
   },
   "auth": {
     "loginTitle": "دخول",
@@ -461,7 +463,13 @@
     "fieldBundleDiscount": "نسبة خصم الباك (%)",
     "tabReturns": "الإرجاعات",
     "colOrder": "الطلبية",
-    "tabAuditLogs": "سجل التدقيق"
+    "tabAuditLogs": "سجل التدقيق",
+    "tabLookbook": "ستايلات",
+    "colAuthor": "الناشر",
+    "colCaption": "الوصف",
+    "colLikes": "إعجابات",
+    "noLooksAdmin": "ما فماش أي ستايل توا.",
+    "confirmDeleteLook": "تحب تمسح الستايل هذا؟"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -604,5 +612,25 @@
     "enable": "فعّل",
     "disable": "وقّف",
     "error": "ما نجمناش نفعّلو الإشعارات. عاود جرب."
+  },
+  "lookbook": {
+    "title": "لوك بوك",
+    "subtitle": "ستايلات شاركوها الحرفاء متاعنا.",
+    "empty": "ما فماش أي ستايل توا.",
+    "like": "عجبني",
+    "linkedProducts": "المنتجات متاع الستايل هذا",
+    "myLooksTitle": "الستايلات متاعي",
+    "noLooksMine": "مازلت ما نشرتش حتى ستايل.",
+    "likesCount": "{count} عجبهم",
+    "statusVisible": "ظاهر",
+    "statusHidden": "تحت المراجعة",
+    "submitTitle": "شارك الستايل متاعك",
+    "addPhotos": "زيد صور",
+    "uploading": "قاعد يتبعث...",
+    "captionPlaceholder": "وصف الإطلالة متاعك...",
+    "linkProductPlaceholder": "اربط منتج (فتش)...",
+    "submit": "انشر",
+    "errorNoPhoto": "زيد صورة وحدة على الأقل.",
+    "genericError": "صار مشكل. عاود جرب."
   }
 }

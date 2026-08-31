@@ -35,9 +35,11 @@ export class UploadsController {
     @Inject(STORAGE_PROVIDER) private readonly storageProvider: StorageProvider,
   ) {}
 
+  // Open to any authenticated user (not just admins) — regular customers
+  // upload photos here for product reviews and lookbook submissions.
+  // JwtAuthGuard (controller-level) + the MIME allowlist/size limit below
+  // are the actual controls, same posture as uploadAvatar.
   @Post('image')
-  @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),

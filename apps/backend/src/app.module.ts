@@ -12,6 +12,7 @@ import { ChatModule } from './chat/chat.module';
 import { validateEnv } from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
+import { LooksModule } from './looks/looks.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { OrdersModule } from './orders/orders.module';
 import { OutfitsModule } from './outfits/outfits.module';
@@ -55,6 +56,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     AnalyticsModule,
     AuditLogsModule,
     PushModule,
+    LooksModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

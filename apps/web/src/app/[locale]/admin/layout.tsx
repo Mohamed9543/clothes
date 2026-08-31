@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { href: '/admin/utilisateurs', labelKey: 'tabUsers' },
   { href: '/admin/modeles-3d', labelKey: 'tabModels3d' },
   { href: '/admin/audit-logs', labelKey: 'tabAuditLogs' },
+  { href: '/admin/lookbook', labelKey: 'tabLookbook' },
 ] as const;
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

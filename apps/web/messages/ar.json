@@ -18,7 +18,8 @@
     "logout": "تسجيل الخروج",
     "searchPlaceholder": "ابحث عن ملابس...",
     "admin": "الإدارة",
-    "wishlist": "قائمتي"
+    "wishlist": "قائمتي",
+    "lookbook": "ستايلات"
   },
   "footer": {
     "about": "عن ستايل فورم",
@@ -179,7 +180,8 @@
     "trackOrder": "تتبّع طلبي",
     "hideTracking": "إخفاء التتبع",
     "loyaltyPoints": "{points} نقطة من Libas Rewards",
-    "loyaltyPointsValue": "القيمة التقريبية: {value} د.ت"
+    "loyaltyPointsValue": "القيمة التقريبية: {value} د.ت",
+    "myLooks": "ستايلاتي"
   },
   "auth": {
     "loginTitle": "تسجيل الدخول",
@@ -461,7 +463,13 @@
     "fieldBundleDiscount": "نسبة خصم الحزمة (%)",
     "tabReturns": "الإرجاعات",
     "colOrder": "الطلب",
-    "tabAuditLogs": "سجل التدقيق"
+    "tabAuditLogs": "سجل التدقيق",
+    "tabLookbook": "ستايلات",
+    "colAuthor": "الناشر",
+    "colCaption": "الوصف",
+    "colLikes": "إعجابات",
+    "noLooksAdmin": "لا يوجد أي ستايل حاليًا.",
+    "confirmDeleteLook": "حذف هذا الستايل؟"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -604,5 +612,25 @@
     "enable": "تفعيل",
     "disable": "إلغاء التفعيل",
     "error": "تعذّر تفعيل الإشعارات. أعد المحاولة."
+  },
+  "lookbook": {
+    "title": "لوك بوك",
+    "subtitle": "ستايلات شاركها عملاؤنا.",
+    "empty": "لا يوجد أي ستايل حاليًا.",
+    "like": "إعجاب",
+    "linkedProducts": "منتجات هذا الستايل",
+    "myLooksTitle": "ستايلاتي",
+    "noLooksMine": "لم تنشر أي ستايل بعد.",
+    "likesCount": "{count} إعجاب",
+    "statusVisible": "ظاهر",
+    "statusHidden": "قيد المراجعة",
+    "submitTitle": "شارك ستايلك",
+    "addPhotos": "إضافة صور",
+    "uploading": "جارٍ الإرسال...",
+    "captionPlaceholder": "صف إطلالتك...",
+    "linkProductPlaceholder": "ربط منتج (بحث)...",
+    "submit": "نشر",
+    "errorNoPhoto": "أضف صورة واحدة على الأقل.",
+    "genericError": "حدث خطأ. أعد المحاولة."
   }
 }

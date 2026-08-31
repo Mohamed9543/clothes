@@ -18,7 +18,8 @@
     "logout": "Déconnexion",
     "searchPlaceholder": "Rechercher un vêtement...",
     "admin": "Admin",
-    "wishlist": "Ma liste"
+    "wishlist": "Ma liste",
+    "lookbook": "Lookbook"
   },
   "footer": {
     "about": "À propos de StyleForm",
@@ -179,7 +180,8 @@
     "trackOrder": "Suivre ma commande",
     "hideTracking": "Masquer le suivi",
     "loyaltyPoints": "{points} points Libas Rewards",
-    "loyaltyPointsValue": "Valeur approximative : {value} TND"
+    "loyaltyPointsValue": "Valeur approximative : {value} TND",
+    "myLooks": "Mes looks"
   },
   "auth": {
     "loginTitle": "Connexion",
@@ -461,7 +463,13 @@
     "fieldBundleDiscount": "Remise pack (%)",
     "tabReturns": "Retours",
     "colOrder": "Commande",
-    "tabAuditLogs": "Journal d'audit"
+    "tabAuditLogs": "Journal d'audit",
+    "tabLookbook": "Lookbook",
+    "colAuthor": "Auteur",
+    "colCaption": "Légende",
+    "colLikes": "J'aime",
+    "noLooksAdmin": "Aucun look pour le moment.",
+    "confirmDeleteLook": "Supprimer ce look ?"
   },
   "stats": {
     "title": "Statistiques",
@@ -604,5 +612,25 @@
     "enable": "Activer",
     "disable": "Désactiver",
     "error": "Impossible d'activer les notifications. Réessayez."
+  },
+  "lookbook": {
+    "title": "Lookbook",
+    "subtitle": "Les looks de la communauté, partagés par nos clients.",
+    "empty": "Aucun look pour le moment.",
+    "like": "J'aime",
+    "linkedProducts": "Produits de ce look",
+    "myLooksTitle": "Mes looks",
+    "noLooksMine": "Vous n'avez pas encore publié de look.",
+    "likesCount": "{count} j'aime",
+    "statusVisible": "Visible",
+    "statusHidden": "En attente de modération",
+    "submitTitle": "Publier un look",
+    "addPhotos": "Ajouter des photos",
+    "uploading": "Envoi...",
+    "captionPlaceholder": "Décrivez votre tenue...",
+    "linkProductPlaceholder": "Lier un produit (rechercher)...",
+    "submit": "Publier",
+    "errorNoPhoto": "Ajoutez au moins une photo.",
+    "genericError": "Une erreur est survenue. Réessayez."
   }
 }

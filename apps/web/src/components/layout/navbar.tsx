@@ -41,6 +41,9 @@ export function Navbar() {
               <Link href="/catalogue" className="hover:text-brand-terracotta">
                 {t('catalog')}
               </Link>
+              <Link href="/lookbook" className="hover:text-brand-terracotta">
+                {t('lookbook')}
+              </Link>
               <Link href="/a-propos" className="hover:text-brand-terracotta">
                 {t('about')}
               </Link>
