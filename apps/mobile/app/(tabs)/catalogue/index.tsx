@@ -9,7 +9,9 @@ import {
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { apiFetch, API_URL } from '@/lib/api';
+import { localize } from '@/lib/localized';
 import type { PaginatedResult, PublicProduct } from '@/types';
 
 const LIMIT = 20;
@@ -20,6 +22,7 @@ function imageUri(path: string): string {
 
 export default function CatalogueScreen() {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const [items, setItems] = useState<PublicProduct[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -82,9 +85,11 @@ export default function CatalogueScreen() {
             <View style={[styles.image, styles.imagePlaceholder]} />
           )}
           <Text numberOfLines={1} style={styles.name}>
-            {item.name.fr}
+            {localize(item.name, i18n.language)}
           </Text>
-          <Text style={styles.price}>{item.price} TND</Text>
+          <Text style={styles.price}>
+            {item.price} {t('common.currency')}
+          </Text>
         </Pressable>
       )}
     />

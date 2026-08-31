@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Governorate } from '@libas/shared';
 import { apiFetch, ApiError } from '@/lib/api';
-import { GOVERNORATE_LABELS } from '@/lib/governorates';
 import { useCart } from '@/context/cart-context';
 import type { Order, OrderQuote } from '@/types';
 
 export default function CheckoutScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { cart, refresh } = useCart();
 
   const [fullName, setFullName] = useState('');
@@ -45,7 +46,7 @@ export default function CheckoutScreen() {
 
   async function handleSubmit() {
     if (!fullName.trim() || !phone.trim() || !address.trim() || !delegation.trim()) {
-      setError('Merci de remplir tous les champs.');
+      setError(t('common.error'));
       return;
     }
     setError(null);
@@ -68,7 +69,7 @@ export default function CheckoutScreen() {
       setConfirmedOrder(order);
       await refresh();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Une erreur est survenue.');
+      setError(err instanceof ApiError ? err.message : t('common.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -77,13 +78,15 @@ export default function CheckoutScreen() {
   if (confirmedOrder) {
     return (
       <View style={styles.center}>
-        <Text style={styles.confirmTitle}>Commande confirmée !</Text>
+        <Text style={styles.confirmTitle}>{t('checkout.orderSuccessTitle')}</Text>
         <Text style={styles.confirmText}>
-          Votre commande #{confirmedOrder._id.slice(-6).toUpperCase()} a été enregistrée. Paiement à la
-          livraison.
+          {t('mobile.confirmOrderText', {
+            number: `#${confirmedOrder._id.slice(-6).toUpperCase()}`,
+          })}{' '}
+          {t('checkout.cod')}.
         </Text>
         <Pressable style={styles.button} onPress={() => router.replace('/(tabs)/catalogue')}>
-          <Text style={styles.buttonText}>Retour au catalogue</Text>
+          <Text style={styles.buttonText}>{t('cart.browseCatalog')}</Text>
         </Pressable>
       </View>
     );
@@ -92,63 +95,86 @@ export default function CheckoutScreen() {
   if (!cart || cart.items.length === 0) {
     return (
       <View style={styles.center}>
-        <Text>Votre panier est vide.</Text>
+        <Text>{t('cart.empty')}</Text>
       </View>
     );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>Adresse de livraison</Text>
-      <TextInput style={styles.input} placeholder="Nom complet" value={fullName} onChangeText={setFullName} />
+      <Text style={styles.sectionTitle}>{t('checkout.shippingAddress')}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Téléphone"
+        placeholder={t('checkout.fullName')}
+        value={fullName}
+        onChangeText={setFullName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder={t('checkout.phone')}
         keyboardType="phone-pad"
         value={phone}
         onChangeText={setPhone}
       />
-      <TextInput style={styles.input} placeholder="Adresse" value={address} onChangeText={setAddress} />
-      <TextInput style={styles.input} placeholder="Délégation" value={delegation} onChangeText={setDelegation} />
+      <TextInput
+        style={styles.input}
+        placeholder={t('checkout.address')}
+        value={address}
+        onChangeText={setAddress}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder={t('checkout.delegationLabel')}
+        value={delegation}
+        onChangeText={setDelegation}
+      />
 
-      <Text style={styles.label}>Gouvernorat</Text>
+      <Text style={styles.label}>{t('checkout.governorateLabel')}</Text>
       <View style={styles.pickerWrapper}>
         <Picker selectedValue={governorate} onValueChange={(value) => setGovernorate(value)}>
           {Object.values(Governorate).map((value) => (
-            <Picker.Item key={value} label={GOVERNORATE_LABELS[value]} value={value} />
+            <Picker.Item key={value} label={t(`checkout.governorate.${value}`)} value={value} />
           ))}
         </Picker>
       </View>
 
       <View style={styles.summary}>
-        <Text style={styles.sectionTitle}>Récapitulatif</Text>
+        <Text style={styles.sectionTitle}>{t('cart.title')}</Text>
         {isQuoting ? (
           <ActivityIndicator />
         ) : quote ? (
           <>
             <View style={styles.summaryRow}>
-              <Text>Sous-total</Text>
-              <Text>{quote.itemsSubtotal} TND</Text>
+              <Text>{t('checkout.subtotal')}</Text>
+              <Text>
+                {quote.itemsSubtotal} {t('common.currency')}
+              </Text>
             </View>
             <View style={styles.summaryRow}>
-              <Text>Livraison</Text>
-              <Text>{quote.shippingFee} TND</Text>
+              <Text>{t('checkout.shippingFee')}</Text>
+              <Text>
+                {quote.shippingFee} {t('common.currency')}
+              </Text>
             </View>
             {quote.discountAmount > 0 && (
               <View style={styles.summaryRow}>
-                <Text>Remise</Text>
-                <Text>-{quote.discountAmount} TND</Text>
+                <Text>{t('checkout.discount')}</Text>
+                <Text>
+                  -{quote.discountAmount} {t('common.currency')}
+                </Text>
               </View>
             )}
             <View style={styles.summaryRow}>
-              <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalValue}>{quote.total} TND</Text>
+              <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
+              <Text style={styles.totalValue}>
+                {quote.total} {t('common.currency')}
+              </Text>
             </View>
           </>
         ) : (
-          <Text style={styles.error}>Impossible de calculer le total.</Text>
+          <Text style={styles.error}>{t('common.error')}</Text>
         )}
-        <Text style={styles.paymentNote}>Paiement à la livraison (contre-remboursement).</Text>
+        <Text style={styles.paymentNote}>{t('checkout.cod')}.</Text>
       </View>
 
       {error && <Text style={styles.error}>{error}</Text>}
@@ -157,7 +183,7 @@ export default function CheckoutScreen() {
         {isSubmitting ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>Confirmer la commande</Text>
+          <Text style={styles.buttonText}>{t('checkout.placeOrder')}</Text>
         )}
       </Pressable>
     </ScrollView>

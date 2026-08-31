@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { apiFetch } from '@/lib/api';
 import type { Order } from '@/types';
 
-const STATUS_LABELS: Record<Order['status'], string> = {
-  pending: 'En attente',
-  paid: 'Payée',
-  shipped: 'Expédiée',
-  delivered: 'Livrée',
-  cancelled: 'Annulée',
-};
-
 export default function OrdersListScreen() {
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const [orders, setOrders] = useState<Order[] | null>(null);
 
   useEffect(() => {
@@ -31,7 +25,7 @@ export default function OrdersListScreen() {
   if (orders.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={styles.emptyText}>Vous n’avez pas encore de commande.</Text>
+        <Text style={styles.emptyText}>{t('account.noOrders')}</Text>
       </View>
     );
   }
@@ -45,11 +39,13 @@ export default function OrdersListScreen() {
         <Pressable style={styles.row} onPress={() => router.push(`/commandes/${item._id}`)}>
           <View>
             <Text style={styles.orderNumber}>#{item._id.slice(-6).toUpperCase()}</Text>
-            <Text style={styles.date}>{new Date(item.createdAt).toLocaleDateString('fr-FR')}</Text>
+            <Text style={styles.date}>{new Date(item.createdAt).toLocaleDateString(i18n.language)}</Text>
           </View>
           <View style={styles.rightColumn}>
-            <Text style={styles.amount}>{item.totalAmount} TND</Text>
-            <Text style={styles.status}>{STATUS_LABELS[item.status]}</Text>
+            <Text style={styles.amount}>
+              {item.totalAmount} {t('common.currency')}
+            </Text>
+            <Text style={styles.status}>{t(`orderStatus.${item.status}`)}</Text>
           </View>
         </Pressable>
       )}

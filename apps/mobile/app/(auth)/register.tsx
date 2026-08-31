@@ -10,9 +10,11 @@ import {
   TextInput,
 } from 'react-native';
 import { Link } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { ApiError, useAuth } from '@/context/auth-context';
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -27,7 +29,7 @@ export default function RegisterScreen() {
     try {
       await register({ email: email.trim(), password, firstName: firstName.trim(), lastName: lastName.trim() });
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Une erreur est survenue.');
+      setError(err instanceof ApiError ? err.message : t('common.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -36,13 +38,23 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Créer un compte</Text>
+        <Text style={styles.title}>{t('auth.registerTitle')}</Text>
 
-        <TextInput style={styles.input} placeholder="Prénom" value={firstName} onChangeText={setFirstName} />
-        <TextInput style={styles.input} placeholder="Nom" value={lastName} onChangeText={setLastName} />
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder={t('auth.firstName')}
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder={t('auth.lastName')}
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder={t('auth.email')}
           autoCapitalize="none"
           keyboardType="email-address"
           value={email}
@@ -50,21 +62,25 @@ export default function RegisterScreen() {
         />
         <TextInput
           style={styles.input}
-          placeholder="Mot de passe"
+          placeholder={t('auth.password')}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
-        <Text style={styles.hint}>8 caractères minimum, avec majuscule, minuscule et chiffre.</Text>
+        <Text style={styles.hint}>{t('mobile.passwordHint')}</Text>
 
         {error && <Text style={styles.error}>{error}</Text>}
 
         <Pressable style={styles.button} onPress={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Créer mon compte</Text>}
+          {isSubmitting ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t('auth.registerCta')}</Text>
+          )}
         </Pressable>
 
         <Link href="/(auth)/login" style={styles.link}>
-          Déjà un compte ? Se connecter
+          {t('auth.haveAccount')} {t('auth.signIn')}
         </Link>
       </ScrollView>
     </KeyboardAvoidingView>

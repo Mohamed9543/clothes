@@ -9,9 +9,11 @@ import {
   TextInput,
 } from 'react-native';
 import { Link } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { ApiError, useAuth } from '@/context/auth-context';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +26,7 @@ export default function LoginScreen() {
     try {
       await login(email.trim(), password);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Une erreur est survenue.');
+      setError(err instanceof ApiError ? err.message : t('common.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -36,11 +38,11 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <Text style={styles.title}>Libas</Text>
-      <Text style={styles.subtitle}>Connectez-vous à votre compte</Text>
+      <Text style={styles.subtitle}>{t('mobile.loginSubtitle')}</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={t('auth.email')}
         autoCapitalize="none"
         keyboardType="email-address"
         value={email}
@@ -48,7 +50,7 @@ export default function LoginScreen() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder={t('auth.password')}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
@@ -57,11 +59,15 @@ export default function LoginScreen() {
       {error && <Text style={styles.error}>{error}</Text>}
 
       <Pressable style={styles.button} onPress={handleSubmit} disabled={isSubmitting}>
-        {isSubmitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Se connecter</Text>}
+        {isSubmitting ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>{t('auth.loginCta')}</Text>
+        )}
       </Pressable>
 
       <Link href="/(auth)/register" style={styles.link}>
-        Pas encore de compte ? Créer un compte
+        {t('auth.noAccount')} {t('auth.createAccount')}
       </Link>
     </KeyboardAvoidingView>
   );

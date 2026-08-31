@@ -9,7 +9,9 @@ import {
   View,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { API_URL, apiFetch, ApiError } from '@/lib/api';
+import { localize } from '@/lib/localized';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import type { PublicProduct } from '@/types';
@@ -21,6 +23,7 @@ function imageUri(path: string): string {
 export default function ProductDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { addItem } = useCart();
 
@@ -61,9 +64,9 @@ export default function ProductDetailScreen() {
     setIsAdding(true);
     try {
       await addItem(product._id, 1, selectedSize, selectedColor);
-      setMessage('Ajouté au panier.');
+      setMessage(t('product.addedToCart'));
     } catch (err) {
-      setMessage(err instanceof ApiError ? err.message : 'Une erreur est survenue.');
+      setMessage(err instanceof ApiError ? err.message : t('common.error'));
     } finally {
       setIsAdding(false);
     }
@@ -83,20 +86,23 @@ export default function ProductDetailScreen() {
         <Image source={{ uri: imageUri(product.images[0]) }} style={styles.image} />
       )}
       <View style={styles.content}>
-        <Text style={styles.name}>{product.name.fr}</Text>
+        <Text style={styles.name}>{localize(product.name, i18n.language)}</Text>
         <Text style={styles.price}>
-          {product.price} TND
+          {product.price} {t('common.currency')}
           {product.isOnSale && product.compareAtPrice && (
-            <Text style={styles.compareAtPrice}> {product.compareAtPrice} TND</Text>
+            <Text style={styles.compareAtPrice}>
+              {' '}
+              {product.compareAtPrice} {t('common.currency')}
+            </Text>
           )}
         </Text>
-        {product.isOutOfStock && <Text style={styles.outOfStock}>Rupture de stock</Text>}
+        {product.isOutOfStock && <Text style={styles.outOfStock}>{t('product.outOfStock')}</Text>}
 
-        <Text style={styles.description}>{product.description.fr}</Text>
+        <Text style={styles.description}>{localize(product.description, i18n.language)}</Text>
 
         {sizes.length > 0 && (
           <View style={styles.selectorGroup}>
-            <Text style={styles.selectorLabel}>Taille</Text>
+            <Text style={styles.selectorLabel}>{t('product.size')}</Text>
             <View style={styles.chipRow}>
               {sizes.map((size) => (
                 <Pressable
@@ -113,7 +119,7 @@ export default function ProductDetailScreen() {
 
         {colors.length > 0 && (
           <View style={styles.selectorGroup}>
-            <Text style={styles.selectorLabel}>Couleur</Text>
+            <Text style={styles.selectorLabel}>{t('product.color')}</Text>
             <View style={styles.chipRow}>
               {colors.map((color) => (
                 <Pressable
@@ -135,7 +141,7 @@ export default function ProductDetailScreen() {
           onPress={handleAddToCart}
           disabled={product.isOutOfStock || isAdding}
         >
-          <Text style={styles.buttonText}>{isAdding ? 'Ajout...' : 'Ajouter au panier'}</Text>
+          <Text style={styles.buttonText}>{isAdding ? t('common.loading') : t('product.addToCart')}</Text>
         </Pressable>
       </View>
     </ScrollView>

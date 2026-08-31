@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '@/context/cart-context';
 
 function TabIcon({ label, focused }: { label: string; focused: boolean }) {
@@ -9,6 +10,7 @@ function TabIcon({ label, focused }: { label: string; focused: boolean }) {
 }
 
 export default function TabsLayout() {
+  const { t } = useTranslation();
   const { itemCount } = useCart();
 
   return (
@@ -16,7 +18,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="catalogue"
         options={{
-          title: 'Catalogue',
+          title: t('nav.catalog'),
           headerShown: false,
           tabBarIcon: ({ focused }) => <TabIcon label="🛍️" focused={focused} />,
         }}
@@ -24,7 +26,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="panier"
         options={{
-          title: 'Panier',
+          title: t('nav.cart'),
           tabBarIcon: ({ focused }) => <TabIcon label="🧺" focused={focused} />,
           tabBarBadge: itemCount > 0 ? itemCount : undefined,
         }}
@@ -32,7 +34,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="compte"
         options={{
-          title: 'Compte',
+          title: t('nav.account'),
           tabBarIcon: ({ focused }) => <TabIcon label="👤" focused={focused} />,
         }}
       />
