@@ -48,6 +48,10 @@ function RootNavigator() {
           name="payments/mock/[reference]"
           options={{ headerShown: true, title: t('checkout.paymentMethod') }}
         />
+        <Stack.Screen
+          name="essayage/[slug]"
+          options={{ headerShown: true, title: t('avatar.tryOn') }}
+        />
       </Stack.Protected>
     </Stack>
   );

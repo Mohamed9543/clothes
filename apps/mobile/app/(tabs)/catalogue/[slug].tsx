@@ -14,6 +14,7 @@ import { API_URL, apiFetch, ApiError } from '@/lib/api';
 import { localize } from '@/lib/localized';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
+import { TryOnButton } from '@/components/try-on-button';
 import type { PublicProduct } from '@/types';
 
 function imageUri(path: string): string {
@@ -143,6 +144,8 @@ export default function ProductDetailScreen() {
         >
           <Text style={styles.buttonText}>{isAdding ? t('common.loading') : t('product.addToCart')}</Text>
         </Pressable>
+
+        <TryOnButton product={product} selectedColor={selectedColor} />
       </View>
     </ScrollView>
   );
