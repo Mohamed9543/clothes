@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 import { CatalogModule } from '../catalog/catalog.module';
 import { Product, ProductSchema } from '../catalog/schemas/product.schema';
 import { OrdersModule } from '../orders/orders.module';
@@ -17,6 +18,7 @@ import { Review, ReviewSchema } from './schemas/review.schema';
     ]),
     CatalogModule,
     OrdersModule,
+    AuditLogsModule,
   ],
   controllers: [ReviewsController],
   providers: [ReviewsService],

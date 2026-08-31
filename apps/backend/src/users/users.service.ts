@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { User, UserDocument } from './schemas/user.schema';
 
@@ -13,7 +14,10 @@ export interface CreateUserInput {
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private readonly auditLogsService: AuditLogsService,
+  ) {}
 
   findByEmail(email: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ email: email.toLowerCase() }).exec();
@@ -115,7 +119,7 @@ export class UsersService {
     return user;
   }
 
-  async setBlocked(id: string, isBlocked: boolean): Promise<UserDocument> {
+  async setBlocked(id: string, isBlocked: boolean, adminUserId: string): Promise<UserDocument> {
     const user = await this.userModel
       .findByIdAndUpdate(
         id,
@@ -126,21 +130,45 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    await this.auditLogsService.log({
+      adminUserId,
+      action: isBlocked ? 'user_blocked' : 'user_unblocked',
+      targetType: 'user',
+      targetId: id,
+    });
     return user;
   }
 
-  async updateAdmin(id: string, dto: { firstName?: string; lastName?: string }): Promise<UserDocument> {
+  async updateAdmin(
+    id: string,
+    dto: { firstName?: string; lastName?: string },
+    adminUserId: string,
+  ): Promise<UserDocument> {
     const user = await this.userModel.findByIdAndUpdate(id, dto, { new: true }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    await this.auditLogsService.log({
+      adminUserId,
+      action: 'user_updated',
+      targetType: 'user',
+      targetId: id,
+      details: Object.keys(dto).join(', '),
+    });
     return user;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, adminUserId: string): Promise<void> {
     const result = await this.userModel.findByIdAndDelete(id).exec();
     if (!result) {
       throw new NotFoundException('User not found');
     }
+    await this.auditLogsService.log({
+      adminUserId,
+      action: 'user_deleted',
+      targetType: 'user',
+      targetId: id,
+      details: result.email,
+    });
   }
 }

@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { Product, ProductDocument } from '../catalog/schemas/product.schema';
 import { ProductsService } from '../catalog/products.service';
 import { OrdersService } from '../orders/orders.service';
@@ -50,6 +51,7 @@ export class ReviewsService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly productsService: ProductsService,
     private readonly ordersService: OrdersService,
+    private readonly auditLogsService: AuditLogsService,
   ) {}
 
   private async enrichWithAuthorName(reviews: ReviewDocument[]): Promise<EnrichedReview[]> {
@@ -152,11 +154,18 @@ export class ReviewsService {
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async setHidden(id: string, isHidden: boolean): Promise<ReviewDocument> {
+  async setHidden(id: string, isHidden: boolean, adminUserId: string): Promise<ReviewDocument> {
     const review = await this.reviewModel.findByIdAndUpdate(id, { isHidden }, { new: true }).exec();
     if (!review) {
       throw new BadRequestException('Review not found');
     }
+    await this.auditLogsService.log({
+      adminUserId,
+      action: 'review_moderated',
+      targetType: 'review',
+      targetId: id,
+      details: isHidden ? 'hidden' : 'unhidden',
+    });
     return review;
   }
 

@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import { Types } from 'mongoose';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { ProductsService } from '../catalog/products.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrdersService } from '../orders/orders.service';
@@ -60,6 +61,7 @@ describe('ReturnsService', () => {
           useValue: { restock: restockMock, decrementStock: decrementStockMock },
         },
         { provide: NotificationsService, useValue: { create: notifyMock } },
+        { provide: AuditLogsService, useValue: { log: jest.fn().mockResolvedValue(undefined) } },
       ],
     }).compile();
 

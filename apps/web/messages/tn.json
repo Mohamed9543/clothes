@@ -460,7 +460,8 @@
     "fieldSaleEndsAt": "تاريخ خلاص التخفيض (مش إجباري)",
     "fieldBundleDiscount": "نسبة خصم الباك (%)",
     "tabReturns": "الإرجاعات",
-    "colOrder": "الطلبية"
+    "colOrder": "الطلبية",
+    "tabAuditLogs": "سجل التدقيق"
   },
   "stats": {
     "title": "الإحصائيات",
@@ -478,7 +479,21 @@
     "colProduct": "الحاجة",
     "colQuantity": "العدد",
     "colRevenue": "المداخيل",
-    "noData": "ما فماش بيانات لحد الآن."
+    "noData": "ما فماش بيانات لحد الآن.",
+    "period": {
+      "day": "نهار",
+      "week": "جمعة",
+      "month": "شهر",
+      "year": "عام"
+    },
+    "returnsRequested": "طلبات الإرجاع",
+    "returnsRefunded": "{count} ترجعو",
+    "reviewStats": "متوسط تقييم الآراء",
+    "reviewCount": "{count} رأي",
+    "outfitsCount": "التنسيقات الفعالة",
+    "tryOnUsage": "التجارب الافتراضية",
+    "popularSizes": "المقاسات الأكثر طلب",
+    "popularColors": "الألوان الأكثر طلب"
   },
   "review": {
     "title": "آراء الزبائن",
@@ -567,5 +582,15 @@
     "title": "الإشعارات",
     "markAllRead": "حط الكل مقروي",
     "empty": "ما فماش إشعارات."
+  },
+  "auditLogs": {
+    "title": "سجل التدقيق",
+    "empty": "ما فماش أي إجراء متسجل.",
+    "colAdmin": "المسؤول",
+    "colAction": "الإجراء",
+    "colTarget": "الهدف",
+    "colDate": "التاريخ",
+    "previous": "اللي قبل",
+    "next": "اللي بعد"
   }
 }

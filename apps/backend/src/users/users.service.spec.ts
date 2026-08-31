@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { UsersService } from './users.service';
 import { User } from './schemas/user.schema';
 
@@ -18,6 +19,7 @@ describe('UsersService — loyalty points', () => {
           provide: getModelToken(User.name),
           useValue: { updateOne: (...args: unknown[]) => ({ exec: () => updateOneMock(...args) }) },
         },
+        { provide: AuditLogsService, useValue: { log: jest.fn().mockResolvedValue(undefined) } },
       ],
     }).compile();
 

@@ -460,7 +460,8 @@
     "fieldSaleEndsAt": "Fin du solde (optionnel)",
     "fieldBundleDiscount": "Remise pack (%)",
     "tabReturns": "Retours",
-    "colOrder": "Commande"
+    "colOrder": "Commande",
+    "tabAuditLogs": "Journal d'audit"
   },
   "stats": {
     "title": "Statistiques",
@@ -478,7 +479,21 @@
     "colProduct": "Produit",
     "colQuantity": "Quantité",
     "colRevenue": "Chiffre d'affaires",
-    "noData": "Pas encore de données."
+    "noData": "Pas encore de données.",
+    "period": {
+      "day": "Jour",
+      "week": "Semaine",
+      "month": "Mois",
+      "year": "Année"
+    },
+    "returnsRequested": "Retours demandés",
+    "returnsRefunded": "{count} remboursé(s)",
+    "reviewStats": "Note moyenne des avis",
+    "reviewCount": "{count} avis",
+    "outfitsCount": "Tenues actives",
+    "tryOnUsage": "Essayages virtuels",
+    "popularSizes": "Tailles populaires",
+    "popularColors": "Couleurs populaires"
   },
   "review": {
     "title": "Avis clients",
@@ -567,5 +582,15 @@
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
     "empty": "Aucune notification."
+  },
+  "auditLogs": {
+    "title": "Journal d'audit",
+    "empty": "Aucune action enregistrée.",
+    "colAdmin": "Admin",
+    "colAction": "Action",
+    "colTarget": "Cible",
+    "colDate": "Date",
+    "previous": "Précédent",
+    "next": "Suivant"
   }
 }

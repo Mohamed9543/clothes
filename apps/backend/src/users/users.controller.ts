@@ -97,7 +97,7 @@ export class UsersController {
         throw new BadRequestException('You cannot block another admin account');
       }
     }
-    return this.usersService.setBlocked(id, dto.isBlocked);
+    return this.usersService.setBlocked(id, dto.isBlocked, currentUser.sub);
   }
 
   @Get('admin/:id/orders')
@@ -135,8 +135,12 @@ export class UsersController {
   @Patch('admin/:id')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  async updateUserAdmin(@Param('id') id: string, @Body() dto: UpdateUserAdminDto) {
-    const user = await this.usersService.updateAdmin(id, dto);
+  async updateUserAdmin(
+    @CurrentUser() currentUser: JwtAccessPayload,
+    @Param('id') id: string,
+    @Body() dto: UpdateUserAdminDto,
+  ) {
+    const user = await this.usersService.updateAdmin(id, dto, currentUser.sub);
     return toAdminUserView(user);
   }
 
@@ -151,6 +155,6 @@ export class UsersController {
     if (target?.role === UserRole.ADMIN) {
       throw new BadRequestException('You cannot delete another admin account');
     }
-    await this.usersService.remove(id);
+    await this.usersService.remove(id, currentUser.sub);
   }
 }

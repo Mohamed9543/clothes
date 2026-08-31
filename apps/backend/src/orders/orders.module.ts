@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 import { CartModule } from '../cart/cart.module';
 import { CatalogModule } from '../catalog/catalog.module';
 import { NotificationsModule } from '../notifications/notifications.module';
@@ -29,6 +30,7 @@ import { Order, OrderSchema } from './schemas/order.schema';
     OutfitsModule,
     PaymentsModule,
     PromotionsModule,
+    AuditLogsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, ShippingFeeService],

@@ -5,6 +5,7 @@ import { validate } from 'class-validator';
 import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
 import { Model, QueryFilter, Types } from 'mongoose';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { CSV_COLUMNS, productToRow, rowToProductDto } from './csv/product-csv.mapper';
 import { AdjustStockDto, ManualStockReason } from './dto/adjust-stock.dto';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -54,6 +55,7 @@ export class ProductsService {
     @InjectModel(Product.name) private readonly productModel: Model<ProductDocument>,
     @InjectModel(StockMovement.name)
     private readonly stockMovementModel: Model<StockMovementDocument>,
+    private readonly auditLogsService: AuditLogsService,
   ) {}
 
   async findAll(query: QueryProductsDto): Promise<PaginatedResult<Product & PublicStockSummary>> {
@@ -202,11 +204,18 @@ export class ProductsService {
     return product;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, adminUserId: string): Promise<void> {
     const result = await this.productModel.findByIdAndDelete(id).exec();
     if (!result) {
       throw new NotFoundException('Product not found');
     }
+    await this.auditLogsService.log({
+      adminUserId,
+      action: 'product_deleted',
+      targetType: 'product',
+      targetId: id,
+      details: result.slug,
+    });
   }
 
   getVariantStock(product: ProductDocument, size: string, color: string): number {
@@ -275,6 +284,7 @@ export class ProductsService {
   async adjustStock(
     productId: string,
     dto: AdjustStockDto,
+    adminUserId: string,
   ): Promise<ProductDocument> {
     const product = await this.productModel.findById(productId).exec();
     if (!product) {
@@ -300,6 +310,14 @@ export class ProductsService {
       quantityChange: dto.quantityChange,
       reason: dto.reason as ManualStockReason,
       note: dto.note ?? '',
+    });
+
+    await this.auditLogsService.log({
+      adminUserId,
+      action: 'stock_adjusted',
+      targetType: 'product',
+      targetId: productId,
+      details: `${dto.size}/${dto.color} ${dto.quantityChange > 0 ? '+' : ''}${dto.quantityChange} (${dto.reason})`,
     });
 
     return product;

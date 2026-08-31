@@ -24,8 +24,12 @@ export class ReviewsController {
   @Patch('admin/:id/status')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  setStatus(@Param('id') id: string, @Body() dto: SetReviewStatusDto) {
-    return this.reviewsService.setHidden(id, dto.isHidden);
+  setStatus(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('id') id: string,
+    @Body() dto: SetReviewStatusDto,
+  ) {
+    return this.reviewsService.setHidden(id, dto.isHidden, user.sub);
   }
 
   @Delete('admin/:id')

@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { AuditLogsModule } from './audit-logs/audit-logs.module';
 import { AuthModule } from './auth/auth.module';
 import { AvatarAssetsModule } from './avatar-assets/avatar-assets.module';
 import { CartModule } from './cart/cart.module';
@@ -49,6 +51,8 @@ import { WishlistModule } from './wishlist/wishlist.module';
     SizeAssistantModule,
     NotificationsModule,
     ReturnsModule,
+    AnalyticsModule,
+    AuditLogsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

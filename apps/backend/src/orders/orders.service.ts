@@ -3,6 +3,7 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
 import { LOYALTY_POINTS_PER_TND_SPENT, LOYALTY_TND_PER_POINT_REDEEMED } from '@libas/shared';
 import type { DiscountSource } from '@libas/shared';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { CartService } from '../cart/cart.service';
 import { ProductsService } from '../catalog/products.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -57,6 +58,7 @@ export class OrdersService {
     private readonly paymentsService: PaymentsService,
     private readonly promotionsService: PromotionsService,
     private readonly notificationsService: NotificationsService,
+    private readonly auditLogsService: AuditLogsService,
   ) {}
 
   /**
@@ -301,6 +303,14 @@ export class OrdersService {
       type: 'order_status',
       message: `Your order #${orderId.slice(-6)} is now "${status}"`,
       link: '/commandes',
+    });
+
+    await this.auditLogsService.log({
+      adminUserId,
+      action: 'order_status_changed',
+      targetType: 'order',
+      targetId: orderId,
+      details: `${previous.status} -> ${status}`,
     });
 
     return order;

@@ -19,9 +19,11 @@ import { memoryStorage } from 'multer';
 
 const MAX_CSV_FILE_SIZE = 2 * 1024 * 1024; // 2MB — generous for a product CSV
 const CSV_MIME_TYPES = ['text/csv', 'application/vnd.ms-excel', 'text/plain'];
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import type { JwtAccessPayload } from '../auth/strategies/jwt-access.strategy';
 import { TranslationService } from '../translation/translation.service';
 import { TranslateProductDto } from '../translation/dto/translate-product.dto';
 import { UserRole } from '../users/schemas/user.schema';
@@ -115,8 +117,8 @@ export class ProductsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(id);
+  remove(@CurrentUser() user: JwtAccessPayload, @Param('id') id: string) {
+    return this.productsService.remove(id, user.sub);
   }
 
   @Get(':id/stock-movements')
@@ -129,7 +131,11 @@ export class ProductsController {
   @Patch(':id/stock-adjust')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  adjustStock(@Param('id') id: string, @Body() dto: AdjustStockDto) {
-    return this.productsService.adjustStock(id, dto);
+  adjustStock(
+    @CurrentUser() user: JwtAccessPayload,
+    @Param('id') id: string,
+    @Body() dto: AdjustStockDto,
+  ) {
+    return this.productsService.adjustStock(id, dto, user.sub);
   }
 }

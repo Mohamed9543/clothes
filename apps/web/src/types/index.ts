@@ -126,9 +126,27 @@ export interface AdminUser {
   createdAt: string;
 }
 
-export interface MonthlyRevenue {
-  month: string;
+export interface SalesPoint {
+  label: string;
   revenue: number;
+}
+
+export type StatsPeriod = 'day' | 'week' | 'month' | 'year';
+
+export interface PopularVariantEntry {
+  value: string;
+  quantity: number;
+}
+
+export interface ReturnsStats {
+  requestedCount: number;
+  completedCount: number;
+  refundedAmount: number;
+}
+
+export interface ReviewStats {
+  count: number;
+  avgRating: number;
 }
 
 export interface TopProduct {
@@ -188,12 +206,29 @@ export interface BulkAddResult {
 export interface DashboardStats {
   totalRevenue: number;
   totalOrders: number;
-  revenueByMonth: MonthlyRevenue[];
+  revenueByMonth: SalesPoint[];
   topProducts: TopProduct[];
   topCategories: CategorySales[];
   salesByAudience: AudienceSales[];
   languageDistribution: LanguageDistributionEntry[];
   chatbotConversion: ChatbotConversion;
+  popularSizes: PopularVariantEntry[];
+  popularColors: PopularVariantEntry[];
+  returnsStats: ReturnsStats;
+  reviewStats: ReviewStats;
+  outfitsCount: number;
+  tryOnUsageCount: number;
+}
+
+export interface AuditLogEntry {
+  _id: string;
+  adminUserId: string;
+  adminName: string;
+  action: string;
+  targetType: string;
+  targetId: string;
+  details: string | null;
+  createdAt: string;
 }
 
 export type Gender = 'male' | 'female' | 'other';

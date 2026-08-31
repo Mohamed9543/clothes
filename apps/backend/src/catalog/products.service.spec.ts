@@ -1,9 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { Product, isProductOnSale } from './schemas/product.schema';
 import { StockMovement } from './schemas/stock-movement.schema';
 import { ProductsService } from './products.service';
+
+const auditLogsServiceMock = { log: jest.fn().mockResolvedValue(undefined) };
 
 describe('ProductsService — decrementStock (size×color variants)', () => {
   let service: ProductsService;
@@ -31,6 +34,7 @@ describe('ProductsService — decrementStock (size×color variants)', () => {
             create: createMovementMock,
           },
         },
+        { provide: AuditLogsService, useValue: auditLogsServiceMock },
       ],
     }).compile();
 
@@ -125,6 +129,7 @@ describe('ProductsService — findAll (color/availability filter + sort)', () =>
           },
         },
         { provide: getModelToken(StockMovement.name), useValue: {} },
+        { provide: AuditLogsService, useValue: auditLogsServiceMock },
       ],
     }).compile();
 

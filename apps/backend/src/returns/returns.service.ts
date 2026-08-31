@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 import { ProductsService } from '../catalog/products.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { OrderStatus } from '../orders/schemas/order.schema';
@@ -15,6 +16,7 @@ export class ReturnsService {
     private readonly ordersService: OrdersService,
     private readonly productsService: ProductsService,
     private readonly notificationsService: NotificationsService,
+    private readonly auditLogsService: AuditLogsService,
   ) {}
 
   async create(userId: string, dto: CreateReturnDto): Promise<ReturnDocument> {
@@ -128,6 +130,14 @@ export class ReturnsService {
           );
           return sum + (orderItem?.unitPrice ?? 0) * item.quantity;
         }, 0);
+
+        await this.auditLogsService.log({
+          adminUserId,
+          action: 'return_refunded',
+          targetType: 'return',
+          targetId: id,
+          details: `${ret.refundAmount}`,
+        });
       }
     }
 

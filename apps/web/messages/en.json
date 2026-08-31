@@ -460,7 +460,8 @@
     "fieldSaleEndsAt": "Sale end date (optional)",
     "fieldBundleDiscount": "Bundle discount (%)",
     "tabReturns": "Returns",
-    "colOrder": "Order"
+    "colOrder": "Order",
+    "tabAuditLogs": "Audit log"
   },
   "stats": {
     "title": "Statistics",
@@ -478,7 +479,21 @@
     "colProduct": "Product",
     "colQuantity": "Quantity",
     "colRevenue": "Revenue",
-    "noData": "No data yet."
+    "noData": "No data yet.",
+    "period": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year"
+    },
+    "returnsRequested": "Returns requested",
+    "returnsRefunded": "{count} refunded",
+    "reviewStats": "Average review rating",
+    "reviewCount": "{count} reviews",
+    "outfitsCount": "Active outfits",
+    "tryOnUsage": "Virtual try-ons",
+    "popularSizes": "Popular sizes",
+    "popularColors": "Popular colors"
   },
   "review": {
     "title": "Customer reviews",
@@ -567,5 +582,15 @@
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "empty": "No notifications."
+  },
+  "auditLogs": {
+    "title": "Audit log",
+    "empty": "No recorded action yet.",
+    "colAdmin": "Admin",
+    "colAction": "Action",
+    "colTarget": "Target",
+    "colDate": "Date",
+    "previous": "Previous",
+    "next": "Next"
   }
 }
