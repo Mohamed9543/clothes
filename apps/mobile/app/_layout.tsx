@@ -44,6 +44,10 @@ function RootNavigator() {
           name="commandes/[id]"
           options={{ headerShown: true, title: t('account.orderNumber') }}
         />
+        <Stack.Screen
+          name="payments/mock/[reference]"
+          options={{ headerShown: true, title: t('checkout.paymentMethod') }}
+        />
       </Stack.Protected>
     </Stack>
   );

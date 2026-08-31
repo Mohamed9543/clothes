@@ -1,4 +1,4 @@
-// Extracted verbatim from apps/web/messages/tn.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus)
+// Extracted verbatim from apps/web/messages/tn.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments)
 // plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
 // Do not hand-edit the shared namespaces here — update the web source and re-run the
 // extraction instead, to avoid the two clients drifting out of sync.
@@ -150,6 +150,16 @@ export default {
     "shipped": "خرجت للتوصيل",
     "delivered": "توصلت",
     "cancelled": "تلغات"
+  },
+  "payments": {
+    "mockConfirmTitle": "تجربة الخلاص",
+    "mockConfirmSubtitle": "هذه صفحة تجريبية برشا — ما فماش خلاص حقيقي.",
+    "simulateSuccess": "جرب خلاص ناجح",
+    "simulateFailure": "جرب خلاص فاشل",
+    "simulatedPaidTitle": "التجربة نجحت",
+    "simulatedFailedTitle": "التجربة فشلت",
+    "viewOrders": "شوف الطلبيات متاعي",
+    "simulateError": "صار مشكل خلال التجربة."
   },
   "mobile": {
     "loginSubtitle": "دخّل للكونط متاعك",

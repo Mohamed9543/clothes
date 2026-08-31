@@ -124,3 +124,8 @@ export interface Order {
   shippingAddress: ShippingAddress;
   createdAt: string;
 }
+
+export interface CreateOrderResult {
+  order: Order;
+  paymentRedirectUrl?: string;
+}

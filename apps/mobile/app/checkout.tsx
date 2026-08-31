@@ -14,7 +14,9 @@ import { useTranslation } from 'react-i18next';
 import { Governorate } from '@libas/shared';
 import { apiFetch, ApiError } from '@/lib/api';
 import { useCart } from '@/context/cart-context';
-import type { Order, OrderQuote } from '@/types';
+import type { CreateOrderResult, Order, OrderQuote } from '@/types';
+
+type PaymentMethod = 'cod' | 'card';
 
 export default function CheckoutScreen() {
   const router = useRouter();
@@ -26,6 +28,7 @@ export default function CheckoutScreen() {
   const [address, setAddress] = useState('');
   const [delegation, setDelegation] = useState('');
   const [governorate, setGovernorate] = useState<Governorate>(Governorate.TUNIS);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [quote, setQuote] = useState<OrderQuote | null>(null);
   const [isQuoting, setIsQuoting] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,10 +55,11 @@ export default function CheckoutScreen() {
     setError(null);
     setIsSubmitting(true);
     try {
-      const order = await apiFetch<Order>('/orders', {
+      const result = await apiFetch<CreateOrderResult>('/orders', {
         method: 'POST',
         auth: true,
         body: JSON.stringify({
+          paymentMethod,
           shippingAddress: {
             fullName: fullName.trim(),
             phone: phone.trim(),
@@ -66,8 +70,20 @@ export default function CheckoutScreen() {
           },
         }),
       });
-      setConfirmedOrder(order);
       await refresh();
+
+      if (result.paymentRedirectUrl) {
+        // The mock provider returns a web confirmation URL
+        // (`${WEB_APP_URL}/payments/mock/{reference}`) — the reference is
+        // always its last path segment. Mobile has its own native screen
+        // for this instead of opening the web page (which relies on the
+        // web app's localStorage session, not this app's auth).
+        const reference = result.paymentRedirectUrl.split('/').filter(Boolean).pop();
+        router.replace(`/payments/mock/${reference}`);
+        return;
+      }
+
+      setConfirmedOrder(result.order);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('common.error'));
     } finally {
@@ -138,6 +154,26 @@ export default function CheckoutScreen() {
         </Picker>
       </View>
 
+      <Text style={styles.label}>{t('checkout.paymentMethod')}</Text>
+      <View style={styles.paymentRow}>
+        <Pressable
+          onPress={() => setPaymentMethod('cod')}
+          style={[styles.paymentChip, paymentMethod === 'cod' && styles.paymentChipActive]}
+        >
+          <Text style={paymentMethod === 'cod' ? styles.paymentChipTextActive : styles.paymentChipText}>
+            {t('checkout.cod')}
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setPaymentMethod('card')}
+          style={[styles.paymentChip, paymentMethod === 'card' && styles.paymentChipActive]}
+        >
+          <Text style={paymentMethod === 'card' ? styles.paymentChipTextActive : styles.paymentChipText}>
+            {t('checkout.card')}
+          </Text>
+        </Pressable>
+      </View>
+
       <View style={styles.summary}>
         <Text style={styles.sectionTitle}>{t('cart.title')}</Text>
         {isQuoting ? (
@@ -174,7 +210,7 @@ export default function CheckoutScreen() {
         ) : (
           <Text style={styles.error}>{t('common.error')}</Text>
         )}
-        <Text style={styles.paymentNote}>{t('checkout.cod')}.</Text>
+        <Text style={styles.paymentNote}>{t(paymentMethod === 'cod' ? 'checkout.cod' : 'checkout.card')}.</Text>
       </View>
 
       {error && <Text style={styles.error}>{error}</Text>}
@@ -205,6 +241,19 @@ const styles = StyleSheet.create({
   },
   label: { fontSize: 13, fontWeight: '600', marginBottom: 4 },
   pickerWrapper: { borderWidth: 1, borderColor: '#ddd', borderRadius: 8, backgroundColor: '#fff', marginBottom: 16 },
+  paymentRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
+  paymentChip: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  paymentChipActive: { borderColor: '#b8622e', backgroundColor: '#fbe9e0' },
+  paymentChipText: { fontSize: 13 },
+  paymentChipTextActive: { fontSize: 13, color: '#b8622e', fontWeight: '600' },
   summary: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginTop: 8 },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
   totalLabel: { fontWeight: '700' },

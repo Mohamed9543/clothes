@@ -1,4 +1,4 @@
-// Extracted verbatim from apps/web/messages/en.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus)
+// Extracted verbatim from apps/web/messages/en.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments)
 // plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
 // Do not hand-edit the shared namespaces here — update the web source and re-run the
 // extraction instead, to avoid the two clients drifting out of sync.
@@ -150,6 +150,16 @@ export default {
     "shipped": "Shipped",
     "delivered": "Delivered",
     "cancelled": "Cancelled"
+  },
+  "payments": {
+    "mockConfirmTitle": "Payment simulation",
+    "mockConfirmSubtitle": "This is a demo page — no real payment is made.",
+    "simulateSuccess": "Simulate a successful payment",
+    "simulateFailure": "Simulate a failure",
+    "simulatedPaidTitle": "Simulated payment succeeded",
+    "simulatedFailedTitle": "Simulated payment failed",
+    "viewOrders": "View my orders",
+    "simulateError": "Something went wrong during the simulation."
   },
   "mobile": {
     "loginSubtitle": "Sign in to your account",

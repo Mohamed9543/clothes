@@ -1,4 +1,4 @@
-// Extracted verbatim from apps/web/messages/ar.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus)
+// Extracted verbatim from apps/web/messages/ar.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments)
 // plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
 // Do not hand-edit the shared namespaces here — update the web source and re-run the
 // extraction instead, to avoid the two clients drifting out of sync.
@@ -150,6 +150,16 @@ export default {
     "shipped": "تم الشحن",
     "delivered": "تم التسليم",
     "cancelled": "ملغاة"
+  },
+  "payments": {
+    "mockConfirmTitle": "محاكاة الدفع",
+    "mockConfirmSubtitle": "هذه صفحة تجريبية — لا يتم أي دفع حقيقي.",
+    "simulateSuccess": "محاكاة دفع ناجح",
+    "simulateFailure": "محاكاة فشل الدفع",
+    "simulatedPaidTitle": "نجحت محاكاة الدفع",
+    "simulatedFailedTitle": "فشلت محاكاة الدفع",
+    "viewOrders": "مشاهدة طلباتي",
+    "simulateError": "حدث خطأ أثناء المحاكاة."
   },
   "mobile": {
     "loginSubtitle": "سجّل الدخول إلى حسابك",
