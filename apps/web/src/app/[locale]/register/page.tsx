@@ -25,7 +25,7 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     try {
       await register({ firstName, lastName, email, password });
-      router.push('/compte');
+      router.push('/');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : tCommon('error'));
     } finally {

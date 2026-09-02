@@ -23,7 +23,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await login(email, password);
-      router.push('/compte');
+      router.push('/');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : tCommon('error'));
     } finally {
