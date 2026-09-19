@@ -16,11 +16,27 @@ export default function TabsLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: '#b8622e' }}>
       <Tabs.Screen
+        name="index"
+        options={{
+          title: t('nav.home'),
+          headerTitle: t('brand.name'),
+          tabBarIcon: ({ focused }) => <TabIcon label="🏠" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
         name="catalogue"
         options={{
           title: t('nav.catalog'),
           headerShown: false,
           tabBarIcon: ({ focused }) => <TabIcon label="🛍️" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="lookbook"
+        options={{
+          title: t('nav.lookbook'),
+          headerShown: false,
+          tabBarIcon: ({ focused }) => <TabIcon label="📸" focused={focused} />,
         }}
       />
       <Tabs.Screen

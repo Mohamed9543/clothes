@@ -12,6 +12,8 @@ import {
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ApiError, useAuth } from '@/context/auth-context';
+import { GoogleButton } from '@/components/google-button';
+import { PasswordInput } from '@/components/password-input';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
@@ -60,13 +62,7 @@ export default function RegisterScreen() {
           value={email}
           onChangeText={setEmail}
         />
-        <TextInput
-          style={styles.input}
-          placeholder={t('auth.password')}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <PasswordInput placeholder={t('auth.password')} value={password} onChangeText={setPassword} />
         <Text style={styles.hint}>{t('mobile.passwordHint')}</Text>
 
         {error && <Text style={styles.error}>{error}</Text>}
@@ -78,6 +74,8 @@ export default function RegisterScreen() {
             <Text style={styles.buttonText}>{t('auth.registerCta')}</Text>
           )}
         </Pressable>
+
+        <GoogleButton onError={setError} />
 
         <Link href="/(auth)/login" style={styles.link}>
           {t('auth.haveAccount')} {t('auth.signIn')}

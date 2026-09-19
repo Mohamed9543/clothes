@@ -4,13 +4,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
+  ScrollView,
   Text,
   TextInput,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { ApiError, useAuth } from '@/context/auth-context';
+import { GoogleButton } from '@/components/google-button';
+import { PasswordInput } from '@/components/password-input';
+import { authStyles as styles } from '@/lib/auth-styles';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -34,66 +37,50 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={{ flex: 1, backgroundColor: '#faf8f5' }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <Text style={styles.title}>Libas</Text>
-      <Text style={styles.subtitle}>{t('mobile.loginSubtitle')}</Text>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: 24 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={[styles.title, { fontSize: 32 }]}>{t('brand.name')}</Text>
+        <Text style={styles.subtitle}>{t('mobile.loginSubtitle')}</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder={t('auth.email')}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={t('auth.password')}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder={t('auth.email')}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <PasswordInput
+          placeholder={t('auth.password')}
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      {error && <Text style={styles.error}>{error}</Text>}
+        <Link href="/(auth)/forgot-password" style={styles.linkEnd}>
+          {t('auth.forgotLink')}
+        </Link>
 
-      <Pressable style={styles.button} onPress={handleSubmit} disabled={isSubmitting}>
-        {isSubmitting ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>{t('auth.loginCta')}</Text>
-        )}
-      </Pressable>
+        {error && <Text style={styles.error}>{error}</Text>}
 
-      <Link href="/(auth)/register" style={styles.link}>
-        {t('auth.noAccount')} {t('auth.createAccount')}
-      </Link>
+        <Pressable style={styles.button} onPress={handleSubmit} disabled={isSubmitting}>
+          {isSubmitting ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t('auth.loginCta')}</Text>
+          )}
+        </Pressable>
+
+        <GoogleButton onError={setError} />
+
+        <Link href="/(auth)/register" style={styles.link}>
+          {t('auth.noAccount')} {t('auth.createAccount')}
+        </Link>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 24, backgroundColor: '#faf8f5' },
-  title: { fontSize: 32, fontWeight: '700', textAlign: 'center', marginBottom: 4 },
-  subtitle: { fontSize: 14, color: '#6b6b6b', textAlign: 'center', marginBottom: 32 },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 12,
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: '#b8622e',
-    borderRadius: 999,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: { color: '#fff', fontWeight: '600', fontSize: 15 },
-  link: { marginTop: 20, textAlign: 'center', color: '#b8622e' },
-  error: { color: '#c0392b', marginBottom: 12, fontSize: 13 },
-});

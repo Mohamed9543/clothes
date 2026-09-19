@@ -8,6 +8,7 @@ import { initI18n } from '@/i18n';
 import { syncNativeRtlFlag } from '@/lib/rtl';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { CartProvider } from '@/context/cart-context';
+import { WishlistProvider } from '@/context/wishlist-context';
 
 function LoadingScreen() {
   return (
@@ -52,6 +53,13 @@ function RootNavigator() {
           name="essayage/[slug]"
           options={{ headerShown: true, title: t('avatar.tryOn') }}
         />
+        <Stack.Screen name="wishlist" options={{ headerShown: true, title: t('wishlist.title') }} />
+        <Stack.Screen name="tenue/[slug]" options={{ headerShown: true, title: t('home.outfitsTitle') }} />
+        <Stack.Screen name="retours" options={{ headerShown: true, title: t('returns.title') }} />
+        <Stack.Screen name="mes-looks" options={{ headerShown: true, title: t('lookbook.myLooksTitle') }} />
+        <Stack.Screen name="mensurations" options={{ headerShown: true, title: t('avatar.measurements') }} />
+        <Stack.Screen name="a-propos" options={{ headerShown: true, title: t('nav.about') }} />
+        <Stack.Screen name="assistant" options={{ headerShown: true, title: t('chat.title') }} />
       </Stack.Protected>
     </Stack>
   );
@@ -83,8 +91,10 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <AuthProvider>
         <CartProvider>
-          <StatusBar style="dark" />
-          <RootNavigator />
+          <WishlistProvider>
+            <StatusBar style="dark" />
+            <RootNavigator />
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </SafeAreaProvider>

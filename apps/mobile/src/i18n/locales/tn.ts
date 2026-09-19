@@ -1,7 +1,10 @@
-// Extracted verbatim from apps/web/messages/tn.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments, avatar, fittingRoom)
-// plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
-// Do not hand-edit the shared namespaces here — update the web source and re-run the
-// extraction instead, to avoid the two clients drifting out of sync.
+// Namespaces mirrored from apps/web/messages/<locale>.json (nav, auth, account, cart, checkout,
+// product, common, orderStatus, payments, avatar, fittingRoom, brand, home, catalog, wishlist,
+// lookbook, outfit, returns, about, chat, review, sizeAssistant) plus a small mobile-only
+// "mobile" namespace for strings with no exact web equivalent.
+// Placeholders use single braces ({name}) like the web; i18n/index.ts configures i18next for that.
+// Do not hand-edit the shared namespaces here — update the web source and re-sync them instead,
+// to avoid the two clients drifting out of sync.
 export default {
   "nav": {
     "home": "لصفحة الرئيسية",
@@ -28,7 +31,24 @@ export default {
     "noAccount": "ماعندكش كونط؟",
     "haveAccount": "عندك كونط ديجا؟",
     "createAccount": "اعمل كونط",
-    "signIn": "دخول"
+    "signIn": "دخول",
+    "forgotLink": "نسيت كلمة السر؟",
+    "forgotTitle": "بدّل كلمة السر",
+    "forgotSubtitle": "اكتب الإيميل متاعك وباش نبعثولك كود من 6 أرقام.",
+    "sendCode": "ابعث الكود",
+    "codeSentTo": "بعثنالك كود من 6 أرقام على {email}. يخدم 10 دقايق.",
+    "code": "الكود (6 أرقام)",
+    "newPassword": "كلمة السر الجديدة",
+    "resetCta": "بدّل كلمة السر",
+    "resetSuccess": "كلمة السر تبدلت. تنجم تدخل توّا.",
+    "backToLogin": "ارجع لتسجيل الدخول",
+    "resendCode": "عاود ابعث الكود",
+    "or": "ولا",
+    "verifyTitle": "اكتب الكود",
+    "verifyCta": "تثبّت من الكود",
+    "codeResent": "بعثنالك كود جديد.",
+    "newPasswordTitle": "اختار كلمة سر جديدة",
+    "newPasswordSubtitle": "8 أحرف على الأقل، مع حروف كبيرة وصغيرة ورقم."
   },
   "account": {
     "title": "الكونط متاعي",
@@ -232,7 +252,7 @@ export default {
     "loginSubtitle": "دخّل للكونط متاعك",
     "passwordHint": "8 أحرف بالكل الأقل، فيهم حرف كبير وحرف صغير ورقم.",
     "loadMore": "عرض أكثر",
-    "confirmOrderText": "الطلبية متاعك {{number}} تسجلت.",
+    "confirmOrderText": "الطلبية متاعك {number} تسجلت.",
     "restartRequiredTitle": "لازم تعاود تشغل الأبليكاسيون",
     "restartRequiredText": "تبديل اللغة يحتاج تعاود تشغل الأبليكاسيون باش يتطبق مليح.",
     "restartNow": "عاود شغّل توا",
@@ -241,6 +261,164 @@ export default {
     "offlineTitle": "مافماش كونكسيون",
     "offlineText": "تأكد من الكونكسيون متاعك وعاود جرب.",
     "orderItems": "الحوايج",
-    "paymentByCard": "الخلاص بالكارت"
+    "paymentByCard": "الخلاص بالكارت",
+    "showPassword": "ورّي كلمة السر",
+    "hidePassword": "خبّي كلمة السر",
+    "continueWithGoogle": "كمّل بـ Google"
+  },
+  "brand": {
+    "name": "ستايل فورم",
+    "tagline": "الموضة، تجربها قبل ما تشريها."
+  },
+  "home": {
+    "heroTitle": "جرّبها قبل ما تشريها",
+    "heroSubtitle": "اكتشف المجموعة متاعنا ولقى الستيل يعجبك، بالراحة.",
+    "heroCta": "شوف الكتالوق",
+    "categoriesTitle": "شري حسب الفئة",
+    "categoryMen": "راجل",
+    "categoryWomen": "مرا",
+    "categoryKids": "صغار",
+    "featuredTitle": "الجديد",
+    "outfitsTitle": "لبسات مختارة"
+  },
+  "catalog": {
+    "title": "الكتالوق",
+    "filters": "الفلاتر",
+    "audience": "الفئة",
+    "all": "الكل",
+    "men": "راجل",
+    "women": "مرا",
+    "kids": "صغار",
+    "type": "النوع",
+    "pull": "كنزة",
+    "pantalon": "سروال",
+    "chemise": "قميص",
+    "robe": "فستان",
+    "veste": "جاكيت",
+    "chaussure": "صباط",
+    "accessoire": "إكسسوار",
+    "priceRange": "الميزانية",
+    "minPrice": "الأدنى",
+    "maxPrice": "الأقصى",
+    "apply": "أكد",
+    "reset": "رجّع",
+    "noResults": "ما فماش حاجة تنجم تعجبك.",
+    "resultsCount": "{count} حاجة موجودة",
+    "color": "اللون",
+    "availableOnly": "المتوفر برك",
+    "page": "صفحة {page} من {totalPages}",
+    "previous": "اللي قبل",
+    "next": "اللي بعد",
+    "sort": {
+      "newest": "الجداد",
+      "price_asc": "السعر: من الأقل للأعلى",
+      "price_desc": "السعر: من الأعلى للأقل"
+    }
+  },
+  "wishlist": {
+    "title": "ليستة متاعي",
+    "empty": "الليستة متاعك فارغة.",
+    "browseCatalog": "شوف الكتالوق",
+    "remove": "نحّي",
+    "newListPlaceholder": "اسم الليستة الجديدة",
+    "createList": "إنشاء"
+  },
+  "lookbook": {
+    "title": "لوك بوك",
+    "subtitle": "ستايلات شاركوها الحرفاء متاعنا.",
+    "empty": "ما فماش أي ستايل توا.",
+    "like": "عجبني",
+    "linkedProducts": "المنتجات متاع الستايل هذا",
+    "myLooksTitle": "الستايلات متاعي",
+    "noLooksMine": "مازلت ما نشرتش حتى ستايل.",
+    "likesCount": "{count} عجبهم",
+    "statusVisible": "ظاهر",
+    "statusHidden": "تحت المراجعة",
+    "submitTitle": "شارك الستايل متاعك",
+    "addPhotos": "زيد صور",
+    "uploading": "قاعد يتبعث...",
+    "captionPlaceholder": "وصف الإطلالة متاعك...",
+    "linkProductPlaceholder": "اربط منتج (فتش)...",
+    "submit": "انشر",
+    "errorNoPhoto": "زيد صورة وحدة على الأقل.",
+    "genericError": "صار مشكل. عاود جرب."
+  },
+  "outfit": {
+    "includedProducts": "الحوايج المتضمنة في هالبسة",
+    "totalPrice": "السعر الكل",
+    "addToCart": "زيد التنوّرة كلها للكارتة",
+    "someItemsUnavailable": "شوية حاجات ما كانوش موجودين وتزادو.",
+    "itemsAdded": "التنوّرة تزادت للكارتة!",
+    "bundlePrice": "سعر الباك",
+    "bundleSavings": "اربح {percent}%"
+  },
+  "returns": {
+    "title": "الإرجاع والتبديل متاعي",
+    "empty": "ما فماش طلب إرجاع ولا تبديل توا.",
+    "requestReturn": "إرجاع",
+    "requestExchange": "تبديل",
+    "exchangeSize": "المقاس الجديد",
+    "exchangeColor": "اللون الجديد",
+    "reason": "السبب",
+    "submit": "ابعث الطلب",
+    "cancel": "إلغاء",
+    "genericError": "صار مشكل.",
+    "refundAmount": "المبلغ اللي ترجع",
+    "status": {
+      "requested": "الطلب تبعث",
+      "accepted": "تقبّل",
+      "return_shipped": "الإرجاع تبعث",
+      "received": "وصل",
+      "completed": "كمل",
+      "rejected": "ترفض"
+    }
+  },
+  "about": {
+    "title": "على ستايل فورم",
+    "text1": "ستايل فورم جات من فكرة بسيطة: شرا الحوايج عبر الأنترنات مايستهلش يبقى مخاطرة. التكنولوجيا متاعنا نتاع القياس الافتراضي تخليك تشوف كل حاجة على أفتار ثلاثي الأبعاد شبه قامتك قبل ما تشريها.",
+    "text2": "المساعد الذكي متاعنا يعاونك تركب لبسة كاملة حسب المناسبة والميزانية متاعك، بلغتك."
+  },
+  "chat": {
+    "title": "المساعد متاع ستايل فورم",
+    "openLabel": "حل المساعد",
+    "placeholder": "اكتب رسالتك...",
+    "send": "صيفط",
+    "thinking": "المساعد قاعد يكتب...",
+    "loginRequired": "دخّل باش تهضر مع المساعد.",
+    "login": "دخول",
+    "greeting": "أهلا! نجم نعاونك تلقى لبسة، تقارن بين الحوايج، أو تجاوب على أسئلتك على الكتالوق.",
+    "error": "صارت مشكلة، عاود جرب.",
+    "outfitTitle": "تنوّرة مقترحة",
+    "outfitTotal": "السعر الكل: {total} د.ت",
+    "outfitSomeUnavailable": "يمكن شوية حاجات ما تكونش موجودة."
+  },
+  "review": {
+    "title": "آراء الزبائن",
+    "writeReview": "زيد رأيك",
+    "rating": "التقييم",
+    "comment": "التعليق متاعك",
+    "submit": "نشر الرأي",
+    "ratingCount": "{count} رأي",
+    "noReviews": "ما فماش آراء على هالحاجة لحد الآن.",
+    "genericError": "صارت مشكلة.",
+    "verifiedPurchase": "شرا متأكد منه",
+    "fitLabel": "القياس",
+    "fitUnset": "مش محدد",
+    "fit": {
+      "small": "يصغر شوية",
+      "true_to_size": "قياسه مظبوط",
+      "large": "يكبر شوية"
+    },
+    "report": "بلّغ",
+    "reportSuccess": "تبلّغ",
+    "addPhotos": "زيد تصاور",
+    "uploading": "قاعد يتلوّد..."
+  },
+  "sizeAssistant": {
+    "title": "المقاس الموصى بيه:",
+    "confidenceHigh": "ثقة عالية",
+    "confidenceMedium": "ثقة متوسطة",
+    "loading": "قاعد يحسب التوصية...",
+    "fillProfile": "كمّل بروفايلي"
   }
 } as const;

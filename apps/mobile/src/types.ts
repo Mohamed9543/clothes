@@ -129,3 +129,126 @@ export interface CreateOrderResult {
   order: Order;
   paymentRedirectUrl?: string;
 }
+
+export interface Outfit {
+  _id: string;
+  slug: string;
+  title: LocalizedText;
+  description: LocalizedText;
+  coverImage: string;
+  productIds: string[];
+  isFeatured: boolean;
+  bundleDiscountPercent: number | null;
+}
+
+export interface OutfitWithProducts extends Outfit {
+  products: PublicProduct[];
+  totalPrice: number;
+  bundlePrice: number | null;
+}
+
+export interface BulkAddResult {
+  skippedProductIds: string[];
+}
+
+export interface Wishlist {
+  _id: string;
+  name: string;
+  productIds: string[];
+  isDefault: boolean;
+}
+
+export interface LookProductSummary {
+  _id: string;
+  slug: string;
+  name: LocalizedText;
+  image: string | null;
+}
+
+export interface Look {
+  _id: string;
+  authorName: string;
+  images: string[];
+  caption: string | null;
+  productIds: string[];
+  products: LookProductSummary[];
+  likeCount: number;
+  isHidden: boolean;
+  createdAt: string;
+}
+
+export type ReviewFit = 'small' | 'true_to_size' | 'large';
+
+export interface Review {
+  _id: string;
+  authorName: string;
+  rating: number;
+  comment: string;
+  fit: ReviewFit | null;
+  photos: string[];
+  createdAt: string;
+}
+
+export interface ProductReviewsResult {
+  reviews: Review[];
+  avgRating: number;
+  count: number;
+}
+
+export interface SizeRecommendation {
+  recommendedSize: string | null;
+  confidence: 'high' | 'medium' | 'none';
+  message: string;
+}
+
+export type ReturnType = 'return' | 'exchange';
+export type ReturnStatus =
+  | 'requested'
+  | 'accepted'
+  | 'return_shipped'
+  | 'received'
+  | 'completed'
+  | 'rejected';
+
+export interface ReturnRequest {
+  _id: string;
+  orderId: string;
+  type: ReturnType;
+  items: {
+    productId: string;
+    size: string;
+    color: string;
+    quantity: number;
+    exchangeSize: string | null;
+    exchangeColor: string | null;
+  }[];
+  reason: string;
+  status: ReturnStatus;
+  refundAmount: number | null;
+  createdAt: string;
+}
+
+export interface ChatToolProduct {
+  id: string;
+  slug: string;
+  name: LocalizedText;
+  price: number;
+  image: string | null;
+}
+
+export interface ChatComposedOutfit {
+  items: ChatToolProduct[];
+  totalPrice: number;
+  allInStock: boolean;
+}
+
+export interface ChatReply {
+  message: string;
+  products: ChatToolProduct[];
+  outfit?: ChatComposedOutfit;
+}
+
+export interface Conversation {
+  _id: string;
+  messages: { role: 'user' | 'assistant'; content: string }[];
+}

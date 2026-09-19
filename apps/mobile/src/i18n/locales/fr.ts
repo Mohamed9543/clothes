@@ -1,7 +1,10 @@
-// Extracted verbatim from apps/web/messages/fr.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments, avatar, fittingRoom)
-// plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
-// Do not hand-edit the shared namespaces here — update the web source and re-run the
-// extraction instead, to avoid the two clients drifting out of sync.
+// Namespaces mirrored from apps/web/messages/<locale>.json (nav, auth, account, cart, checkout,
+// product, common, orderStatus, payments, avatar, fittingRoom, brand, home, catalog, wishlist,
+// lookbook, outfit, returns, about, chat, review, sizeAssistant) plus a small mobile-only
+// "mobile" namespace for strings with no exact web equivalent.
+// Placeholders use single braces ({name}) like the web; i18n/index.ts configures i18next for that.
+// Do not hand-edit the shared namespaces here — update the web source and re-sync them instead,
+// to avoid the two clients drifting out of sync.
 export default {
   "nav": {
     "home": "Accueil",
@@ -28,7 +31,24 @@ export default {
     "noAccount": "Pas encore de compte ?",
     "haveAccount": "Déjà un compte ?",
     "createAccount": "Créer un compte",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "forgotLink": "Mot de passe oublié ?",
+    "forgotTitle": "Réinitialiser votre mot de passe",
+    "forgotSubtitle": "Entrez votre e-mail et nous vous enverrons un code à 6 chiffres.",
+    "sendCode": "Envoyer le code",
+    "codeSentTo": "Nous avons envoyé un code à 6 chiffres à {email}. Il expire dans 10 minutes.",
+    "code": "Code à 6 chiffres",
+    "newPassword": "Nouveau mot de passe",
+    "resetCta": "Réinitialiser le mot de passe",
+    "resetSuccess": "Mot de passe mis à jour. Vous pouvez vous connecter.",
+    "backToLogin": "Retour à la connexion",
+    "resendCode": "Renvoyer le code",
+    "or": "ou",
+    "verifyTitle": "Saisissez le code",
+    "verifyCta": "Vérifier le code",
+    "codeResent": "Un nouveau code a été envoyé.",
+    "newPasswordTitle": "Choisissez un nouveau mot de passe",
+    "newPasswordSubtitle": "Au moins 8 caractères, avec majuscules, minuscules et un chiffre."
   },
   "account": {
     "title": "Mon compte",
@@ -232,7 +252,7 @@ export default {
     "loginSubtitle": "Connectez-vous à votre compte",
     "passwordHint": "8 caractères minimum, avec majuscule, minuscule et chiffre.",
     "loadMore": "Charger plus",
-    "confirmOrderText": "Votre commande {{number}} a été enregistrée.",
+    "confirmOrderText": "Votre commande {number} a été enregistrée.",
     "restartRequiredTitle": "Redémarrage nécessaire",
     "restartRequiredText": "Le changement de langue nécessite de redémarrer l'application pour s'appliquer correctement.",
     "restartNow": "Redémarrer maintenant",
@@ -241,6 +261,164 @@ export default {
     "offlineTitle": "Pas de connexion",
     "offlineText": "Vérifiez votre connexion internet et réessayez.",
     "orderItems": "Articles",
-    "paymentByCard": "Paiement par carte"
+    "paymentByCard": "Paiement par carte",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "continueWithGoogle": "Continuer avec Google"
+  },
+  "brand": {
+    "name": "StyleForm",
+    "tagline": "La mode, essayée avant d'être achetée."
+  },
+  "home": {
+    "heroTitle": "Essayez avant d'acheter",
+    "heroSubtitle": "Découvrez notre collection et trouvez votre style, en toute confiance.",
+    "heroCta": "Explorer le catalogue",
+    "categoriesTitle": "Acheter par catégorie",
+    "categoryMen": "Homme",
+    "categoryWomen": "Femme",
+    "categoryKids": "Enfant",
+    "featuredTitle": "Nouveautés",
+    "outfitsTitle": "Tenues en vedette"
+  },
+  "catalog": {
+    "title": "Catalogue",
+    "filters": "Filtres",
+    "audience": "Public",
+    "all": "Tous",
+    "men": "Homme",
+    "women": "Femme",
+    "kids": "Enfant",
+    "type": "Type",
+    "pull": "Pull",
+    "pantalon": "Pantalon",
+    "chemise": "Chemise",
+    "robe": "Robe",
+    "veste": "Veste",
+    "chaussure": "Chaussure",
+    "accessoire": "Accessoire",
+    "priceRange": "Fourchette de prix",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser",
+    "noResults": "Aucun produit ne correspond à votre recherche.",
+    "resultsCount": "{count} produit(s) trouvé(s)",
+    "color": "Couleur",
+    "availableOnly": "Disponible uniquement",
+    "page": "Page {page} sur {totalPages}",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "sort": {
+      "newest": "Nouveautés",
+      "price_asc": "Prix croissant",
+      "price_desc": "Prix décroissant"
+    }
+  },
+  "wishlist": {
+    "title": "Ma liste de souhaits",
+    "empty": "Votre liste de souhaits est vide.",
+    "browseCatalog": "Parcourir le catalogue",
+    "remove": "Retirer",
+    "newListPlaceholder": "Nom de la nouvelle liste",
+    "createList": "Créer"
+  },
+  "lookbook": {
+    "title": "Lookbook",
+    "subtitle": "Les looks de la communauté, partagés par nos clients.",
+    "empty": "Aucun look pour le moment.",
+    "like": "J'aime",
+    "linkedProducts": "Produits de ce look",
+    "myLooksTitle": "Mes looks",
+    "noLooksMine": "Vous n'avez pas encore publié de look.",
+    "likesCount": "{count} j'aime",
+    "statusVisible": "Visible",
+    "statusHidden": "En attente de modération",
+    "submitTitle": "Publier un look",
+    "addPhotos": "Ajouter des photos",
+    "uploading": "Envoi...",
+    "captionPlaceholder": "Décrivez votre tenue...",
+    "linkProductPlaceholder": "Lier un produit (rechercher)...",
+    "submit": "Publier",
+    "errorNoPhoto": "Ajoutez au moins une photo.",
+    "genericError": "Une erreur est survenue. Réessayez."
+  },
+  "outfit": {
+    "includedProducts": "Produits inclus dans cette tenue",
+    "totalPrice": "Prix total",
+    "addToCart": "Ajouter toute la tenue au panier",
+    "someItemsUnavailable": "Certains articles étaient indisponibles et ont été ignorés.",
+    "itemsAdded": "Tenue ajoutée au panier !",
+    "bundlePrice": "Prix pack",
+    "bundleSavings": "économisez {percent}%"
+  },
+  "returns": {
+    "title": "Mes retours et échanges",
+    "empty": "Aucune demande de retour ou d’échange pour le moment.",
+    "requestReturn": "Retour",
+    "requestExchange": "Échange",
+    "exchangeSize": "Nouvelle taille",
+    "exchangeColor": "Nouvelle couleur",
+    "reason": "Motif",
+    "submit": "Envoyer la demande",
+    "cancel": "Annuler",
+    "genericError": "Une erreur est survenue.",
+    "refundAmount": "Montant remboursé",
+    "status": {
+      "requested": "Demande envoyée",
+      "accepted": "Acceptée",
+      "return_shipped": "Retour expédié",
+      "received": "Reçu",
+      "completed": "Terminé",
+      "rejected": "Refusée"
+    }
+  },
+  "about": {
+    "title": "À propos de StyleForm",
+    "text1": "StyleForm est né d'une idée simple : acheter des vêtements en ligne ne devrait plus être un pari. Notre technologie d'essayage virtuel vous permet de visualiser chaque pièce sur un avatar 3D à votre morphologie avant de l'acheter.",
+    "text2": "Notre assistant intelligent vous aide à composer des tenues complètes selon vos occasions et votre budget, dans votre langue."
+  },
+  "chat": {
+    "title": "Assistant StyleForm",
+    "openLabel": "Ouvrir l'assistant",
+    "placeholder": "Écrivez votre message...",
+    "send": "Envoyer",
+    "thinking": "L'assistant écrit...",
+    "loginRequired": "Connectez-vous pour discuter avec l'assistant.",
+    "login": "Se connecter",
+    "greeting": "Bonjour ! Je peux vous aider à trouver une tenue, comparer des produits ou répondre à vos questions sur le catalogue.",
+    "error": "Une erreur est survenue, réessayez.",
+    "outfitTitle": "Tenue proposée",
+    "outfitTotal": "Prix total : {total} TND",
+    "outfitSomeUnavailable": "Certaines pièces peuvent être indisponibles."
+  },
+  "review": {
+    "title": "Avis clients",
+    "writeReview": "Laisser un avis",
+    "rating": "Note",
+    "comment": "Votre commentaire",
+    "submit": "Publier l'avis",
+    "ratingCount": "{count} avis",
+    "noReviews": "Aucun avis pour ce produit pour le moment.",
+    "genericError": "Une erreur est survenue.",
+    "verifiedPurchase": "Achat vérifié",
+    "fitLabel": "Coupe",
+    "fitUnset": "Non précisé",
+    "fit": {
+      "small": "Taille petit",
+      "true_to_size": "Taille normalement",
+      "large": "Taille grand"
+    },
+    "report": "Signaler",
+    "reportSuccess": "Signalé",
+    "addPhotos": "Ajouter des photos",
+    "uploading": "Envoi en cours..."
+  },
+  "sizeAssistant": {
+    "title": "Taille recommandée :",
+    "confidenceHigh": "confiance élevée",
+    "confidenceMedium": "confiance moyenne",
+    "loading": "Calcul de la recommandation...",
+    "fillProfile": "Compléter mon profil"
   }
 } as const;

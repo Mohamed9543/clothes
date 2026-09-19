@@ -1,4 +1,5 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -35,6 +36,34 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   google(@Body() dto: GoogleLoginDto) {
     return this.authService.googleLogin(dto.credential);
+  }
+
+  @Get('google/mobile/start')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  googleMobileStart(@Query('returnUrl') returnUrl: string, @Res() res: Response) {
+    res.redirect(this.authService.googleMobileStartUrl(returnUrl ?? ''));
+  }
+
+  @Post('google/mobile/callback')
+  @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async googleMobileCallback(
+    @Body() body: { id_token?: string; state?: string },
+    @Res() res: Response,
+  ) {
+    const target = await this.authService.googleMobileCallback(
+      body.id_token ?? '',
+      body.state ?? '',
+    );
+    const escaped = target.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    const script = JSON.stringify(target).replace(/</g, '\\u003c');
+    // A page rather than a 302: mobile browsers don't always follow a redirect to a
+    // custom app scheme; the auth session closes as soon as the app link opens.
+    res
+      .type('html')
+      .send(
+        `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>StyleForm</title><p style="font-family:sans-serif;text-align:center;margin-top:30vh">Returning to StyleForm…</p><script>location.replace(${script});</script><noscript><a href="${escaped}">Continue</a></noscript>`,
+      );
   }
 
   @Post('forgot-password')

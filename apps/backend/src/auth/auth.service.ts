@@ -1,4 +1,4 @@
-import { randomInt, randomBytes } from 'crypto';
+import { createHmac, randomBytes, randomInt } from 'crypto';
 import {
   BadRequestException,
   ConflictException,
@@ -10,7 +10,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { OAuth2Client } from 'google-auth-library';
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { EnvConfig } from '../config/env.validation';
 import { UserDocument } from '../users/schemas/user.schema';
 import { UsersService } from '../users/users.service';
@@ -187,14 +187,14 @@ export class AuthService {
     return { success: true };
   }
 
-  async googleLogin(credential: string): Promise<{ user: SafeUser } & AuthTokens> {
+  private async verifyGoogleIdToken(credential: string): Promise<TokenPayload> {
     const clientId = this.configService.get('GOOGLE_CLIENT_ID', { infer: true });
     if (!clientId) {
       throw new ServiceUnavailableException('Google sign-in is not configured');
     }
     this.googleClient ??= new OAuth2Client(clientId);
 
-    let payload;
+    let payload: TokenPayload | undefined;
     try {
       const ticket = await this.googleClient.verifyIdToken({ idToken: credential, audience: clientId });
       payload = ticket.getPayload();
@@ -204,18 +204,24 @@ export class AuthService {
     if (!payload?.sub || !payload.email || !payload.email_verified) {
       throw new UnauthorizedException('Google account email is not verified');
     }
+    return payload;
+  }
 
-    let user = await this.usersService.findByEmail(payload.email);
+  private async loginWithGooglePayload(
+    payload: TokenPayload,
+  ): Promise<{ user: SafeUser } & AuthTokens> {
+    const email = payload.email as string;
+    let user = await this.usersService.findByEmail(email);
     if (user) {
       if (!user.googleId) {
         await this.usersService.setGoogleId(user._id.toString(), payload.sub);
       }
     } else {
       user = await this.usersService.create({
-        email: payload.email,
+        email,
         // Random unusable password: this account signs in with Google (or resets via email).
         passwordHash: await bcrypt.hash(randomBytes(32).toString('hex'), SALT_ROUNDS),
-        firstName: payload.given_name ?? payload.name ?? payload.email.split('@')[0],
+        firstName: payload.given_name ?? payload.name ?? email.split('@')[0],
         lastName: payload.family_name ?? '-',
         googleId: payload.sub,
       });
@@ -226,6 +232,85 @@ export class AuthService {
     }
     const tokens = await this.issueTokens(user);
     return { user: toSafeUser(user), ...tokens };
+  }
+
+  async googleLogin(credential: string): Promise<{ user: SafeUser } & AuthTokens> {
+    return this.loginWithGooglePayload(await this.verifyGoogleIdToken(credential));
+  }
+
+  // --- Google sign-in for the mobile app --------------------------------------
+  // Redirect flow (no client secret needed): the app opens /auth/google/mobile/start
+  // in a browser, Google posts an ID token back to /auth/google/mobile/callback, and
+  // we hand fresh tokens to the app through its deep link. The state is HMAC-signed
+  // and its hash is sent as the OIDC nonce, so a forged callback is rejected.
+
+  private signState(state: string): string {
+    return createHmac('sha256', this.configService.get('JWT_ACCESS_SECRET', { infer: true }))
+      .update(state)
+      .digest('hex');
+  }
+
+  private googleMobileCallbackUrl(): string {
+    const base =
+      this.configService.get('API_PUBLIC_URL', { infer: true }) ||
+      process.env.RENDER_EXTERNAL_URL ||
+      `http://localhost:${this.configService.get('PORT', { infer: true })}`;
+    return `${base.replace(/\/$/, '')}/auth/google/mobile/callback`;
+  }
+
+  private assertAppReturnUrl(returnUrl: string): void {
+    const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(returnUrl)?.[1]?.toLowerCase();
+    if (!scheme || !['exp', 'exps', 'libas'].includes(scheme)) {
+      throw new BadRequestException('Invalid return URL');
+    }
+  }
+
+  googleMobileStartUrl(returnUrl: string): string {
+    this.assertAppReturnUrl(returnUrl);
+    const clientId = this.configService.get('GOOGLE_CLIENT_ID', { infer: true });
+    if (!clientId) {
+      throw new ServiceUnavailableException('Google sign-in is not configured');
+    }
+    const state = Buffer.from(
+      JSON.stringify({ r: returnUrl, n: randomBytes(8).toString('hex') }),
+    ).toString('base64url');
+    const signature = this.signState(state);
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: this.googleMobileCallbackUrl(),
+      response_type: 'id_token',
+      response_mode: 'form_post',
+      scope: 'openid email profile',
+      state: `${state}.${signature}`,
+      nonce: signature,
+      prompt: 'select_account',
+    });
+    return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+  }
+
+  // Returns the deep link that sends the user back to the app, carrying tokens or an error.
+  async googleMobileCallback(idToken: string, signedState: string): Promise<string> {
+    const [state, signature] = signedState.split('.');
+    if (!state || !signature || signature !== this.signState(state)) {
+      throw new BadRequestException('Invalid state');
+    }
+    const { r: returnUrl } = JSON.parse(Buffer.from(state, 'base64url').toString()) as {
+      r: string;
+    };
+    this.assertAppReturnUrl(returnUrl);
+
+    const separator = returnUrl.includes('?') ? '&' : '?';
+    try {
+      const payload = await this.verifyGoogleIdToken(idToken);
+      if (payload.nonce !== signature) {
+        throw new UnauthorizedException('Invalid nonce');
+      }
+      const { accessToken, refreshToken } = await this.loginWithGooglePayload(payload);
+      return `${returnUrl}${separator}accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Google sign-in failed';
+      return `${returnUrl}${separator}error=${encodeURIComponent(message)}`;
+    }
   }
 
   async refresh(userId: string, refreshToken: string): Promise<AuthTokens> {

@@ -75,3 +75,23 @@ export async function apiFetch<T>(
 
   return response.json();
 }
+
+// Multipart upload (photos). Don't set Content-Type: fetch adds the multipart boundary.
+export async function apiUpload<T>(path: string, formData: FormData): Promise<T> {
+  const send = async (token: string | null) =>
+    fetch(`${API_URL}${path}`, {
+      method: 'POST',
+      body: formData,
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
+
+  let response = await send((await getTokens()).accessToken);
+  if (response.status === 401) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) response = await send(refreshed);
+  }
+  if (!response.ok) {
+    throw new ApiError(response.status, response.statusText);
+  }
+  return response.json();
+}

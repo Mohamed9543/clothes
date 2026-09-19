@@ -4,6 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/auth-context';
 import { LanguageSwitcher } from '@/components/language-switcher';
 
+const ROWS = [
+  { href: '/commandes', icon: '📦', labelKey: 'account.myOrders' },
+  { href: '/wishlist', icon: '♡', labelKey: 'nav.wishlist' },
+  { href: '/retours', icon: '↩️', labelKey: 'returns.title' },
+  { href: '/mes-looks', icon: '📸', labelKey: 'account.myLooks' },
+  { href: '/mensurations', icon: '📏', labelKey: 'avatar.measurements' },
+  { href: '/assistant', icon: '💬', labelKey: 'chat.title' },
+  { href: '/a-propos', icon: 'ℹ️', labelKey: 'nav.about' },
+] as const;
+
 export default function AccountScreen() {
   const router = useRouter();
   const { t } = useTranslation();
@@ -38,9 +48,13 @@ export default function AccountScreen() {
 
       <LanguageSwitcher />
 
-      <Pressable style={styles.row} onPress={() => router.push('/commandes')}>
-        <Text style={styles.rowText}>{t('account.myOrders')}</Text>
-      </Pressable>
+      {ROWS.map((row) => (
+        <Pressable key={row.href} style={styles.row} onPress={() => router.push(row.href)}>
+          <Text style={styles.rowText}>
+            {row.icon}  {t(row.labelKey)}
+          </Text>
+        </Pressable>
+      ))}
 
       <Pressable style={styles.logoutButton} onPress={() => logout()}>
         <Text style={styles.logoutText}>{t('nav.logout')}</Text>

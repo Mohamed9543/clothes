@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Libas",
+    "name": "StyleForm",
     "slug": "libas-mobile",
     "scheme": "libas",
     "version": "1.0.0",
@@ -8,16 +8,18 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.styleform.app"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#b8622e",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.styleform.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -25,7 +27,14 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-localization"
+      "expo-localization",
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow StyleForm to access your photos to share looks and reviews."
+        }
+      ]
     ]
   }
 }

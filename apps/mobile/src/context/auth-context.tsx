@@ -1,15 +1,21 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { apiFetch, ApiError } from '@/lib/api';
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
+import { API_URL, apiFetch, ApiError } from '@/lib/api';
 import { clearTokens, getTokens, setTokens } from '@/lib/storage';
 import type { AuthResult, SafeUser } from '@/types';
+
+WebBrowser.maybeCompleteAuthSession();
 
 interface AuthContextValue {
   user: SafeUser | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   register: (input: { email: string; password: string; firstName: string; lastName: string }) => Promise<void>;
   logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -33,6 +39,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })();
   }, []);
 
+  async function refreshUser() {
+    const me = await apiFetch<SafeUser>('/auth/me', { auth: true });
+    setUser(me);
+  }
+
   async function login(email: string, password: string) {
     const result = await apiFetch<AuthResult>('/auth/login', {
       method: 'POST',
@@ -40,6 +51,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     await setTokens(result.accessToken, result.refreshToken);
     setUser(result.user);
+  }
+
+  // Opens Google in the system browser; the API sends us back to this app through a
+  // deep link carrying our session tokens (see AuthService.googleMobileCallback).
+  async function loginWithGoogle() {
+    const returnUrl = Linking.createURL('login');
+    const result = await WebBrowser.openAuthSessionAsync(
+      `${API_URL}/auth/google/mobile/start?returnUrl=${encodeURIComponent(returnUrl)}`,
+      returnUrl,
+    );
+    if (result.type !== 'success') {
+      return; // cancelled or dismissed
+    }
+
+    const { queryParams } = Linking.parse(result.url);
+    if (queryParams?.error) {
+      throw new Error(String(queryParams.error));
+    }
+    const accessToken = queryParams?.accessToken;
+    const refreshToken = queryParams?.refreshToken;
+    if (typeof accessToken !== 'string' || typeof refreshToken !== 'string') {
+      throw new Error('Google sign-in failed');
+    }
+    await setTokens(accessToken, refreshToken);
+    await refreshUser();
   }
 
   async function register(input: { email: string; password: string; firstName: string; lastName: string }) {
@@ -62,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, loginWithGoogle, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

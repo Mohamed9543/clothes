@@ -1,7 +1,10 @@
-// Extracted verbatim from apps/web/messages/en.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments, avatar, fittingRoom)
-// plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
-// Do not hand-edit the shared namespaces here — update the web source and re-run the
-// extraction instead, to avoid the two clients drifting out of sync.
+// Namespaces mirrored from apps/web/messages/<locale>.json (nav, auth, account, cart, checkout,
+// product, common, orderStatus, payments, avatar, fittingRoom, brand, home, catalog, wishlist,
+// lookbook, outfit, returns, about, chat, review, sizeAssistant) plus a small mobile-only
+// "mobile" namespace for strings with no exact web equivalent.
+// Placeholders use single braces ({name}) like the web; i18n/index.ts configures i18next for that.
+// Do not hand-edit the shared namespaces here — update the web source and re-sync them instead,
+// to avoid the two clients drifting out of sync.
 export default {
   "nav": {
     "home": "Home",
@@ -28,7 +31,24 @@ export default {
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
     "createAccount": "Create an account",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "forgotLink": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotSubtitle": "Enter your email and we'll send you a 6-digit code.",
+    "sendCode": "Send code",
+    "codeSentTo": "We sent a 6-digit code to {email}. It expires in 10 minutes.",
+    "code": "6-digit code",
+    "newPassword": "New password",
+    "resetCta": "Reset password",
+    "resetSuccess": "Password updated. You can now log in.",
+    "backToLogin": "Back to login",
+    "resendCode": "Resend code",
+    "or": "or",
+    "verifyTitle": "Enter the code",
+    "verifyCta": "Verify code",
+    "codeResent": "A new code has been sent.",
+    "newPasswordTitle": "Choose a new password",
+    "newPasswordSubtitle": "Use at least 8 characters, with upper and lower case letters and a digit."
   },
   "account": {
     "title": "My account",
@@ -232,7 +252,7 @@ export default {
     "loginSubtitle": "Sign in to your account",
     "passwordHint": "At least 8 characters, with an uppercase, lowercase letter and a digit.",
     "loadMore": "Load more",
-    "confirmOrderText": "Your order {{number}} has been placed.",
+    "confirmOrderText": "Your order {number} has been placed.",
     "restartRequiredTitle": "Restart required",
     "restartRequiredText": "Changing the language requires restarting the app to fully apply.",
     "restartNow": "Restart now",
@@ -241,6 +261,164 @@ export default {
     "offlineTitle": "No connection",
     "offlineText": "Check your internet connection and try again.",
     "orderItems": "Items",
-    "paymentByCard": "Card payment"
+    "paymentByCard": "Card payment",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "continueWithGoogle": "Continue with Google"
+  },
+  "brand": {
+    "name": "StyleForm",
+    "tagline": "Fashion, tried on before you buy."
+  },
+  "home": {
+    "heroTitle": "Try it before you buy it",
+    "heroSubtitle": "Discover our collection and find your style, with confidence.",
+    "heroCta": "Browse the catalog",
+    "categoriesTitle": "Shop by category",
+    "categoryMen": "Men",
+    "categoryWomen": "Women",
+    "categoryKids": "Kids",
+    "featuredTitle": "New arrivals",
+    "outfitsTitle": "Featured outfits"
+  },
+  "catalog": {
+    "title": "Catalog",
+    "filters": "Filters",
+    "audience": "Audience",
+    "all": "All",
+    "men": "Men",
+    "women": "Women",
+    "kids": "Kids",
+    "type": "Type",
+    "pull": "Sweater",
+    "pantalon": "Trousers",
+    "chemise": "Shirt",
+    "robe": "Dress",
+    "veste": "Jacket",
+    "chaussure": "Shoes",
+    "accessoire": "Accessory",
+    "priceRange": "Price range",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "apply": "Apply",
+    "reset": "Reset",
+    "noResults": "No products match your search.",
+    "resultsCount": "{count} product(s) found",
+    "color": "Color",
+    "availableOnly": "In stock only",
+    "page": "Page {page} of {totalPages}",
+    "previous": "Previous",
+    "next": "Next",
+    "sort": {
+      "newest": "Newest",
+      "price_asc": "Price: low to high",
+      "price_desc": "Price: high to low"
+    }
+  },
+  "wishlist": {
+    "title": "My wishlist",
+    "empty": "Your wishlist is empty.",
+    "browseCatalog": "Browse the catalog",
+    "remove": "Remove",
+    "newListPlaceholder": "New list name",
+    "createList": "Create"
+  },
+  "lookbook": {
+    "title": "Lookbook",
+    "subtitle": "Looks shared by our community of customers.",
+    "empty": "No looks yet.",
+    "like": "Like",
+    "linkedProducts": "Products in this look",
+    "myLooksTitle": "My looks",
+    "noLooksMine": "You haven't published a look yet.",
+    "likesCount": "{count} likes",
+    "statusVisible": "Visible",
+    "statusHidden": "Pending moderation",
+    "submitTitle": "Share a look",
+    "addPhotos": "Add photos",
+    "uploading": "Uploading...",
+    "captionPlaceholder": "Describe your outfit...",
+    "linkProductPlaceholder": "Link a product (search)...",
+    "submit": "Publish",
+    "errorNoPhoto": "Add at least one photo.",
+    "genericError": "Something went wrong. Try again."
+  },
+  "outfit": {
+    "includedProducts": "Products included in this outfit",
+    "totalPrice": "Total price",
+    "addToCart": "Add the whole outfit to cart",
+    "someItemsUnavailable": "Some items were unavailable and were skipped.",
+    "itemsAdded": "Outfit added to cart!",
+    "bundlePrice": "Bundle price",
+    "bundleSavings": "save {percent}%"
+  },
+  "returns": {
+    "title": "My returns and exchanges",
+    "empty": "No return or exchange request yet.",
+    "requestReturn": "Return",
+    "requestExchange": "Exchange",
+    "exchangeSize": "New size",
+    "exchangeColor": "New color",
+    "reason": "Reason",
+    "submit": "Submit request",
+    "cancel": "Cancel",
+    "genericError": "Something went wrong.",
+    "refundAmount": "Refunded amount",
+    "status": {
+      "requested": "Requested",
+      "accepted": "Accepted",
+      "return_shipped": "Return shipped",
+      "received": "Received",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    }
+  },
+  "about": {
+    "title": "About StyleForm",
+    "text1": "StyleForm was born from a simple idea: buying clothes online shouldn't be a gamble anymore. Our virtual try-on technology lets you visualize every piece on a 3D avatar shaped like you before you buy it.",
+    "text2": "Our smart assistant helps you put together full outfits based on your occasion and budget, in your own language."
+  },
+  "chat": {
+    "title": "StyleForm Assistant",
+    "openLabel": "Open the assistant",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "thinking": "Assistant is typing...",
+    "loginRequired": "Log in to chat with the assistant.",
+    "login": "Log in",
+    "greeting": "Hi! I can help you find an outfit, compare products, or answer questions about the catalog.",
+    "error": "Something went wrong, please try again.",
+    "outfitTitle": "Suggested outfit",
+    "outfitTotal": "Total price: {total} TND",
+    "outfitSomeUnavailable": "Some pieces may be unavailable."
+  },
+  "review": {
+    "title": "Customer reviews",
+    "writeReview": "Write a review",
+    "rating": "Rating",
+    "comment": "Your comment",
+    "submit": "Post review",
+    "ratingCount": "{count} review(s)",
+    "noReviews": "No reviews for this product yet.",
+    "genericError": "Something went wrong.",
+    "verifiedPurchase": "Verified purchase",
+    "fitLabel": "Fit",
+    "fitUnset": "Not specified",
+    "fit": {
+      "small": "Runs small",
+      "true_to_size": "True to size",
+      "large": "Runs large"
+    },
+    "report": "Report",
+    "reportSuccess": "Reported",
+    "addPhotos": "Add photos",
+    "uploading": "Uploading..."
+  },
+  "sizeAssistant": {
+    "title": "Recommended size:",
+    "confidenceHigh": "high confidence",
+    "confidenceMedium": "medium confidence",
+    "loading": "Computing recommendation...",
+    "fillProfile": "Complete my profile"
   }
 } as const;

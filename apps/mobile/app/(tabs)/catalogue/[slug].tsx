@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -10,16 +11,16 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { API_URL, apiFetch, ApiError } from '@/lib/api';
+import { apiFetch, ApiError } from '@/lib/api';
+import { imageUri } from '@/lib/image';
 import { localize } from '@/lib/localized';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
+import { useWishlist } from '@/context/wishlist-context';
+import { ProductReviews } from '@/components/product-reviews';
+import { SizeAssistant } from '@/components/size-assistant';
 import { TryOnButton } from '@/components/try-on-button';
 import type { PublicProduct } from '@/types';
-
-function imageUri(path: string): string {
-  return path.startsWith('http') ? path : `${API_URL}${path}`;
-}
 
 export default function ProductDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -27,6 +28,7 @@ export default function ProductDetailScreen() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { addItem } = useCart();
+  const { isInWishlist, toggle: toggleWishlist } = useWishlist();
 
   const [product, setProduct] = useState<PublicProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,9 +85,24 @@ export default function ProductDetailScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {product.images[0] && (
-        <Image source={{ uri: imageUri(product.images[0]) }} style={styles.image} />
-      )}
+      <View>
+        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+          {product.images.map((image) => (
+            <Image
+              key={image}
+              source={{ uri: imageUri(image) }}
+              style={[styles.image, { width: Dimensions.get('window').width }]}
+            />
+          ))}
+        </ScrollView>
+        {user && (
+          <Pressable style={styles.heart} onPress={() => void toggleWishlist(product._id)}>
+            <Text style={[styles.heartText, isInWishlist(product._id) && styles.heartActive]}>
+              {isInWishlist(product._id) ? '♥' : '♡'}
+            </Text>
+          </Pressable>
+        )}
+      </View>
       <View style={styles.content}>
         <Text style={styles.name}>{localize(product.name, i18n.language)}</Text>
         <Text style={styles.price}>
@@ -135,6 +152,8 @@ export default function ProductDetailScreen() {
           </View>
         )}
 
+        {user && <SizeAssistant productId={product._id} />}
+
         {message && <Text style={styles.message}>{message}</Text>}
 
         <Pressable
@@ -146,6 +165,8 @@ export default function ProductDetailScreen() {
         </Pressable>
 
         <TryOnButton product={product} selectedColor={selectedColor} />
+
+        <ProductReviews slug={product.slug} />
       </View>
     </ScrollView>
   );
@@ -156,6 +177,19 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#faf8f5' },
   image: { width: '100%', aspectRatio: 3 / 4, backgroundColor: '#eee' },
   content: { padding: 16 },
+  heart: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heartText: { fontSize: 22, color: '#6b6b6b' },
+  heartActive: { color: '#c0392b' },
   name: { fontSize: 20, fontWeight: '700' },
   price: { fontSize: 18, color: '#b8622e', marginTop: 6, fontWeight: '600' },
   compareAtPrice: { fontSize: 14, color: '#999', textDecorationLine: 'line-through' },

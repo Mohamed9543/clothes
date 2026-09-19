@@ -1,7 +1,10 @@
-// Extracted verbatim from apps/web/messages/ar.json (namespaces: nav, auth, account, cart, checkout, product, common, orderStatus, payments, avatar, fittingRoom)
-// plus a small mobile-only "mobile" namespace for strings with no exact web equivalent.
-// Do not hand-edit the shared namespaces here — update the web source and re-run the
-// extraction instead, to avoid the two clients drifting out of sync.
+// Namespaces mirrored from apps/web/messages/<locale>.json (nav, auth, account, cart, checkout,
+// product, common, orderStatus, payments, avatar, fittingRoom, brand, home, catalog, wishlist,
+// lookbook, outfit, returns, about, chat, review, sizeAssistant) plus a small mobile-only
+// "mobile" namespace for strings with no exact web equivalent.
+// Placeholders use single braces ({name}) like the web; i18n/index.ts configures i18next for that.
+// Do not hand-edit the shared namespaces here — update the web source and re-sync them instead,
+// to avoid the two clients drifting out of sync.
 export default {
   "nav": {
     "home": "الرئيسية",
@@ -28,7 +31,24 @@ export default {
     "noAccount": "ليس لديك حساب؟",
     "haveAccount": "لديك حساب بالفعل؟",
     "createAccount": "إنشاء حساب",
-    "signIn": "تسجيل الدخول"
+    "signIn": "تسجيل الدخول",
+    "forgotLink": "هل نسيت كلمة المرور؟",
+    "forgotTitle": "إعادة تعيين كلمة المرور",
+    "forgotSubtitle": "أدخل بريدك الإلكتروني وسنرسل لك رمزًا من 6 أرقام.",
+    "sendCode": "إرسال الرمز",
+    "codeSentTo": "أرسلنا رمزًا من 6 أرقام إلى {email}. تنتهي صلاحيته خلال 10 دقائق.",
+    "code": "الرمز المكوّن من 6 أرقام",
+    "newPassword": "كلمة المرور الجديدة",
+    "resetCta": "إعادة تعيين كلمة المرور",
+    "resetSuccess": "تم تحديث كلمة المرور. يمكنك تسجيل الدخول الآن.",
+    "backToLogin": "العودة إلى تسجيل الدخول",
+    "resendCode": "إعادة إرسال الرمز",
+    "or": "أو",
+    "verifyTitle": "أدخل الرمز",
+    "verifyCta": "تحقق من الرمز",
+    "codeResent": "تم إرسال رمز جديد.",
+    "newPasswordTitle": "اختر كلمة مرور جديدة",
+    "newPasswordSubtitle": "8 أحرف على الأقل، مع أحرف كبيرة وصغيرة ورقم."
   },
   "account": {
     "title": "حسابي",
@@ -232,7 +252,7 @@ export default {
     "loginSubtitle": "سجّل الدخول إلى حسابك",
     "passwordHint": "8 أحرف على الأقل، مع حرف كبير وحرف صغير ورقم.",
     "loadMore": "عرض المزيد",
-    "confirmOrderText": "تم تسجيل طلبك {{number}}.",
+    "confirmOrderText": "تم تسجيل طلبك {number}.",
     "restartRequiredTitle": "إعادة التشغيل ضرورية",
     "restartRequiredText": "تغيير اللغة يتطلب إعادة تشغيل التطبيق ليتم تطبيقه بشكل صحيح.",
     "restartNow": "إعادة التشغيل الآن",
@@ -241,6 +261,164 @@ export default {
     "offlineTitle": "لا يوجد اتصال",
     "offlineText": "تحقق من اتصالك بالإنترنت وأعد المحاولة.",
     "orderItems": "المنتجات",
-    "paymentByCard": "الدفع بالبطاقة"
+    "paymentByCard": "الدفع بالبطاقة",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "continueWithGoogle": "المتابعة باستخدام Google"
+  },
+  "brand": {
+    "name": "ستايل فورم",
+    "tagline": "الموضة، تجربها قبل ما تشريها."
+  },
+  "home": {
+    "heroTitle": "جرّبه قبل ما تشريه",
+    "heroSubtitle": "اكتشف مجموعتنا واعثر على أسلوبك، بكل ثقة.",
+    "heroCta": "تصفح الكتالوج",
+    "categoriesTitle": "تسوق حسب الفئة",
+    "categoryMen": "رجال",
+    "categoryWomen": "نساء",
+    "categoryKids": "أطفال",
+    "featuredTitle": "أحدث المنتجات",
+    "outfitsTitle": "إطلالات مختارة"
+  },
+  "catalog": {
+    "title": "الكتالوج",
+    "filters": "التصفية",
+    "audience": "الفئة",
+    "all": "الكل",
+    "men": "رجال",
+    "women": "نساء",
+    "kids": "أطفال",
+    "type": "النوع",
+    "pull": "كنزة",
+    "pantalon": "بنطلون",
+    "chemise": "قميص",
+    "robe": "فستان",
+    "veste": "جاكيت",
+    "chaussure": "حذاء",
+    "accessoire": "إكسسوار",
+    "priceRange": "نطاق السعر",
+    "minPrice": "الأدنى",
+    "maxPrice": "الأقصى",
+    "apply": "تطبيق",
+    "reset": "إعادة تعيين",
+    "noResults": "لا توجد منتجات مطابقة لبحثك.",
+    "resultsCount": "{count} منتج/منتجات",
+    "color": "اللون",
+    "availableOnly": "المتوفر فقط",
+    "page": "صفحة {page} من {totalPages}",
+    "previous": "السابق",
+    "next": "التالي",
+    "sort": {
+      "newest": "الأحدث",
+      "price_asc": "السعر: من الأقل للأعلى",
+      "price_desc": "السعر: من الأعلى للأقل"
+    }
+  },
+  "wishlist": {
+    "title": "قائمة أمنياتي",
+    "empty": "قائمة أمنياتك فارغة.",
+    "browseCatalog": "تصفح الكتالوج",
+    "remove": "إزالة",
+    "newListPlaceholder": "اسم القائمة الجديدة",
+    "createList": "إنشاء"
+  },
+  "lookbook": {
+    "title": "لوك بوك",
+    "subtitle": "ستايلات شاركها عملاؤنا.",
+    "empty": "لا يوجد أي ستايل حاليًا.",
+    "like": "إعجاب",
+    "linkedProducts": "منتجات هذا الستايل",
+    "myLooksTitle": "ستايلاتي",
+    "noLooksMine": "لم تنشر أي ستايل بعد.",
+    "likesCount": "{count} إعجاب",
+    "statusVisible": "ظاهر",
+    "statusHidden": "قيد المراجعة",
+    "submitTitle": "شارك ستايلك",
+    "addPhotos": "إضافة صور",
+    "uploading": "جارٍ الإرسال...",
+    "captionPlaceholder": "صف إطلالتك...",
+    "linkProductPlaceholder": "ربط منتج (بحث)...",
+    "submit": "نشر",
+    "errorNoPhoto": "أضف صورة واحدة على الأقل.",
+    "genericError": "حدث خطأ. أعد المحاولة."
+  },
+  "outfit": {
+    "includedProducts": "المنتجات المتضمنة في هذه الإطلالة",
+    "totalPrice": "السعر الإجمالي",
+    "addToCart": "أضف كامل الإطلالة إلى السلة",
+    "someItemsUnavailable": "بعض القطع لم تكن متوفرة وتم تجاهلها.",
+    "itemsAdded": "تمت إضافة الإطلالة إلى السلة!",
+    "bundlePrice": "سعر الحزمة",
+    "bundleSavings": "وفّر {percent}%"
+  },
+  "returns": {
+    "title": "طلبات الإرجاع والاستبدال",
+    "empty": "لا يوجد أي طلب إرجاع أو استبدال حتى الآن.",
+    "requestReturn": "إرجاع",
+    "requestExchange": "استبدال",
+    "exchangeSize": "المقاس الجديد",
+    "exchangeColor": "اللون الجديد",
+    "reason": "السبب",
+    "submit": "إرسال الطلب",
+    "cancel": "إلغاء",
+    "genericError": "حدث خطأ ما.",
+    "refundAmount": "المبلغ المسترجع",
+    "status": {
+      "requested": "تم الإرسال",
+      "accepted": "مقبول",
+      "return_shipped": "تم شحن الإرجاع",
+      "received": "تم الاستلام",
+      "completed": "مكتمل",
+      "rejected": "مرفوض"
+    }
+  },
+  "about": {
+    "title": "عن ستايل فورم",
+    "text1": "وُلدت ستايل فورم من فكرة بسيطة: شراء الملابس عبر الإنترنت لم يعد يجب أن يكون مغامرة. تتيح لك تقنية القياس الافتراضي تصوّر كل قطعة على صورة رمزية ثلاثية الأبعاد تشبه قوامك قبل شرائها.",
+    "text2": "يساعدك مساعدنا الذكي على تركيب إطلالات كاملة حسب مناسبتك وميزانيتك، بلغتك."
+  },
+  "chat": {
+    "title": "مساعد ستايل فورم",
+    "openLabel": "افتح المساعد",
+    "placeholder": "اكتب رسالتك...",
+    "send": "إرسال",
+    "thinking": "المساعد يكتب...",
+    "loginRequired": "سجّل الدخول للدردشة مع المساعد.",
+    "login": "تسجيل الدخول",
+    "greeting": "مرحبًا! يمكنني مساعدتك في إيجاد إطلالة، مقارنة المنتجات، أو الإجابة عن أسئلتك حول الكتالوج.",
+    "error": "حدث خطأ ما، حاول مرة أخرى.",
+    "outfitTitle": "إطلالة مقترحة",
+    "outfitTotal": "السعر الإجمالي: {total} د.ت",
+    "outfitSomeUnavailable": "بعض القطع قد تكون غير متوفرة."
+  },
+  "review": {
+    "title": "آراء العملاء",
+    "writeReview": "أضف رأيك",
+    "rating": "التقييم",
+    "comment": "تعليقك",
+    "submit": "نشر الرأي",
+    "ratingCount": "{count} رأي",
+    "noReviews": "لا توجد آراء لهذا المنتج بعد.",
+    "genericError": "حدث خطأ ما.",
+    "verifiedPurchase": "شراء موثّق",
+    "fitLabel": "القياس",
+    "fitUnset": "غير محدد",
+    "fit": {
+      "small": "يصغر عن المقاس",
+      "true_to_size": "مقاس مضبوط",
+      "large": "يكبر عن المقاس"
+    },
+    "report": "إبلاغ",
+    "reportSuccess": "تم الإبلاغ",
+    "addPhotos": "أضف صورًا",
+    "uploading": "جارٍ الرفع..."
+  },
+  "sizeAssistant": {
+    "title": "المقاس الموصى به:",
+    "confidenceHigh": "ثقة عالية",
+    "confidenceMedium": "ثقة متوسطة",
+    "loading": "جارٍ حساب التوصية...",
+    "fillProfile": "أكمل ملفي الشخصي"
   }
 } as const;
