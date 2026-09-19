@@ -13,6 +13,7 @@ import { AuthProvider } from '@/context/auth-context';
 import { CartProvider } from '@/context/cart-context';
 import { WishlistProvider } from '@/context/wishlist-context';
 import { FittingRoomProvider } from '@/context/fitting-room-context';
+import { AuthGate } from '@/components/auth/auth-gate';
 import { ChatWidget } from '@/components/chat/chat-widget';
 import { FittingRoomModal } from '@/components/avatar/fitting-room-modal';
 import '../globals.css';
@@ -103,30 +104,26 @@ export default async function LocaleLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
+        <script
           // Runs before paint to avoid a flash of the wrong theme.
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('libas_theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
           }}
         />
-        <Script
-          id="sw-register"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js');});}`,
-          }}
-        />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <Script id="sw-register" strategy="afterInteractive">
+          {`if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js');});}`}
+        </Script>
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <CartProvider>
               <WishlistProvider>
                 <FittingRoomProvider>
                   <Navbar />
-                  <main className="flex-1">{children}</main>
+                  <main className="flex-1">
+                    <AuthGate>{children}</AuthGate>
+                  </main>
                   <Footer />
                   <ChatWidget />
                   <FittingRoomModal />

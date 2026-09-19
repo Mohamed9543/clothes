@@ -10,6 +10,7 @@ export interface CreateUserInput {
   passwordHash: string;
   firstName: string;
   lastName: string;
+  googleId?: string;
 }
 
 @Injectable()
@@ -33,7 +34,50 @@ export class UsersService {
       passwordHash: input.passwordHash,
       firstName: input.firstName,
       lastName: input.lastName,
+      googleId: input.googleId ?? null,
     });
+  }
+
+  async setGoogleId(userId: string, googleId: string): Promise<void> {
+    await this.userModel.updateOne({ _id: userId }, { googleId }).exec();
+  }
+
+  async setResetCode(userId: string, resetCodeHash: string, expiresAt: Date): Promise<void> {
+    await this.userModel
+      .updateOne(
+        { _id: userId },
+        { resetCodeHash, resetCodeExpiresAt: expiresAt, resetCodeAttempts: 0 },
+      )
+      .exec();
+  }
+
+  async incrementResetAttempts(userId: string): Promise<void> {
+    await this.userModel.updateOne({ _id: userId }, { $inc: { resetCodeAttempts: 1 } }).exec();
+  }
+
+  async clearResetCode(userId: string): Promise<void> {
+    await this.userModel
+      .updateOne(
+        { _id: userId },
+        { resetCodeHash: null, resetCodeExpiresAt: null, resetCodeAttempts: 0 },
+      )
+      .exec();
+  }
+
+  // Sets a new password and revokes existing sessions and any pending reset code.
+  async resetPassword(userId: string, passwordHash: string): Promise<void> {
+    await this.userModel
+      .updateOne(
+        { _id: userId },
+        {
+          passwordHash,
+          refreshTokenHash: null,
+          resetCodeHash: null,
+          resetCodeExpiresAt: null,
+          resetCodeAttempts: 0,
+        },
+      )
+      .exec();
   }
 
   async updateRefreshTokenHash(userId: string, refreshTokenHash: string | null): Promise<void> {

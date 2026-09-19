@@ -85,6 +85,20 @@ export class User {
   @Prop({ default: 0, min: 0 })
   loyaltyPoints: number;
 
+  // Password reset: bcrypt hash of the 6-digit code, its expiry and the number
+  // of wrong guesses so far (the code is invalidated after too many).
+  @Prop({ type: String, default: null })
+  resetCodeHash: string | null;
+
+  @Prop({ type: Date, default: null })
+  resetCodeExpiresAt: Date | null;
+
+  @Prop({ type: Number, default: 0 })
+  resetCodeAttempts: number;
+
+  @Prop({ type: String, default: null })
+  googleId: string | null;
+
   @Prop({ default: false })
   isBlocked: boolean;
 

@@ -5,12 +5,13 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { ApiError } from '@/lib/api';
+import { GoogleButton } from '@/components/auth/google-button';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,6 +29,16 @@ export default function LoginPage() {
       setError(err instanceof ApiError ? err.message : tCommon('error'));
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleGoogle(credential: string) {
+    setError(null);
+    try {
+      await loginWithGoogle(credential);
+      router.push('/');
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : tCommon('error'));
     }
   }
 
@@ -53,6 +64,12 @@ export default function LoginPage() {
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
 
+        <div className="text-end">
+          <Link href="/forgot-password" className="text-sm text-brand-terracotta underline">
+            {t('forgotLink')}
+          </Link>
+        </div>
+
         {error && <p className="text-sm text-brand-terracotta">{error}</p>}
 
         <button
@@ -63,6 +80,13 @@ export default function LoginPage() {
           {t('loginCta')}
         </button>
       </form>
+
+      <div className="my-5 flex items-center gap-3 text-xs text-muted">
+        <span className="h-px flex-1 bg-border" />
+        {t('or')}
+        <span className="h-px flex-1 bg-border" />
+      </div>
+      <GoogleButton onCredential={handleGoogle} />
 
       <p className="mt-4 text-sm text-muted">
         {t('noAccount')}{' '}

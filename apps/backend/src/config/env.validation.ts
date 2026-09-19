@@ -28,6 +28,12 @@ export const envSchema = z.object({
   // is implemented for real use — no cloud bucket exists yet. 's3' works
   // against any S3-compatible endpoint (AWS S3, Cloudflare R2, DO Spaces) but
   // fails loudly at startup if selected without the required S3_* vars.
+  // Transactional email through Resend (https://resend.com). Optional so the app
+  // boots without it; the password-reset email fails only if it's missing.
+  RESEND_API_KEY: z.string().default(''),
+  MAIL_FROM: z.string().default('StyleForm <onboarding@resend.dev>'),
+  // Google OAuth web client ID, used to verify "Sign in with Google" ID tokens.
+  GOOGLE_CLIENT_ID: z.string().default(''),
   STORAGE_DRIVER: z.enum(['local', 's3']).default('local'),
   S3_BUCKET: z.string().default(''),
   S3_ENDPOINT: z.string().default(''),
