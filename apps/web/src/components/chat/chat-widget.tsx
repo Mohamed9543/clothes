@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { MessageCircle, Send, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { AddOutfitToCartButton } from '@/components/add-outfit-to-cart-button';
 import { apiFetch } from '@/lib/api';
+import { AUTH_PATHS } from '@/lib/auth-paths';
 import { ChatProductCard } from './chat-product-card';
 import type { ChatComposedOutfit, ChatReply, ChatToolProduct, Conversation } from '@/types';
 
@@ -22,6 +23,8 @@ interface DisplayMessage {
 export function ChatWidget() {
   const t = useTranslations('chat');
   const { user } = useAuth();
+  const pathname = usePathname();
+  const isAuthPage = AUTH_PATHS.includes(pathname);
 
   const [isOpen, setIsOpen] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -98,6 +101,10 @@ export function ChatWidget() {
     } finally {
       setIsSending(false);
     }
+  }
+
+  if (isAuthPage) {
+    return null;
   }
 
   return (

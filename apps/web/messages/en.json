@@ -212,7 +212,9 @@
     "verifyCta": "Verify code",
     "codeResent": "A new code has been sent.",
     "newPasswordTitle": "Choose a new password",
-    "newPasswordSubtitle": "Use at least 8 characters, with upper and lower case letters and a digit."
+    "newPasswordSubtitle": "Use at least 8 characters, with upper and lower case letters and a digit.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "orderStatus": {
     "pending": "Pending",

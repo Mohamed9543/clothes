@@ -1,11 +1,19 @@
+'use client';
+
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
+import { AUTH_PATHS } from '@/lib/auth-paths';
 
 export function Footer() {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
   const tBrand = useTranslations('brand');
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+
+  if (AUTH_PATHS.includes(pathname)) {
+    return null;
+  }
 
   return (
     <footer className="border-t border-border bg-surface">

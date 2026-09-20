@@ -6,6 +6,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { ApiError } from '@/lib/api';
 import { GoogleButton } from '@/components/auth/google-button';
+import { PasswordInput } from '@/components/auth/password-input';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
@@ -55,13 +56,11 @@ export default function LoginPage() {
           onChange={(event) => setEmail(event.target.value)}
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
-        <input
+        <PasswordInput
           required
-          type="password"
           placeholder={t('password')}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
 
         <div className="text-end">

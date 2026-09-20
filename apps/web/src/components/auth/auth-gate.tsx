@@ -3,9 +3,7 @@
 import { useEffect } from 'react';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
-
-// Pages reachable without being logged in.
-const PUBLIC_PATHS = ['/login', '/register', '/forgot-password', '/verify-code', '/reset-password'];
+import { AUTH_PATHS as PUBLIC_PATHS } from '@/lib/auth-paths';
 
 // Sends visitors who aren't logged in to /login. Session tokens live in
 // localStorage, so this has to be a client-side check rather than middleware.

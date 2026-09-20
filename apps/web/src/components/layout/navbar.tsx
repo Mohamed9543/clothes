@@ -5,7 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
 import { useWishlist } from '@/context/wishlist-context';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
+import { AUTH_PATHS } from '@/lib/auth-paths';
 import { AccountMenu } from './account-menu';
 import { LocaleSwitcher } from './locale-switcher';
 import { NotificationBell } from './notification-bell';
@@ -18,6 +19,8 @@ export function Navbar() {
   const { user } = useAuth();
   const { itemCount } = useCart();
   const { defaultList } = useWishlist();
+  const pathname = usePathname();
+  const isAuthPage = AUTH_PATHS.includes(pathname);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
@@ -28,36 +31,38 @@ export function Navbar() {
           </Link>
         )}
 
-        <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
-          {user?.role === 'admin' ? (
-            <Link
-              href="/admin"
-              className="shrink-0 text-xl font-semibold tracking-tight text-foreground hover:text-brand-terracotta"
-            >
-              {t('admin')}
-            </Link>
-          ) : (
-            <>
-              <Link href="/catalogue" className="hover:text-brand-terracotta">
-                {t('catalog')}
+        {!isAuthPage && (
+          <nav className="hidden items-center gap-5 text-sm font-medium md:flex">
+            {user?.role === 'admin' ? (
+              <Link
+                href="/admin"
+                className="shrink-0 text-xl font-semibold tracking-tight text-foreground hover:text-brand-terracotta"
+              >
+                {t('admin')}
               </Link>
-              <Link href="/lookbook" className="hover:text-brand-terracotta">
-                {t('lookbook')}
-              </Link>
-              <Link href="/a-propos" className="hover:text-brand-terracotta">
-                {t('about')}
-              </Link>
-            </>
-          )}
-        </nav>
+            ) : (
+              <>
+                <Link href="/catalogue" className="hover:text-brand-terracotta">
+                  {t('catalog')}
+                </Link>
+                <Link href="/lookbook" className="hover:text-brand-terracotta">
+                  {t('lookbook')}
+                </Link>
+                <Link href="/a-propos" className="hover:text-brand-terracotta">
+                  {t('about')}
+                </Link>
+              </>
+            )}
+          </nav>
+        )}
 
-        {user?.role !== 'admin' && <SearchBar />}
+        {!isAuthPage && user?.role !== 'admin' && <SearchBar />}
 
         <div className="ms-auto flex items-center gap-3">
           <ThemeToggle />
           <LocaleSwitcher />
 
-          {user?.role !== 'admin' && (
+          {!isAuthPage && user?.role !== 'admin' && (
             <Link
               href="/wishlist"
               className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
@@ -72,7 +77,7 @@ export function Navbar() {
             </Link>
           )}
 
-          {user?.role !== 'admin' && (
+          {!isAuthPage && user?.role !== 'admin' && (
             <Link
               href="/panier"
               className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-background"
@@ -87,8 +92,12 @@ export function Navbar() {
             </Link>
           )}
 
-          <NotificationBell />
-          <AccountMenu />
+          {!isAuthPage && (
+            <>
+              <NotificationBell />
+              <AccountMenu />
+            </>
+          )}
         </div>
       </div>
     </header>

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { ApiError, apiFetch } from '@/lib/api';
 import { clearResetState, getResetState } from '@/lib/password-reset';
+import { PasswordInput } from '@/components/auth/password-input';
 
 export default function ResetPasswordPage() {
   const t = useTranslations('auth');
@@ -67,15 +68,13 @@ export default function ResetPasswordPage() {
         <>
           <p className="mb-4 text-sm text-muted">{t('newPasswordSubtitle')}</p>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
+            <PasswordInput
               required
-              type="password"
               minLength={8}
               autoComplete="new-password"
               placeholder={t('newPassword')}
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}
-              className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
             />
             {error && <p className="text-sm text-brand-terracotta">{error}</p>}
             <button

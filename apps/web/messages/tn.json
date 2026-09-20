@@ -212,7 +212,9 @@
     "verifyCta": "تثبّت من الكود",
     "codeResent": "بعثنالك كود جديد.",
     "newPasswordTitle": "اختار كلمة سر جديدة",
-    "newPasswordSubtitle": "8 أحرف على الأقل، مع حروف كبيرة وصغيرة ورقم."
+    "newPasswordSubtitle": "8 أحرف على الأقل، مع حروف كبيرة وصغيرة ورقم.",
+    "showPassword": "ورّي كلمة السر",
+    "hidePassword": "خبّي كلمة السر"
   },
   "orderStatus": {
     "pending": "تنتظر",

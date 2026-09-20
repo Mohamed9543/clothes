@@ -212,7 +212,9 @@
     "verifyCta": "Vérifier le code",
     "codeResent": "Un nouveau code a été envoyé.",
     "newPasswordTitle": "Choisissez un nouveau mot de passe",
-    "newPasswordSubtitle": "Au moins 8 caractères, avec majuscules, minuscules et un chiffre."
+    "newPasswordSubtitle": "Au moins 8 caractères, avec majuscules, minuscules et un chiffre.",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "orderStatus": {
     "pending": "En attente",

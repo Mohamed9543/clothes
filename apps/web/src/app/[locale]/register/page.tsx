@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/auth-context';
 import { ApiError } from '@/lib/api';
+import { PasswordInput } from '@/components/auth/password-input';
 
 export default function RegisterPage() {
   const t = useTranslations('auth');
@@ -60,13 +61,11 @@ export default function RegisterPage() {
           onChange={(event) => setEmail(event.target.value)}
           className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
-        <input
+        <PasswordInput
           required
-          type="password"
           placeholder={t('password')}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
         />
 
         {error && <p className="text-sm text-brand-terracotta">{error}</p>}
